@@ -1,7 +1,9 @@
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener.html
+
 vpc (必須): ALBをデプロイするVPCを指定します。このプロパティはIVpc型で、ALBが通信を行うEC2インスタンスなどのリソースが存在するVPCの参照を必要とします。
 
 clientKeepAlive?: クライアントのKeep-Alive設定ですが、このプロパティはAWS CDKのALBには存在しません。クライアントとALB間の接続を維持する時間の設定は通常、クライアント側またはアプリケーションレベルで行います。
-
+→
 crossZoneEnabled?: ゾーン間ロードバランシングが有効かどうかを指定します。boolean型で、ALBが複数のアベイラビリティーゾーンにまたがるインスタンスにリクエストを分散するかどうかを制御します。
 
 deletionProtection?: ALBの削除保護を有効にするかどうかを指定します。boolean型で、誤ってALBを削除することを防ぎます。
