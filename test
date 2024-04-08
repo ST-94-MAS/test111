@@ -1,3 +1,8 @@
+ 接続タイムアウト時間は、後段(ECSタスク等)より前段（ALB等）が先にタイムアウトすることがないよう、業務アプリケーションの接続タイムアウトの値を考慮の上、設定を行うものとする。 
+接続タイムアウトの設定は、ALBやSpring Bootの設定ファイル(application.propertiesなど)で制御する。
+ALBタイムアウトはSP-TSMでの試験結果を参考に60秒とし、性能試験実施後に再度検討を行う。
+
+
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener.html
 
 vpc (必須): ALBをデプロイするVPCを指定します。このプロパティはIVpc型で、ALBが通信を行うEC2インスタンスなどのリソースが存在するVPCの参照を必要とします。
