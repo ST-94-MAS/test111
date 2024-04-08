@@ -1,1 +1,43 @@
 test
+aws-cdk-lib » aws-cdk-lib.aws_elasticloadbalancingv2 » ApplicationLoadBalancer																			
+	vpc																		
+	clientKeepAlive?																		
+	crossZoneEnabled?																		
+	deletionProtection?																		
+	denyAllIgwTraffic?																		
+	desyncMitigationMode?																		
+	dropInvalidHeaderFields?																		
+	http2Enabled?																		
+	idleTimeout?																		
+	internetFacing?																		
+	ipAddressType?																		
+	loadBalancerName?																		
+	securityGroup?																		
+	vpcSubnets?																		
+	logAccessLogs																		
+		bucket																	
+		prefix																	
+	tags																		
+		Name																	
+
+データ型	デフォルト
+	
+IVpc	-
+Duration	Duration.seconds(3600)
+boolean	false for Network Load Balancers and true for Application Load
+boolean	false
+boolean	false for internet-facing load balancers and true for internal load balancers
+DesyncMitigationMode	DesyncMitigationMode.DEFENSIVE
+boolean	false
+boolean	true
+Duration	60
+boolean	false
+IpAddressType	IpAddressType.Ipv4
+string	Automatically generated name.
+ISecurityGroup	A security group is created
+SubnetSelection	the Vpc default strategy.
+	
+Ibucket	-
+string	-
+	
+	
