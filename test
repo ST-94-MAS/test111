@@ -1,43 +1,31 @@
-test
-aws-cdk-lib » aws-cdk-lib.aws_elasticloadbalancingv2 » ApplicationLoadBalancer																			
-	vpc																		
-	clientKeepAlive?																		
-	crossZoneEnabled?																		
-	deletionProtection?																		
-	denyAllIgwTraffic?																		
-	desyncMitigationMode?																		
-	dropInvalidHeaderFields?																		
-	http2Enabled?																		
-	idleTimeout?																		
-	internetFacing?																		
-	ipAddressType?																		
-	loadBalancerName?																		
-	securityGroup?																		
-	vpcSubnets?																		
-	logAccessLogs																		
-		bucket																	
-		prefix																	
-	tags																		
-		Name																	
+vpc (必須): ALBをデプロイするVPCを指定します。このプロパティはIVpc型で、ALBが通信を行うEC2インスタンスなどのリソースが存在するVPCの参照を必要とします。
 
-データ型	デフォルト
-	
-IVpc	-
-Duration	Duration.seconds(3600)
-boolean	false for Network Load Balancers and true for Application Load
-boolean	false
-boolean	false for internet-facing load balancers and true for internal load balancers
-DesyncMitigationMode	DesyncMitigationMode.DEFENSIVE
-boolean	false
-boolean	true
-Duration	60
-boolean	false
-IpAddressType	IpAddressType.Ipv4
-string	Automatically generated name.
-ISecurityGroup	A security group is created
-SubnetSelection	the Vpc default strategy.
-	
-Ibucket	-
-string	-
-	
-	
+clientKeepAlive?: クライアントのKeep-Alive設定ですが、このプロパティはAWS CDKのALBには存在しません。クライアントとALB間の接続を維持する時間の設定は通常、クライアント側またはアプリケーションレベルで行います。
+
+crossZoneEnabled?: ゾーン間ロードバランシングが有効かどうかを指定します。boolean型で、ALBが複数のアベイラビリティーゾーンにまたがるインスタンスにリクエストを分散するかどうかを制御します。
+
+deletionProtection?: ALBの削除保護を有効にするかどうかを指定します。boolean型で、誤ってALBを削除することを防ぎます。
+
+denyAllIgwTraffic?: このプロパティはAWS CDKのALBには存在しません。
+
+desyncMitigationMode?: HTTP/2とWebSocketsのリクエストで不整合が発生した場合の緩和モードを指定します。DesyncMitigationMode型で、不整合リクエストの扱い方を制御します。
+
+dropInvalidHeaderFields?: 不正なHTTPヘッダーを持つリクエストをドロップするかどうかを指定します。boolean型で、セキュリティを強化するために使用されます。
+
+http2Enabled?: HTTP/2のサポートを有効にするかどうかを指定します。boolean型で、デフォルトはtrueです。
+
+idleTimeout?: 接続のアイドルタイムアウトを設定します。Duration型で、ALBが接続を閉じるまでの時間を指定します。
+
+internetFacing?: インターネット向けのALBかどうかを指定します。boolean型で、trueの場合はインターネットからのアクセスを受け入れます。
+
+ipAddressType?: ALBのIPアドレスタイプを指定します。IpAddressType型で、IPv4またはdualstackを指定できます。
+
+loadBalancerName?: ALBの名前を指定します。string型で、指定しない場合は自動的に生成された名前が使用されます。
+
+securityGroup?: ALBに関連付けるセキュリティグループを指定します。ISecurityGroup型で、指定しない場合は新しいセキュリティグループが作成されます。
+
+vpcSubnets?: ALBを配置するサブネットを指定します。SubnetSelection型で、特定のサブネットやサブネットタイプを選択できます。
+
+logAccessLogs: ALBのアクセスログをAmazon S3バケットに保存するかどうか、およびその設定を指定します。bucketはログを保存するS3バケット、prefixはログファイルのプレフィックスを指定します。
+
+tags: ALBに適用するタグ
