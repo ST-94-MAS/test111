@@ -9,3 +9,16 @@ ipAddressType?
 loadBalancerName?	
 securityGroups?	
 vpcSubnets?	
+
+
+The VPC network to place the load balancer in.
+The AZ affinity routing policy.
+Indicates whether cross-zone load balancing is enabled.
+Indicates whether deletion protection is enabled.
+Indicates whether the load balancer blocks traffic through the Internet Gateway (IGW).
+Indicates whether to evaluate inbound security group rules for traffic sent to a Network Load Balancer through AWS PrivateLink.
+Whether the load balancer has an internet-routable address.
+The type of IP addresses to use.
+Name of the load balancer.
+Security groups to associate with this load balancer.
+Which subnets place the load balancer in.
