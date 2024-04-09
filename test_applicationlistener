@@ -1,3 +1,5 @@
+AWS　CDKでapplicationlistenerを作成する場合に下記何を入力したらいいか教えて
+
 loadBalancer				
 certificates?				
 defaultAction?				
@@ -14,3 +16,27 @@ protocol?
 sslPolicy?				
 tags				
 	Name			
+
+loadBalancer: リスナーを作成する対象のALBのインスタンスです。
+
+certificates?: HTTPSリスナーを設定する場合に必要なSSL/TLS証明書の配列。AWS Certificate Manager (ACM) から取得した証明書を指定します。
+
+defaultAction?: リクエストが他のルーティングルールに一致しない場合に適用されるアクション。一般的には、特定のターゲットグループへの転送が指定されます。
+
+targetGroups: デフォルトアクションで使用するターゲットグループの設定。
+targetGroupArn: ターゲットグループのARN。
+weight: 複数のターゲットグループにトラフィックを分散する場合の、このターゲットグループの重み。
+targetGroupStickinessConfig: セッションスティッキネスの設定。
+durationSeconds: スティッキーセッションが有効である期間（秒）。
+enabled: スティッキーセッションが有効かどうか。
+defaultTargetGroups?: リスナー作成時にデフォルトで関連付けるターゲットグループ。
+
+open?: セキュリティグループが自動的にリスナーのポートで受信トラフィックを許可するかどうか。
+
+port: リスナーがリッスンするポート（例: 80, 443）。
+
+protocol: リスナーのプロトコル（例: HTTP, HTTPS）。
+
+sslPolicy?: HTTPSリスナーの場合、使用するSSLポリシー。
+
+tags: リソースに適用するタグ。特定のタグ（例えば Name）を含めることができます。
