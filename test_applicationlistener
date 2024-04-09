@@ -1,0 +1,16 @@
+loadBalancer				
+certificates?				
+defaultAction?				
+	targetGroups			
+		targetGroupArn		
+		weight		
+	targetGroupStickinessConfig			
+		durationSeconds		
+		enabled		
+defaultTargetGroups?				
+open?				
+port?				
+protocol?				
+sslPolicy?				
+tags				
+	Name			
