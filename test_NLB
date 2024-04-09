@@ -1,0 +1,11 @@
+vpc	
+clientRoutingPolicy?	
+crossZoneEnabled?	
+deletionProtection?	
+denyAllIgwTraffic?	
+enforceSecurityGroupInboundRulesOnPrivateLinkTraffic?	
+internetFacing?	
+ipAddressType?	
+loadBalancerName?	
+securityGroups?	
+vpcSubnets?	
