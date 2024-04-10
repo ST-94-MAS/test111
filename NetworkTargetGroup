@@ -1,3 +1,5 @@
+AWS　CDKでNetworkTargetGroupを作成する場合に下記何を入力したらいいか教えて
+
 port						
 connectionTermination?						
 deregistrationDelay?						
