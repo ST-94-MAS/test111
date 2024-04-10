@@ -1,25 +1,26 @@
 AWS　CDKでNetworkTargetGroupを作成する場合に下記何を入力したらいいか教えて
 
-port						
-connectionTermination?						
-deregistrationDelay?						
-healthCheck?						
-	enabled?					
-	healthyGrpcCodes?					
-	healthyHttpCodes?					
-	healthyThresholdCount?					
-	interval?					
-	path?					
-	port?					
-	protocol?					
-	timeout?					
-	unhealthyThresholdCount?					
-preserveClientIp?						
-protocol?						
-proxyProtocolV2?						
-targetGroupName?						
-targetType?						
-targets?						
-vpc?						
-tags						
-	Name					
+必須項目
+port: ターゲットグループに転送されるトラフィックのポート番号。
+vpc: ターゲットグループが存在するAmazon VPC。
+オプション項目
+connectionTermination?: ターゲットからの接続終了を有効にするかどうか。これにより、NLBは接続をアクティブに閉じることができます。
+deregistrationDelay?: ターゲットが登録解除された後、トラフィックを転送し続ける時間。
+healthCheck?: ヘルスチェックの設定。
+enabled?: ヘルスチェックを有効にするかどうか。
+healthyGrpcCodes?: gRPCリスナーの場合、ヘルシーとみなされるgRPCステータスコード。
+healthyHttpCodes?: HTTP/HTTPSリスナーの場合、ヘルシーとみなされるHTTPステータスコード。
+healthyThresholdCount?: ターゲットがヘルシーと判断されるまでの連続したヘルスチェックの成功数。
+interval?: ヘルスチェックの間隔（秒）。
+path?: ヘルスチェックのリクエストパス（HTTP/HTTPSプロトコルの場合）。
+port?: ヘルスチェックのポート。特定のポートかtraffic-portを使用します。
+protocol?: ヘルスチェックのプロトコル。
+timeout?: ヘルスチェックのタイムアウト（秒）。
+unhealthyThresholdCount?: ターゲットがアンヘルシーと判断されるまでの連続したヘルスチェックの失敗数。
+preserveClientIp?: クライアントIPの保存を有効にするかどうか。VPC内のターゲットでのみ使用可能です。
+protocol?: ターゲットグループのプロトコル（TCP, TLS, UDP, TCP_UDP）。
+proxyProtocolV2?: Proxy Protocol v2を有効にするかどうか。
+targetGroupName?: ターゲットグループの名前。
+targetType?: ターゲットのタイプ（instance, ip, lambda）。
+targets?: ターゲットグループに登録されるターゲットのリスト。
+tags: ターゲットグループに適用するタグ。例：Nameタグ。
