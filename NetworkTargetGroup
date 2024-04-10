@@ -1,0 +1,23 @@
+port						
+connectionTermination?						
+deregistrationDelay?						
+healthCheck?						
+	enabled?					
+	healthyGrpcCodes?					
+	healthyHttpCodes?					
+	healthyThresholdCount?					
+	interval?					
+	path?					
+	port?					
+	protocol?					
+	timeout?					
+	unhealthyThresholdCount?					
+preserveClientIp?						
+protocol?						
+proxyProtocolV2?						
+targetGroupName?						
+targetType?						
+targets?						
+vpc?						
+tags						
+	Name					
