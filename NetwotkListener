@@ -1,12 +1,14 @@
 AWS　CDKでNetwotkListenerを作成する場合に下記何を入力したらいいか教えて
 
-loadBalancer			
-port			
-alpnPolicy?			
-certificates?			
-defaultAction?			
-defaultTargetGroups?			
-protocol?			
-sslPolicy?			
-tags			
-	Name		
+必須項目
+loadBalancer: リスナーが関連付けられるNetworkLoadBalancerのインスタンスです。
+port: リスナーが待ち受けるポート番号。
+オプション項目
+alpnPolicy?: アプリケーションレイヤープロトコルネゴシエーション(ALPN)ポリシー。TLS接続時にクライアントとサーバー間で使用されるプロトコルを決定するためのポリシーです。
+certificates?: リスナーがSSLまたはTLSリスナーの場合に使用する証明書のリスト。各証明書は、AWS Certificate Manager（ACM）から取得したものや、IAMにアップロードされたものなど、さまざまな形式で指定できます。
+defaultAction?: リクエストが他のルートに一致しない場合のデフォルトアクション。通常、NetworkListenerではターゲットグループへの転送が指定されます。
+defaultTargetGroups?: リスナー作成時に関連付けるデフォルトのターゲットグループ。
+protocol?: リスナーのプロトコル。NLBの場合、TCP, TLS, UDP, またはTCP_UDPが指定できます。
+sslPolicy?: SSLポリシー。セキュアリスナー（protocolがTLSの場合）で使用され、セキュリティ設定（使用する暗号スイートやプロトコルバージョンなど）を指定します。
+タグ
+tags: リソースに適用するタグの辞書。例えば、Nameタグを使ってリソースを識別できます。
