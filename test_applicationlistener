@@ -40,3 +40,24 @@ protocol: リスナーのプロトコル（例: HTTP, HTTPS）。
 sslPolicy?: HTTPSリスナーの場合、使用するSSLポリシー。
 
 tags: リソースに適用するタグ。特定のタグ（例えば Name）を含めることができます。
+
+
+vpc						
+clientKeepAlive?						
+crossZoneEnabled?						
+deletionProtection?						
+denyAllIgwTraffic?						
+desyncMitigationMode?						
+dropInvalidHeaderFields?						
+http2Enabled?						
+idleTimeout?						
+internetFacing?						
+ipAddressType?						
+loadBalancerName?						
+securityGroup?						
+vpcSubnets?						
+logAccessLogs						
+	bucket					
+	prefix					
+tags						
+	Name					
