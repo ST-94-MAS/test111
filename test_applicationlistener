@@ -1,20 +1,18 @@
 AWS　CDKでapplicationlistenerを作成する場合に下記何を入力したらいいか教えて
 
-clientKeepAlive?: クライアントのキープアライブを有効にするかどうか。
-crossZoneEnabled?: クロスゾーンロードバランシングを有効にするかどうか。
-deletionProtection?: ALBの削除保護を有効にするかどうか。
-denyAllIgwTraffic?: インターネットゲートウェイ経由の全てのトラフィックを拒否するかどうか。
-desyncMitigationMode?: 不整合トラフィックの軽減モード。
-dropInvalidHeaderFields?: 無効なヘッダーフィールドをドロップするかどうか。
-http2Enabled?: HTTP/2を有効にするかどうか。
-idleTimeout?: アイドルタイムアウトの秒数。
-internetFacing?: インターネット向け(ALBがインターネットに公開される)かどうか。
-ipAddressType?: IPアドレスのタイプ（ipv4 または dualstack）。
-loadBalancerName?: ALBの名前。
-securityGroup?: ALBに関連付けるセキュリティグループ。
-vpcSubnets?: ALBをデプロイするサブネット。
-アクセスログ
-logAccessLogs: アクセスログを有効にするかどうか。
-bucket: ログを保存するS3バケット。
-prefix: S3バケット内のログファイルのプレフィックス。
-タグ
+loadBalancer						
+certificates?						
+defaultAction?						
+	targetGroups					
+		targetGroupArn				
+		weight				
+	targetGroupStickinessConfig					
+		durationSeconds				
+		enabled				
+defaultTargetGroups?						
+open?						
+port?						
+protocol?						
+sslPolicy?						
+tags						
+	Name					
