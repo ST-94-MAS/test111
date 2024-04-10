@@ -1,3 +1,5 @@
+AWS　CDKでNetwotkListenerを作成する場合に下記何を入力したらいいか教えて
+
 loadBalancer			
 port			
 alpnPolicy?			
