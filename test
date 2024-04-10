@@ -1,3 +1,5 @@
+（２）	予閉塞の処理方式
+ALBのリスナールールである固定レスポンスを返す機能により、閉塞時は新規セッションをHTTPステータスコード：503を返す仕組みとする。
 
 
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener.html
