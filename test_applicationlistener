@@ -1,63 +1,20 @@
 AWS　CDKでapplicationlistenerを作成する場合に下記何を入力したらいいか教えて
 
-loadBalancer				
-certificates?				
-defaultAction?				
-	targetGroups			
-		targetGroupArn		
-		weight		
-	targetGroupStickinessConfig			
-		durationSeconds		
-		enabled		
-defaultTargetGroups?				
-open?				
-port?				
-protocol?				
-sslPolicy?				
-tags				
-	Name			
-
-loadBalancer: リスナーを作成する対象のALBのインスタンスです。
-
-certificates?: HTTPSリスナーを設定する場合に必要なSSL/TLS証明書の配列。AWS Certificate Manager (ACM) から取得した証明書を指定します。
-
-defaultAction?: リクエストが他のルーティングルールに一致しない場合に適用されるアクション。一般的には、特定のターゲットグループへの転送が指定されます。
-
-targetGroups: デフォルトアクションで使用するターゲットグループの設定。
-targetGroupArn: ターゲットグループのARN。
-weight: 複数のターゲットグループにトラフィックを分散する場合の、このターゲットグループの重み。
-targetGroupStickinessConfig: セッションスティッキネスの設定。
-durationSeconds: スティッキーセッションが有効である期間（秒）。
-enabled: スティッキーセッションが有効かどうか。
-defaultTargetGroups?: リスナー作成時にデフォルトで関連付けるターゲットグループ。
-
-open?: セキュリティグループが自動的にリスナーのポートで受信トラフィックを許可するかどうか。
-
-port: リスナーがリッスンするポート（例: 80, 443）。
-
-protocol: リスナーのプロトコル（例: HTTP, HTTPS）。
-
-sslPolicy?: HTTPSリスナーの場合、使用するSSLポリシー。
-
-tags: リソースに適用するタグ。特定のタグ（例えば Name）を含めることができます。
-
-
-vpc						
-clientKeepAlive?						
-crossZoneEnabled?						
-deletionProtection?						
-denyAllIgwTraffic?						
-desyncMitigationMode?						
-dropInvalidHeaderFields?						
-http2Enabled?						
-idleTimeout?						
-internetFacing?						
-ipAddressType?						
-loadBalancerName?						
-securityGroup?						
-vpcSubnets?						
-logAccessLogs						
-	bucket					
-	prefix					
-tags						
-	Name					
+clientKeepAlive?: クライアントのキープアライブを有効にするかどうか。
+crossZoneEnabled?: クロスゾーンロードバランシングを有効にするかどうか。
+deletionProtection?: ALBの削除保護を有効にするかどうか。
+denyAllIgwTraffic?: インターネットゲートウェイ経由の全てのトラフィックを拒否するかどうか。
+desyncMitigationMode?: 不整合トラフィックの軽減モード。
+dropInvalidHeaderFields?: 無効なヘッダーフィールドをドロップするかどうか。
+http2Enabled?: HTTP/2を有効にするかどうか。
+idleTimeout?: アイドルタイムアウトの秒数。
+internetFacing?: インターネット向け(ALBがインターネットに公開される)かどうか。
+ipAddressType?: IPアドレスのタイプ（ipv4 または dualstack）。
+loadBalancerName?: ALBの名前。
+securityGroup?: ALBに関連付けるセキュリティグループ。
+vpcSubnets?: ALBをデプロイするサブネット。
+アクセスログ
+logAccessLogs: アクセスログを有効にするかどうか。
+bucket: ログを保存するS3バケット。
+prefix: S3バケット内のログファイルのプレフィックス。
+タグ
