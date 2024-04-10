@@ -1,27 +1,41 @@
 AWS　CDKでapplicationTargetGroupを作成する場合に下記何を入力したらいいか教えて
 
-deregistrationDelay?					
-healthCheck?					
-	enabled?				
-	healthyGrpcCodes?				
-	healthyHttpCodes?				
-	healthyThresholdCount?				
-	interval?				
-	path?				
-	port?				
-	protocol?				
-	timeout?				
-	unhealthyThresholdCount?				
-loadBalancingAlgorithmType?					
-port?					
-protocol?					
-protocolVersion?					
-slowStart?					
-stickinessCookieDuration?					
-stickinessCookieName?					
-targetGroupName?					
-targetType?					
-targets?					
-vpc?					
-tags					
-	Name				
+deregistrationDelay?
+deregistrationDelay?: ターゲットが登録解除された後、そのターゲットがコネクションを完了するのに許される時間の長さを指定します。デフォルトは300秒です。
+healthCheck?
+ヘルスチェックに関する設定です。
+
+enabled?: ヘルスチェックを有効にするかどうか。
+healthyGrpcCodes?: GRPCリスナーの場合、ヘルシーと見なされるgRPCステータスコード。
+healthyHttpCodes?: ヘルシーと見なされるHTTPステータスコードの範囲。
+healthyThresholdCount?: ターゲットがヘルシーと判断されるために必要なヘルスチェックの連続成功回数。
+interval?: ヘルスチェックの間隔（秒）。
+path?: ヘルスチェックに使用されるリクエストパス（HTTP/HTTPSプロトコルの場合）。
+port?: ヘルスチェックに使用されるポート。特定の値またはtraffic-portを使用して、リスナーが受信するポートを指定できます。
+protocol?: ヘルスチェックに使用されるプロトコル。
+timeout?: ヘルスチェックの応答のタイムアウト時間（秒）。
+unhealthyThresholdCount?: ターゲットがアンヘルシーと判断されるために必要なヘルスチェックの連続失敗回数。
+loadBalancingAlgorithmType?
+loadBalancingAlgorithmType?: ロードバランシングのアルゴリズムタイプ（例: round_robin, least_outstanding_requests）。
+port?
+port?: ターゲットグループのデフォルトポート。
+protocol?
+protocol?: ターゲットグループのプロトコル（例: HTTP, HTTPS, TCP）。
+protocolVersion?
+protocolVersion?: HTTP/HTTPSターゲットグループのプロトコルバージョン。
+slowStart?
+slowStart?: ターゲットが新しく登録された後、フルトラフィックの処理を開始するまでの時間（秒）。
+stickinessCookieDuration?
+stickinessCookieDuration?: セッションスティッキネスのクッキーの有効期間（秒）。
+stickinessCookieName?
+stickinessCookieName?: セッションスティッキネスクッキーの名前。
+targetGroupName?
+targetGroupName?: ターゲットグループの名前。
+targetType?
+targetType?: ターゲットのタイプ（例: instance, ip, lambda）。
+targets?
+targets?: ターゲットグループに登録するターゲットのリスト。
+vpc?
+vpc?: ターゲットグループが存在するVPC。
+tags
+tags: ターゲットグループに適用するタグ。Nameなどのキーと値のペアを指定します。
