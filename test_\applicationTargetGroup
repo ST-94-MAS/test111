@@ -1,0 +1,25 @@
+deregistrationDelay?					
+healthCheck?					
+	enabled?				
+	healthyGrpcCodes?				
+	healthyHttpCodes?				
+	healthyThresholdCount?				
+	interval?				
+	path?				
+	port?				
+	protocol?				
+	timeout?				
+	unhealthyThresholdCount?				
+loadBalancingAlgorithmType?					
+port?					
+protocol?					
+protocolVersion?					
+slowStart?					
+stickinessCookieDuration?					
+stickinessCookieName?					
+targetGroupName?					
+targetType?					
+targets?					
+vpc?					
+tags					
+	Name				
