@@ -1,0 +1,97 @@
+vpc		
+clientRoutingPolicy?		
+crossZoneEnabled?		
+deletionProtection?		
+denyAllIgwTraffic?		
+enforceSecurityGroupInboundRulesOnPrivateLinkTraffic?		
+internetFacing?		
+ipAddressType?		
+loadBalancerName?		
+securityGroups?		
+vpcSubnets?		
+logAccessLogs		
+	bucket	
+	prefix	
+tags		
+	Name	
+
+
+  ---------------------------------------------
+  SMP
+Dev
+Tokyo
+Smp-DevA-NLB-Opemd-Private
+-
+開発環境A面Private Subnet用NLB
+設定値
+
+Smp-Dev-Vpc-Smp
+-
+false
+true
+-
+-
+false
+-
+Smp-DevA-NLB-Opemd-Private
+SG ID取得(命名規則に従って設定)
+SubnetID取得（Smp-DevA-Subnet-Private-a）
+
+S3バット名を取得
+nlb/Smp-DevA-NLB-Opemd-Private
+
+Smp-DevA-NLB-Opemd-Private
+
+  ---------------------------------------------
+SMP
+Dev
+Tokyo
+Smp-DevB-NLB-Opemd-Private
+-
+開発環境B面Private Subnet用NLB
+設定値
+
+Smp-Dev-Vpc-Smp
+-
+false
+true
+-
+-
+false
+-
+Smp-DevB-NLB-Opemd-Private
+SG ID取得()
+SubnetID取得（Smp-Dev-Subnet-Private-d）
+
+S3バット名を取得
+nlb/Smp-DevB-NLB-Opemd-Private
+
+Smp-DevB-NLB-Opemd-Private
+
+    ---------------------------------------------
+SMP
+Dev
+Tokyo
+Smp-Dev-NLB-Opemd-Private
+-
+開発環境C面Private Subnet用NLB
+設定値
+
+Smp-Dev-Vpc-Smp
+-
+false
+true
+-
+-
+false
+-
+Smp-Dev-NLB-Opemd-Private
+SG ID取得()
+SubnetID取得（Smp-Dev-Subnet-Private-c）
+
+S3バット名を取得
+nlb/Smp-Dev-NLB-Opemd-Private
+
+Smp-Dev-NLB-Opemd-Private
+
+    ---------------------------------------------
