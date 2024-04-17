@@ -20,7 +20,7 @@ tags
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Ipublic
+Smp-Dev-Lis-Ipublic-Http
 -
 開発環境C面Ingress Public subnet用ALB
 設定値
@@ -28,25 +28,21 @@ Smp-Dev-Lis-Ipublic
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Ipublic)
 -
 
-
+Smp-Dev-TG-Crestf
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Dev-Lis-Ipublic
+Smp-Dev-Lis-Ipublic-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Ipublic
+Smp-Dev-Lis-Ipublic-Htpps
 -
 開発環境C面Ingress Public subnet用ALB
 設定値
@@ -54,25 +50,21 @@ Smp-Dev-Lis-Ipublic
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Ipublic)
 証明書
 
-
+Smp-Dev-TG-Crestf
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTP
 SslPolicy.TLS13_EXT2
 
-Smp-Dev-Lis-Ipublic
+Smp-Dev-Lis-Ipublic-Htpps
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Appublic
+Smp-Dev-Lis-Appublic-Http
 -
 開発環境C面Ingress Public subnetアプリ処理受付用ALB
 設定値
@@ -80,25 +72,21 @@ Smp-Dev-Lis-Appublic
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-AppPro-Ipublic)
 -
 
-
+Smp-Dev-TG-Siarec
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Dev-Lis-Appublic
+Smp-Dev-Lis-Appublic-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Appublic
+Smp-Dev-Lis-Appublic-Https
 -
 開発環境C面Ingress Public subnetアプリ処理受付用ALB
 設定値
@@ -106,25 +94,21 @@ Smp-Dev-Lis-Appublic
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-AppPro-Ipublic)
 証明書
 
-
+Smp-Dev-TG-Siarec
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Dev-Lis-Appublic
+Smp-Dev-Lis-Appublic-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Private
+Smp-Dev-Lis-Private-Http
 -
 開発環境C面Private Subnet用内部ALB
 設定値
@@ -132,25 +116,21 @@ Smp-Dev-Lis-Private
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Private)
 -
 -
+Smp-Dev-TG-Siareq
 -
 -
--
--
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Dev-Lis-Private
+Smp-Dev-Lis-Private-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-Private
+Smp-Dev-Lis-Private-Https
 -
 開発環境C面Private Subnet用内部ALB
 設定値
@@ -158,25 +138,21 @@ Smp-Dev-Lis-Private
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Private)
 証明書
 
-
+Smp-Dev-TG-Siareq
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Dev-Lis-Private
+Smp-Dev-Lis-Private-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-BioAuth
+Smp-Dev-Lis-BioAuth-Http
 -
 開発環境C面顔認証専用内部ALB
 設定値
@@ -184,25 +160,21 @@ Smp-Dev-Lis-BioAuth
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-BioAuth-Private)
 -
 
-
+Smp-Dev-TG-Scareq
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Dev-Lis-BioAuth
+Smp-Dev-Lis-BioAuth-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Dev-Lis-BioAuth
+Smp-Dev-Lis-BioAuth-Https
 -
 開発環境C面顔認証専用内部ALB
 設定値
@@ -210,25 +182,21 @@ Smp-Dev-Lis-BioAuth
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-BioAuth-Private)
 証明書
 
-
+Smp-Dev-TG-Scareq
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Dev-Lis-BioAuth
+Smp-Dev-Lis-BioAuth-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-1
+Smp-Std-Lis-Public-1-Http
 -
 開発疑似環境C面public Subnet用ALB-1
 設定値
@@ -236,25 +204,21 @@ Smp-Std-Lis-Public-1
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-1)
 -
 
-
+Smp-Dev-TG-Psotp
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Std-Lis-Public-1
+Smp-Std-Lis-Public-1-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-1
+Smp-Std-Lis-Public-1-Https
 -
 開発疑似環境C面public Subnet用ALB-1
 設定値
@@ -262,25 +226,21 @@ Smp-Std-Lis-Public-1
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-1)
 証明書
 
-
+Smp-Dev-TG-Psotp
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Std-Lis-Public-1
+Smp-Std-Lis-Public-1-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-2
+Smp-Std-Lis-Public-2-Http
 -
 開発疑似環境C面public Subnet用ALB-2
 設定値
@@ -288,25 +248,21 @@ Smp-Std-Lis-Public-2
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-2)
 -
 -
+Smp-Dev-TG-Psapps
 -
 -
--
--
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Std-Lis-Public-2
+Smp-Std-Lis-Public-2-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-2
+Smp-Std-Lis-Public-2-Https
 -
 開発疑似環境C面public Subnet用ALB-2
 設定値
@@ -314,25 +270,21 @@ Smp-Std-Lis-Public-2
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-2)
 証明書
 
-
+Smp-Dev-TG-Psapps
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Std-Lis-Public-2
+Smp-Std-Lis-Public-2-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-3
+Smp-Std-Lis-Public-3-Http
 -
 開発疑似環境C面public Subnet用ALB-3
 設定値
@@ -340,25 +292,21 @@ Smp-Std-Lis-Public-3
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-3)
 -
 
-
+Smp-Dev-TG-Psresp
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Std-Lis-Public-3
+Smp-Std-Lis-Public-3-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Public-3
+Smp-Std-Lis-Public-3-Https
 -
 開発疑似環境C面public Subnet用ALB-3
 設定値
@@ -366,25 +314,21 @@ Smp-Std-Lis-Public-3
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Public-3)
 証明書
 
-
+Smp-Dev-TG-Psresp
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Std-Lis-Public-3
+Smp-Std-Lis-Public-3-Https
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Private
+Smp-Std-Lis-Private-Http
 -
 開発疑似環境C面Private Subnet用ALB
 設定値
@@ -392,25 +336,21 @@ Smp-Std-Lis-Private
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Private)
 -
 
-
+Smp-Dev-TG-Psfar
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 80
 ApplicationProtocol.HTTP
 -
 
-Smp-Std-Lis-Private
+Smp-Std-Lis-Private-Http
 
   --------------------------
 SMP
 Dev
 Tokyo
-Smp-Std-Lis-Private
+Smp-Std-Lis-Private-Https
 -
 開発疑似環境C面Private Subnet用ALB
 設定値
@@ -418,70 +358,15 @@ Smp-Std-Lis-Private
 ApplicationLoadBalancerから取得(Smp-Dev-ALB-Share-Private)
 証明書
 
-
+Smp-Dev-TG-Psfar
 -
 -
-
--
--
-ApplicationTargetGroupから取得()
 true
 443
 ApplicationProtocol.HTTPS
 SslPolicy.TLS13_EXT2
 
-Smp-Std-Lis-Private
+Smp-Std-Lis-Private-Https
 
   --------------------------
 
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  --------------------------
-
-  
