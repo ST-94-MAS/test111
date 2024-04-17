@@ -1,3 +1,15 @@
+Smp-Dev-ALB-Share-Ipublic
+Smp-Dev-ALB-AppPro-Ipublic
+Smp-Dev-ALB-Share-Private
+Smp-Dev-ALB-BioAuth-Private
+Smp-Dev-ALB-Public-1
+Smp-Dev-ALB-Public-2
+Smp-Dev-ALB-Public-3
+Smp-Dev-ALB-Share-Ipublic-Private
+
+
+
+
 負荷分散アルゴリズム (最小未処理リクエスト): ALBのターゲットグループで設定可能です。CDKでは、leastOutstandingRequestsを使用して負荷分散アルゴリズムを設定します。
 
 セッションアフィニティ (実施しない): ALBのターゲットグループ設定で管理されます。CDKでは、ターゲットグループのstickinessプロパティをfalseに設定することで、セッションアフィニティを無効にします。
