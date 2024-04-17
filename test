@@ -14,6 +14,10 @@ mTLSの設定: ALBのListener設定で管理します。CDKでは、Listenerのs
 
 
 
+SPM環境のELB
+aws-cdk-lib » aws-cdk-lib.aws_elasticloadbalancingv2 » ApplicationListenerRule
+listenerルールにおいてconditions?で各ALBに設定される値を確認したいです。
+
 
 
 
