@@ -1,0 +1,1137 @@
+import * as cdk from "aws-cdk-lib";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as iam from "aws-cdk-lib/aws-iam";
+import * as elbv2 from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import * as kms from "aws-cdk-lib/aws-kms";
+import { Construct } from "constructs";
+
+export interface CustomProps {
+  projectPrefix: string;
+  envPrefix: string;
+  vpcCider: string;
+  vpcMaxAZs: number;
+  vpcPublicSubnetCidrMask: number;
+  vpcPrivateSubnetCidrMask: number;
+}
+
+export class Network extends Construct {
+  constructor(scope: Construct, id: string, props: CustomProps) {
+    super(scope, id);
+
+  /*
+    ########################################################
+    ### S3取得 ###
+    ########################################################
+  */
+    const logarchSecurity = s3.Bucket.fromBucketName(
+      this,
+      "logarchSecurity",
+      `${props.projectPrefix}-${props.envPrefix}-s3-logarch-security`.toLowerCase(),
+    );
+    const AlbAccess = s3.Bucket.fromBucketName(
+      this,
+      "albaccess",
+      `${props.projectPrefix}-${props.envPrefix}-s3-log-albaccess`.toLowerCase(),
+    );
+    const NlbAccess = s3.Bucket.fromBucketName(
+      this,
+      "nlbaccess",
+      `${props.projectPrefix}-${props.envPrefix}-s3-log-nlbaccess`.toLowerCase(),
+    );
+
+  /*
+    ########################################################
+    ### VPC 関連定義 ###
+    ########################################################
+  */
+    const Vpc = new ec2.Vpc(this, "Vpc", {
+      vpcName: `${props.projectPrefix}-${props.envPrefix}-VPC-`,
+      ipAddresses: ec2.IpAddresses.cidr(props.vpcCider), // VPC Cider
+      maxAzs: props.vpcMaxAZs, // default 3
+      natGateways: 0,
+      subnetConfiguration: [
+        {
+          cidrMask: props.vpcPublicSubnetCidrMask, // PublicSunetのCidr指定
+          name: "Public",
+          subnetType: ec2.SubnetType.PUBLIC,
+        },
+        {
+          cidrMask: props.vpcPrivateSubnetCidrMask, // PrivateSunetのCidr指定
+          name: "Private",
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        },
+      ],
+      // flowLogs: {
+      //   FlowLogToMyFlowLogBucket: {
+      //     destination: ec2.FlowLogDestination.toS3(logarchSecurity),
+      //   },
+      // },
+    });
+    
+
+    Vpc.addGatewayEndpoint("S3GatewayEndpoint", {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+      subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
+    });
+
+    Vpc.addGatewayEndpoint("DynamDBGatewayEndpoint", {
+      service: ec2.GatewayVpcEndpointAwsService.DYNAMODB,
+      subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
+    });
+
+  /*
+    ########################################################
+    ### Security Group 関連定義 ###
+    ########################################################
+  */
+    const myVpcEndpointSg = new ec2.SecurityGroup(this, "VpcEndpointSG", {
+      vpc: Vpc,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-Vpc-Endpoint`,
+    });
+    cdk.Tags.of(myVpcEndpointSg).add(
+      "Name",
+      `${props.projectPrefix}-${props.envPrefix}-Sg-Vpc-Endpoint`,
+    );
+    
+    const AlbShareIpublicSg = new ec2.SecurityGroup(this, "AlbShareIpublicSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Share-Ipublic`,
+    });
+
+    const AlbAppProIpublicSg = new ec2.SecurityGroup(this, "AlbAppProIpublicSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-AppPro-Ipublic`,
+    });
+
+    const AlbSharePrivateSg = new ec2.SecurityGroup(this, "AlbSharePrivateSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Share-Private`,
+    });
+
+    const AlbBioAuthPrivateSg = new ec2.SecurityGroup(this, "AlbBioAuthPrivateSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-BioAuth-Private`,
+    });
+
+    const AlbPublic1Sg = new ec2.SecurityGroup(this, "AlbPublic1Sg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Public-1`,
+    });
+
+    const AlbPublic2Sg = new ec2.SecurityGroup(this, "AlbPublic2Sg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Public-2`,
+    });
+
+    const AlbPublic3Sg = new ec2.SecurityGroup(this, "AlbPublic3Sg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Public-3`,
+
+    const AlbShareIpublicPrivateSg = new ec2.SecurityGroup(this, "AlbShareIpublicPrivateSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-alb-Share-Ipublic-Private`,
+
+    const NlbSg = new ec2.SecurityGroup(this, "NlbSg", {
+      vpc: Vpc,
+      allowAllOutbound: true,
+      securityGroupName: `${props.projectPrefix}-${props.envPrefix}-Sg-nlb`,
+    });
+    
+  /*
+    ########################################################
+    ### ALB作成 ###
+    ########################################################
+  */
+  /*Ingress Public subnet用ALB*/
+    const AlbShareIpublic = new elbv2.ApplicationLoadBalancer(this, "AlbShareIpublic", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`,
+      securityGroup: AlbShareIpublicSg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbShareIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`); /*バケット*/
+    cdk.Tags.of(AlbShareIpublic).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`
+    );
+    
+    /*Ingress Public subnetアプリ処理受付用ALB*/
+    const AlbAppProIpublic = new elbv2.ApplicationLoadBalancer(this, "ALBAppProIpublic", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`,
+      securityGroup: AlbAppProIpublicSg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbAppProIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`); /*バケット*/
+    cdk.Tags.of(AlbAppProIpublic).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`
+    );
+    
+    /*Private Subnet用内部ALB*/
+    const AlbSharePrivate = new elbv2.ApplicationLoadBalancer(this, "AlbSharePrivate", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`,
+      securityGroup: AlbSharePrivateSg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbSharePrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`); /*バケット*/
+    cdk.Tags.of(AlbSharePrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`
+    );
+    
+    /*顔認証専用内部ALB*/
+    const AlbBioAuthPrivate= new elbv2.ApplicationLoadBalancer(this, "AlbBioAuthPrivate", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`,
+      securityGroup: AlbBioAuthPrivateSg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`
+    );
+
+    
+    /*開発疑似環境public Subnet用ALB-1*/
+    const AlbPublic1= new elbv2.ApplicationLoadBalancer(this, "AlbPublic1", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`,
+      securityGroup: AlbPublic1Sg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`
+    );
+
+    /*開発疑似環境public Subnet用ALB-2*/
+    const AlbPublic2= new elbv2.ApplicationLoadBalancer(this, "AlbPublic2", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`,
+      securityGroup: AlbPublic2Sg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`
+    );
+
+    /*開発疑似環境public Subnet用ALB-3*/
+    const AlbPublic3= new elbv2.ApplicationLoadBalancer(this, "AlbPublic3", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`,
+      securityGroup: AlbPublic3Sg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`
+    );
+
+    /*開発疑似環境Private Subnet用ALB*/
+    const AlbShareIpublicPrivate= new elbv2.ApplicationLoadBalancer(this, "AlbShareIpublicPrivate", {
+      vpc: Vpc,
+      // clientKeepAlive: /*デフォルト設定値*/
+      // crossZoneEnabled: /*デフォルト設定値*/
+      // deletionProtection: /*デフォルト設定値*/
+      // denyAllIgwTraffic: true, /*デフォルト設定値*/
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      // dropInvalidHeaderFields: false, /*デフォルト設定値*/
+      http2Enabled: true,
+      idleTimeout: elbv2.Duration.seconds(60),
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`,
+      securityGroup: AlbShareIpublicPrivateSg,
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`
+    );
+
+
+    /*ALBターゲットグループ*/
+     /*開発環境APDUコマンド処理結果転送*/
+    const AlbTgCrestf = new elbv2.ApplicationTargetGroup(this, "AlbTgCrestf", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        port: '8080',                        /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Crestf`,
+    });
+    cdk.Tags.of(AlbTgCrestf).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Crestf`);
+
+     /*開発環境アプリ処理受付*/
+    const AlbTgApprec = new elbv2.ApplicationTargetGroup(this, "AlbTgApprec", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        port: '8080',                        /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Apprec`,
+    });
+    cdk.Tags.of(AlbTgApprec).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Apprec`);
+
+     /*開発環境用apple処理受付（SP-Issuer）*/
+    const AlbTgSiarec = new elbv2.ApplicationTargetGroup(this, "AlbTgSiarec", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Siarec`,
+    });
+    cdk.Tags.of(AlbTgSiarec).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Siarec`);
+
+     /*開発環境用apple処理受付（SP-Broker）*/
+    const AlbTgSbarec = new elbv2.ApplicationTargetGroup(this, "AlbTgSbarec", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Sbarec`,
+    });
+    cdk.Tags.of(AlbTgSbarec).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Sbarec`);
+
+     /*開発環境用LCM*/
+    const AlbTgLcm = new elbv2.ApplicationTargetGroup(this, "AlbTgLcm", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Lcm`,
+    });
+    cdk.Tags.of(AlbTgLcm).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Lcm`);
+
+     /*開発環境用apple処理受付（SP-Issuer）*/
+    const AlbTgSiareq = new elbv2.ApplicationTargetGroup(this, "AlbTgSiareq", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Siareq`,
+    });
+    cdk.Tags.of(AlbTgSiareq).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Siareq`);
+
+     /*開発環境用apple処理受付（SP-Broker）*/
+    const AlbTgSbareq = new elbv2.ApplicationTargetGroup(this, "AlbTgSbareq", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Sbareq`,
+    });
+    cdk.Tags.of(AlbTgSbareq).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Sbareq`);
+
+    
+    const AlbTgBith = new elbv2.ApplicationTargetGroup(this, "AlbTgBith");
+     /*開発環境用顔認証*/
+    const AlbTgScareq = new elbv2.ApplicationTargetGroup(this, "AlbTgScareq", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Scareq`,
+    });
+    cdk.Tags.of(AlbTgScareq).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Scareq`);
+    
+     /*開発疑似環境用疑似マイナポータル*/
+    const AlbTgPsotp = new elbv2.ApplicationTargetGroup(this, "AlbTgPsotp", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psotp`,
+    });
+    cdk.Tags.of(AlbTgPsotp).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psotp`);
+
+     /*開発疑似環境用疑似appleサーバル*/
+    const AlbTgPsapps = new elbv2.ApplicationTargetGroup(this, "AlbTgPsapps", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psapps`,
+    });
+    cdk.Tags.of(AlbTgPsapps).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psapps`);
+
+     /*開発疑似環境用疑似OCSPレスポンダ*/
+    const AlbTgPsresp = new elbv2.ApplicationTargetGroup(this, "AlbTgPsresp", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psresp`,
+    });
+    cdk.Tags.of(AlbTgPsresp).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psresp`);
+
+     /*開発疑似環境用疑似顔認証*/
+    const AlbTgPsfar = new elbv2.ApplicationTargetGroup(this, "AlbTgPsfar", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psfar`,
+    });
+    cdk.Tags.of(AlbTgPsfar).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psfar`);
+    
+     /*開発疑似環境用疑似SP-TSM*/
+    const AlbTgPsspt = new elbv2.ApplicationTargetGroup(this, "AlbTgPsspt", {
+      vpc: vpc,
+      targetType: elbv2.TargetType.IP,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      port: 8080,
+      healthCheck: {
+        enabled: true,                       /*デフォルト設定値*/
+        interval: cdk.Duration.seconds(30),  /*デフォルト設定値*/
+        path: '/actuator/health',            /*デフォルト設定値*/
+        protocol: elbv2.Protocol.HTTP,       /*デフォルト設定値*/
+        timeout: cdk.Duration.seconds(5),    /*デフォルト設定値*/
+        healthyThresholdCount: 5,            /*デフォルト設定値*/
+        unhealthyThresholdCount: 2,          /*デフォルト設定値*/
+        healthyHttpCodes: '200'              /*デフォルト設定値*/
+      },
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psspt`,
+    });
+    cdk.Tags.of(AlbTgPsspt).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psspt`);
+    
+    /*ALB リスナー*/
+     /*Ingress Public subnet用ALB Httpリスナー*/
+     
+    const AlbLisIpublicHttp = new elbv2.ApplicationListener(this, "AlbLisIpublicHttp ", {
+      loadBalancer: AlbShareIpublic,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgCrestf])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisIpublicHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Http`);
+
+     // リスナールールの追加
+     AlbLisIpublicHttp.addRules("SmpDevLisRuleIpublicHttp1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgCrestf])]  // Smp-Dev-TG-Crestfに転送
+     });
+
+     AlbLisIpublicHttp.addRules("SmpDevLisRuleIpublicHttp2c", {
+       priority: 20,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Http-2c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgSiarec])]  // Smp-Dev-TG-Siarecに転送
+     });
+
+     AlbLisIpublicHttp.addRules("SmpDevLisRuleIpublicHttp3c", {
+       priority: 30,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Http-3c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgSbarec])]  // Smp-Dev-TG-Sbarecに転送
+     });
+
+     /*Ingress Public subnet用ALB Httpsリスナー*/
+    const AlbLisIpublicHttps = new elbv2.ApplicationListener(this, "AlbLisIpublicHttps ", {
+      loadBalancer: AlbShareIpublic,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgCrestf])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisIpublicHttps).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Apppublic-Https`);
+
+      // HTTPSリスナールールの追加
+      // リスナールール 1
+      AlbLisIpublicHttps.addRules("SmpDevLisRuleIpublicHttps1c", {
+        priority: 10,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-1c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgCrestf])] // Smp-Dev-TG-Crestfに転送
+      });
+
+      // リスナールール 2
+      AlbLisIpublicHttps.addRules("SmpDevLisRuleIpublicHttps2c", {
+        priority: 20,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-2c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSiarec])] // Smp-Dev-TG-Siarecに転送
+      });
+
+      // リスナールール 3
+      AlbLisIpublicHttps.addRules("SmpDevLisRuleIpublicHttps3c", {
+        priority: 30,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-3c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSbarec])] // Smp-Dev-TG-Sbarecに転送
+      });
+
+     /*Ingress Public subnet用アプリ処理受付用ALB Httpリスナー*/
+    const AlbLisApppublicHttp = new elbv2.ApplicationListener(this, "AlbLisApppublicHttp ", {
+      loadBalancer: AlbAppProIpublic,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgSiarec])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisApppublicHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Appublic-Http`);
+
+      // リスナールールの追加
+      AlbLisApppublicHttp.addRules("SmpDevLisRuleAppublicHttp", {
+        priority: 10,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Appublic-Http-1c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgApprec])] // Smp-Dev-TG-Apprecに転送
+      });
+
+
+     /*Ingress Public subnet用ALB Httpsリスナー*/
+    const AlbLisApppublicHttps = new elbv2.ApplicationListener(this, "AlbLisApppublicHttps ", {
+      loadBalancer: AlbAppProIpublic,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgSiarec])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisApppublicHttps).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Appublic-Https`);
+
+     // リスナールールの追加
+     AlbLisApppublicHttps.addRules("SmpDevLisRuleAppublicHttps", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Appublic-Https-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgApprec])] // Smp-Dev-TG-Apprecに転送
+     });
+
+     /*開発環境Private Subnet用内部ALB Httpリスナー*/
+    const AlbLisSharePrivateHttp = new elbv2.ApplicationListener(this, "AlbLisSharePrivateHttp ", {
+      loadBalancer: AlbSharePrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgSiareq])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisSharePrivateHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Private-Http`);
+
+      // リスナールールの追加
+      AlbLisSharePrivateHttp.addRules("SmpDevLisRulePrivateHttp1c", {
+        priority: 10,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Http-1c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgLcm])] // Smp-Dev-TG-Lcmに転送
+      });
+
+      AlbLisSharePrivateHttp.addRules("SmpDevLisRulePrivateHttp2c", {
+        priority: 20,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Http-2c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSiareq])] // Smp-Dev-TG-Siareqに転送
+      });
+
+      AlbLisSharePrivateHttp.addRules("SmpDevLisRulePrivateHttp3c", {
+        priority: 30,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Http-3c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSbareq])] // Smp-Dev-TG-Sbareqに転送
+      });
+
+
+     /*開発環境Private Subnet用内部ALB Httpsリスナー*/
+    const AlbLisSharePrivateHttps = new elbv2.ApplicationListener(this, "AlbLisSharePrivateHttps ", {
+      loadBalancer: AlbSharePrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgSiareq])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisSharePrivateHttps).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Private-Https`);
+
+      // リスナールールの追加
+      AlbLisSharePrivateHttps.addRules("SmpDevLisRulePrivateHttps1c", {
+        priority: 10,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-1c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
+      });
+
+      AlbLisSharePrivateHttps.addRules("SmpDevLisRulePrivateHttps2c", {
+        priority: 20,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-2c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSiareq])] // Smp-Dev-TG-Siareqに転送
+      });
+
+      AlbLisSharePrivateHttps.addRules("SmpDevLisRulePrivateHttps3c", {
+        priority: 30,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-3c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgSbareq])] // Smp-Dev-TG-Sbareqに転送
+      });
+
+
+     /*開発環境顔認証専用内部ALB Httpリスナー*/
+    const AlbLisBioAutheHttp = new elbv2.ApplicationListener(this, "AlbLisBioAuthHttp ", {
+      loadBalancer: AlbBioAuthPrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgScareq])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisBioAutheHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-BioAuth-Http`);
+
+     // リスナールールの追加
+     AlbLisBioAuthHttp.addRules("SmpDevLisRuleBioAuthHttp1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-BioAuth-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
+     });
+
+
+
+     /*開発環境顔認証専用内部ALB Httpsリスナー*/
+    const AlbLisBioAutheHttps = new elbv2.ApplicationListener(this, "AlbLisBioAutheHttps ", {
+      loadBalancer: AlbBioAuthPrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgScareq])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisBioAutheHttps).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-BioAuth-Https`);
+
+     // HTTPSリスナールールの追加
+     AlbLisBioAutheHttps.addRules("SmpDevLisRuleBioAuthHttps1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-BioAuth-Https-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
+     });
+
+     /*開発疑似環境public Subnet用ALB-1 Httpリスナー*/
+    const AlbLisPublic1Http = new elbv2.ApplicationListener(this, "AlbLisPublic1Http ", {
+      loadBalancer: AlbPublic1,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsotp])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPublic1Http).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-1-Http`);
+
+     // リスナールールの追加
+     AlbLisPublic1Http.addRules("SmpDevLisRulePublic1Http1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-1-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsotp])] // Smp-Dev-TG-Psotpに転送
+     });
+
+
+     /*開発疑似環境public Subnet用ALB-1 Httpsリスナー*/
+    const AlbLissPublic1Https = new elbv2.ApplicationListener(this, "AlbLissPublic1Https ", {
+      loadBalancer: AlbBioAuthPrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsotp])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLissPublic1Https).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-1-Https`);
+
+     // HTTPSリスナールールの追加
+     AlbLissPublic1Https.addRules("SmpDevLisRulePublic1Https1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-1-Https-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsotp])] // Smp-Dev-TG-Psappsに転送
+     });
+
+     /*開発疑似環境public Subnet用ALB-2 Httpリスナー*/
+    const AlbLisPublic2Http = new elbv2.ApplicationListener(this, "AlbLisPublic2Http ", {
+      loadBalancer: AlbPublic2,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsapps])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPublic2Http).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-2-Http`);
+
+     // リスナールールの追加
+     AlbLisPublic2Http.addRules("SmpDevLisRulePublic2Http1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-2-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsresp])] // Smp-Dev-TG-Psrespに転送
+     });
+
+     /*開発疑似環境public Subnet用ALB-2 Httpsリスナー*/
+    const AlbLisPublic2Https = new elbv2.ApplicationListener(this, "AlbLisPublic2Https ", {
+      loadBalancer: AlbPublic2,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsapps])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPublic2Https).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-2-Https`);
+
+     // HTTPSリスナールールの追加
+     AlbLisPublic2Https.addRules("SmpDevLisRulePublic2Https1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-2-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsresp])] //  Smp-Dev-TG-Psrespに転送
+     });
+
+     /*開発疑似環境public Subnet用ALB-3 Httpリスナー*/
+    const AlbLisPublic3Http = new elbv2.ApplicationListener(this, "AlbLisPublic3Http ", {
+      loadBalancer: AlbPublic3,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsresp])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPublic3Http).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-3-Http`);
+
+     // リスナールールの追加
+     AlbLisPublic3Http.addRules("SmpDevLisRulePublic3Http1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-3-Http-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsfar])] // Smp-Dev-TG-Psfarに転送
+     });
+
+
+     /*開発疑似環境public Subnet用ALB-3 Httpsリスナー*/
+    const AlbLisPublic3Https = new elbv2.ApplicationListener(this, "AlbLisPublic3Https ", {
+      loadBalancer: AlbPublic3,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsresp])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPublic3Https).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Public-3-Https`);
+
+     // HTTPSリスナールールの追加
+     AlbLisPublic3Https.addRules("SmpDevLisRulePublic3Https1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-3-Https-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsfar])] // Smp-Dev-TG-Psfarに転送
+     });
+
+
+     /*開発疑似環境Private Subnet用ALB Httpリスナー*/
+    const AlbLisPrivateHttp = new elbv2.ApplicationListener(this, "AlbLisPrivateHttp ", {
+      loadBalancer: AlbShareIpublicPrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsfar])],
+      open: true,
+      port: 80,
+      protocol: elbv2.ApplicationProtocol.HTTP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPrivateHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Private-Http`);
+
+      // リスナールールの追加
+      AlbLisPrivateHttp.addRules("SmpDevLisRulePrivateHttp1c", {
+        priority: 10,
+        conditions: [elbv2.ListenerCondition.pathPatterns(['/Smp-Dev-LisRule-Private-Http-1c/*'])], // 仮のpath
+        actions: [elbv2.ListenerAction.forward([props.AlbTgPsspt])] // Smp-Dev-TG-Pssptに転送
+      });
+
+
+     /*開発疑似環境Private Subnet用ALB Httpsリスナー*/
+    const AlbLisPrivateHttps = new elbv2.ApplicationListener(this, "AlbLisPrivateHttps ", {
+      loadBalancer: AlbShareIpublicPrivate,
+      // certificates /*設定不要*/
+      defaultActions: [elbv2.ListenerAction.forward([AlbTgPsfar])],
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(AlbLisPrivateHttps).add("Name",`${props.projectPrefix}-${props.envPrefix}-ALB-Lis-Private-Https`);
+
+     // HTTPSリスナールールの追加
+     AlbLisPrivateHttps.addRules("SmpDevLisRulePrivateHttps1c", {
+       priority: 10,
+       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-1c/*'])], // 仮のpath
+       actions: [elbv2.ListenerAction.forward([props.AlbTgPsspt])] // Smp-Dev-TG-Pssptに転送
+     });
+
+  /*
+    ########################################################
+    ### NLB作成 ###
+    ########################################################
+  */
+  /*NLB*/
+    const Nlb = new elbv2.NetworkLoadBalancer(this, "Nlb", {
+      vpc: Vpc,
+      // clientRoutingPolicy: /*デフォルト設定値*/
+      crossZoneEnabled: true, /*デフォルト設定値*/
+      deletionProtection: true, /*デフォルト設定値*/
+      // denyAllIgwTraffic: false, /*デフォルト設定値*/
+      // enforceSecurityGroupInboundRulesOnPrivateLinkTraffic: true, /*デフォルト設定値*/
+      internetFacing: false,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-NLB-Opemd-Private`,
+      securityGroups:[
+        NlbSg
+      ],
+      vpcSubnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        onePerAz: true
+      },
+    });
+    // アクセスログの設定
+    Nlb.logAccessLogs(NlbAccess, `nlb/${props.projectPrefix}-${props.envPrefix}-NLB-Opemd-Private`); /*バケットの設定*/
+    cdk.Tags.of(Nlb).add("Name", `${props.projectPrefix}-${props.envPrefix}-NLB-Opemd-Private`);     /*タグの設定*/
+    
+  /*NLB ターゲットグループ*/
+    // HTTPS用ターゲットグループ
+    const NlbTgPrivateHttps = new elbv2.NetworkTargetGroup(this, "NlbTgPrivateHttps", {
+      vpc: vpc,
+      port: 443,
+      protocol: elbv2.Protocol.TCP,
+      deregistrationDelay: Duration.seconds(300),
+      healthCheck: {
+        enabled: true,
+        interval: Duration.seconds(30),
+        path: '/actuator/health',
+        port: '9000',
+        protocol: elbv2.Protocol.HTTPS,
+        healthyThresholdCount: 3,
+        unhealthyThresholdCount: 2,
+        timeout: Duration.seconds(10),
+        healthyHttpCodes: '200'
+      },
+      proxyProtocolV2: false,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Private`
+    });
+    cdk.Tags.of(NlbTgPrivateHttp).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Private`);    // タグの追加
+
+    // HTTP用ターゲットグループ
+    const NlbTgPrivateHttp = new elbv2.NetworkTargetGroup(this, "NlbTgPrivateHttp", {
+      vpc: vpc,
+      port: 80,
+      protocol: elbv2.Protocol.TCP,
+      deregistrationDelay: Duration.seconds(300),
+      healthCheck: {
+        enabled: true,
+        interval: Duration.seconds(30),
+        path: '/actuator/health',
+        port: '9000',
+        protocol: elbv2.Protocol.HTTP,
+        healthyThresholdCount: 3,
+        unhealthyThresholdCount: 2,
+        timeout: Duration.seconds(10),
+        healthyHttpCodes: '200'
+      },
+      proxyProtocolV2: false,
+      targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Private`
+    });
+    cdk.Tags.of(NlbTgPrivateHttps).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Private`);    // タグの追加
+    
+  /*NLB Listener*/
+    /*HTTP用*/
+    const LisPrivateHttp = new elbv2.NetworkListener(this, "LisPrivateHttp", {
+      loadBalancer: Nlb,
+      port: 80,
+      // alpnPolicy: elbv2.AlpnPolicy.NONE, /*プロトコルにTLSを設定しないため設定不要*/
+      // certificates:  /*デフォルト設定値*/
+      // defaultAction：/*デフォルトターゲットグループを設定するため設定不要*/
+      defaultTargetGroups: [
+        NlbTgPrivateHttp,
+      ],
+      protocol: elbv2.Protocol.TCP,
+      // sslPolicy: /*デフォルト設定値*/
+    });
+    cdk.Tags.of(LisPrivateHttp).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-NLB-Lis-Private-Http`
+    );
+    
+    /*HTTPS用*/
+    const LisPrivateHttps = new elbv2.NetworkListener(this, "LisPrivateHttps", {
+      loadBalancer: Nlb,
+      port: 443,
+      // alpnPolicy: elbv2.AlpnPolicy.NONE, /*プロトコルにTLSを設定しないため設定不要*/
+      // certificates:  /*デフォルト設定値*/
+      // defaultAction：/*デフォルトターゲットグループを設定するため設定不要*/
+      defaultTargetGroups: [
+        NlbTgPrivateHttps,
+      ],
+      protocol: elbv2.Protocol.TCP,
+      sslPolicy: elbv2.SslPolicy.TLS13_EXT,
+    });
+    cdk.Tags.of(LisPrivateHttps).add(
+      "Name", 
+      `${props.projectPrefix}-${props.envPrefix}-NLB-Lis-Private-Https`
+    );
+
+  /*
+    ########################################################
+    ### VPC Endpoint作成 ###
+    ########################################################
+  */
+    // VPCにインタフェースエンドポイントの追加とSGの設定
+    const ifEndpointList: { [ifEndpoint: string]: string } = {
+      Logs: "com.amazonaws.ap-northeast-1.logs",
+      EcrApi: "com.amazonaws.ap-northeast-1.ecr.api",
+      EcrDkr: "com.amazonaws.ap-northeast-1.ecr.dkr",
+      Sqs: "com.amazonaws.ap-northeast-1.sqs",
+      Xray: "com.amazonaws.ap-northeast-1.xray",
+      Ssm: "com.amazonaws.ap-northeast-1.ssm",
+      SecretsManager: "com.amazonaws.ap-northeast-1.secretsmanager",
+    };
+    
+    for (const ifEndpoint of Object.keys(ifEndpointList)) {
+      Vpc.addInterfaceEndpoint(ifEndpoint + "Endpoint", {
+        service: {
+          name: ifEndpointList[ifEndpoint],
+          port: 443,
+        },
+        securityGroups: [myVpcEndpointSg],
+        open: true,
+      });
+    }
+  }
+}
