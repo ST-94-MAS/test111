@@ -633,13 +633,18 @@ export class Network extends Construct {
       targetGroupName: `${props.projectPrefix}-${props.envPrefix}-TG-Psspt`,
     });
     cdk.Tags.of(AlbTgPsspt).add("Name", `${props.projectPrefix}-${props.envPrefix}-TG-Psspt`);
-    
+
+    /*********************SSL証明書*********************/
+
+　　const certificateArn = 'arn:aws:acm:region:account-id:certificate/certificate-id';
+    const certificate = elbv2.ListenerCertificate.fromArn(certificateArn);
+
     /*********************ALB リスナー*********************/
 
      /*Ingress Public subnet用ALB Httpsリスナー*/
     const AlbLisIpublicHttps = new elbv2.ApplicationListener(this, "AlbLisIpublicHttps ", {
       loadBalancer: AlbShareIpublic,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgCrestf]),
       open: true,
       port: 443,
@@ -652,28 +657,28 @@ export class Network extends Construct {
       // リスナールール 1
       AlbLisIpublicHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRuleIpublicHttps1c", {
         priority: 10,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-1c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgCrestf])] // Smp-Dev-TG-Crestfに転送
       });
 
       // リスナールール 2
       AlbLisIpublicHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRuleIpublicHttps2c", {
         priority: 20,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-2c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgSiarec])] // Smp-Dev-TG-Siarecに転送
       });
 
       // リスナールール 3
       AlbLisIpublicHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRuleIpublicHttps3c", {
         priority: 30,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Ipublic-Htpps-3c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgSbarec])] // Smp-Dev-TG-Sbarecに転送
       });
 
      /*Ingress Public subnet用ALB Httpsリスナー*/
     const AlbLisApppublicHttps = new elbv2.ApplicationListener(this, "AlbLisApppublicHttps ", {
       loadBalancer: AlbAppProIpublic,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgSiarec]),
       open: true,
       port: 443,
@@ -685,14 +690,14 @@ export class Network extends Construct {
      // リスナールールの追加
      AlbLisApppublicHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRuleAppublicHttps", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Appublic-Https-1c/*'])], // 仮のpath
+     　conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgApprec])] // Smp-Dev-TG-Apprecに転送
      });
 
      /*開発環境Private Subnet用内部ALB Httpsリスナー*/
     const AlbLisSharePrivateHttps = new elbv2.ApplicationListener(this, "AlbLisSharePrivateHttps ", {
       loadBalancer: AlbSharePrivate,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgSiareq]),
       open: true,
       port: 443,
@@ -704,26 +709,26 @@ export class Network extends Construct {
       // リスナールールの追加
       AlbLisSharePrivateHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRulePrivateHttps1c", {
         priority: 10,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-1c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
       });
 
       AlbLisSharePrivateHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRulePrivateHttps2c", {
         priority: 20,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-2c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgSiareq])] // Smp-Dev-TG-Siareqに転送
       });
 
       AlbLisSharePrivateHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRulePrivateHttps3c", {
         priority: 30,
-        conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-3c/*'])], // 仮のpath
+        conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
         actions: [elbv2.ListenerAction.forward([props.AlbTgSbareq])] // Smp-Dev-TG-Sbareqに転送
       });
 
      /*開発環境顔認証専用内部ALB Httpsリスナー*/
     const AlbLisBioAutheHttps = new elbv2.ApplicationListener(this, "AlbLisBioAutheHttps ", {
       loadBalancer: AlbBioAuthPrivate,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgScareq]),
       open: true,
       port: 443,
@@ -735,14 +740,14 @@ export class Network extends Construct {
      // HTTPSリスナールールの追加
      AlbLisBioAutheHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRuleBioAuthHttps1c", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-BioAuth-Https-1c/*'])], // 仮のpath
+       conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
      });
 
      /*開発疑似環境public Subnet用ALB-1 Httpsリスナー*/
     const AlbLissPublic1Https = new elbv2.ApplicationListener(this, "AlbLissPublic1Https ", {
       loadBalancer: AlbBioAuthPrivate,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgPsotp]),
       open: true,
       port: 443,
@@ -754,14 +759,14 @@ export class Network extends Construct {
      // HTTPSリスナールールの追加
      AlbLissPublic1Https.addRules("${props.projectPrefix}${props.envPrefix}LisRulePublic1Https1c", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-1-Https-1c/*'])], // 仮のpath
+       conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgPsotp])] // Smp-Dev-TG-Psappsに転送
      });
 
      /*開発疑似環境public Subnet用ALB-2 Httpsリスナー*/
     const AlbLisPublic2Https = new elbv2.ApplicationListener(this, "AlbLisPublic2Https ", {
       loadBalancer: AlbSPublic2,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgPsapps]),
       open: true,
       port: 443,
@@ -773,14 +778,14 @@ export class Network extends Construct {
      // HTTPSリスナールールの追加
      AlbLisPublic2Https.addRules("${props.projectPrefix}${props.envPrefix}LisRulePublic2Https1c", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-2-Http-1c/*'])], // 仮のpath
+       conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgPsresp])] //  Smp-Dev-TG-Psrespに転送
      });
 
      /*開発疑似環境public Subnet用ALB-3 Httpsリスナー*/
     const AlbLisPublic3Https = new elbv2.ApplicationListener(this, "AlbLisPublic3Https ", {
       loadBalancer: AlbSPublic3,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgPsresp]),
       open: true,
       port: 443,
@@ -792,16 +797,14 @@ export class Network extends Construct {
      // HTTPSリスナールールの追加
      AlbLisPublic3Https.addRules("${props.projectPrefix}${props.envPrefix}LisRulePublic3Https1c", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Public-3-Https-1c/*'])], // 仮のpath
+       conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgPsfar])] // Smp-Dev-TG-Psfarに転送
      });
-
-
 
      /*開発疑似環境Private Subnet用ALB Httpsリスナー*/
     const AlbLisPrivateHttps = new elbv2.ApplicationListener(this, "AlbLisPrivateHttps ", {
       loadBalancer: AlbShareIpublicPrivate,
-      // certificates /*設定不要*/
+      certificates: [certificate],  // SSL証明書の追加
       defaultAction: elbv2.ListenerAction.forward([AlbTgPsfar]),
       open: true,
       port: 443,
@@ -813,7 +816,7 @@ export class Network extends Construct {
      // HTTPSリスナールールの追加
      AlbLisPrivateHttps.addRules("${props.projectPrefix}${props.envPrefix}LisRulePrivateHttps1c", {
        priority: 10,
-       conditions: [elbv2.ListenerCondition.pathPatterns(['/LisRule-Private-Https-1c/*'])], // 仮のpath
+       conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.projectPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
        actions: [elbv2.ListenerAction.forward([props.AlbTgPsspt])] // Smp-Dev-TG-Pssptに転送
      });
 
