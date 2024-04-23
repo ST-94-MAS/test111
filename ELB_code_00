@@ -171,7 +171,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`,
       securityGroup: AlbShareIpublicSg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.PUBLIC_ISOLATED, //subnet
       },
     });
     AlbShareIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`); /*バケット*/
@@ -196,7 +196,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`,
       securityGroup: AlbAppProIpublicSg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.PUBLIC_ISOLATED, //subnet
       },
     });
     AlbAppProIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`); /*バケット*/
@@ -221,7 +221,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`,
       securityGroup: AlbSharePrivateSg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED, //subnet
       },
     });
     AlbSharePrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`); /*バケット*/
@@ -246,7 +246,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`,
       securityGroup: AlbBioAuthPrivateSg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED, //subnet
       },
     });
     AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
@@ -272,7 +272,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`,
       securityGroup: AlbSPublic1Sg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
     AlbSPublic1.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`); /*バケット*/
@@ -297,7 +297,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`,
       securityGroup: AlbSPublic2Sg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
     AlbSPublic2.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`); /*バケット*/
@@ -322,7 +322,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`,
       securityGroup: AlbSPublic3Sg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.SPUBLIC_ISOLATED,ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
     AlbSPublic3.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`); /*バケット*/
@@ -347,7 +347,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`,
       securityGroup: AlbShareIpublicPrivateSg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        subnetType: ec2.SubnetType.SPRIVATE_ISOLATED, //疑似環境subnet
       },
     });
     AlbShareSPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`); /*バケット*/
