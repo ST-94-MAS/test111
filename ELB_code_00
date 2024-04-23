@@ -64,14 +64,8 @@ export class Network extends Construct {
           subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
         },
       ],
-      // flowLogs: {
-      //   FlowLogToMyFlowLogBucket: {
-      //     destination: ec2.FlowLogDestination.toS3(logarchSecurity),
-      //   },
-      // },
     });
     
-
     ELBVpc.addGatewayEndpoint("S3GatewayEndpoint", {
       service: ec2.GatewayVpcEndpointAwsService.S3,
       subnets: [{ subnetType: ec2.SubnetType.PRIVATE_ISOLATED }],
@@ -174,7 +168,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.PUBLIC_ISOLATED, //subnet
       },
     });
-    AlbShareIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbShareIpublic.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`); /*バケット*/
     cdk.Tags.of(AlbShareIpublic).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic`
@@ -199,7 +194,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.PUBLIC_ISOLATED, //subnet
       },
     });
-    AlbAppProIpublic.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbAppProIpublic.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`); /*バケット*/
     cdk.Tags.of(AlbAppProIpublic).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`
@@ -224,7 +220,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.PRIVATE_ISOLATED, //subnet
       },
     });
-    AlbSharePrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbSharePrivate.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`); /*バケット*/
     cdk.Tags.of(AlbSharePrivate).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Private`
@@ -249,7 +246,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.PRIVATE_ISOLATED, //subnet
       },
     });
-    AlbBioAuthPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbBioAuthPrivate.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
     cdk.Tags.of(AlbBioAuthPrivate).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-BioAuth-Private`
@@ -275,7 +273,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
-    AlbSPublic1.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbSPublic1.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`); /*バケット*/
     cdk.Tags.of(AlbSPublic1).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Public-1`
@@ -300,7 +299,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
-    AlbSPublic2.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbSPublic2.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`); /*バケット*/
     cdk.Tags.of(AlbSPublic2).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Public-2`
@@ -325,7 +325,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.SPUBLIC_ISOLATED,ec2.SubnetType.SPUBLIC_ISOLATED, //疑似環境subnet
       },
     });
-    AlbSPublic3.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbSPublic3.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`); /*バケット*/
     cdk.Tags.of(AlbSPublic3).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Public-3`
@@ -350,7 +351,8 @@ export class Network extends Construct {
         subnetType: ec2.SubnetType.SPRIVATE_ISOLATED, //疑似環境subnet
       },
     });
-    AlbShareSPrivate.logAccessLogs(NlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`); /*バケット*/
+   /*アクセスログの設定*/
+    AlbShareSPrivate.logAccessLogs(AlbAccess, `alb/${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`); /*バケット*/
     cdk.Tags.of(AlbShareSPrivate).add(
       "Name", 
       `${props.projectPrefix}-${props.envPrefix}-ALB-Share-Ipublic-Private`
