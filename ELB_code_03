@@ -16,6 +16,8 @@ export interface CustomProps {
   vpcMaxAZs: number;
   vpcPublicSubnetCidrMask: number;
   vpcPrivateSubnetCidrMask: number;
+  vpcSpublicSubnetCidrMask: number;
+  vpcSprivateSubnetCidrMask: number;
 }
 
 export class Network extends Construct {
@@ -76,12 +78,12 @@ export class Network extends Construct {
         {
           cidrMask: props.vpcSpublicSubnetCidrMask, // 疑似環境PublicSunetのCidr指定
           name: "Spublic",
-          subnetType: ec2.SubnetType.SPUBLIC,
+          subnetType: ec2.SubnetType.PUBLIC,
         },
         {
           cidrMask: props.vpcSprivateSubnetCidrMask, // 疑似環境PrivateSunetのCidr指定
           name: "Sprivate",
-          subnetType: ec2.SubnetType.SPRIVATE_ISOLATED,
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
         },
       ],
     });
@@ -138,25 +140,25 @@ export class Network extends Construct {
     const AlbSPublic1Sg = new ec2.SecurityGroup(this, "AlbSPublic1Sg", {
       vpc: ELBSVpc,
       allowAllOutbound: true,
-      securityGroupName: `${props.projectSPrefix}-${props.envPrefix}-Sg-alb-Public-1`,
+      securityGroupName: `${props.projectPrefix}-${props.envSPrefix}-Sg-alb-Public-1`,
     });
 
     const AlbSPublic2Sg = new ec2.SecurityGroup(this, "AlbSPublic2Sg", {
       vpc: ELBSVpc,
       allowAllOutbound: true,
-      securityGroupName: `${props.projectSPrefix}-${props.envPrefix}-Sg-alb-Public-2`,
+      securityGroupName: `${props.projectPrefix}-${props.envSPrefix}-Sg-alb-Public-2`,
     });
 
     const AlbSPublic3Sg = new ec2.SecurityGroup(this, "AlbSPublic3Sg", {
       vpc: ELBSVpc,
       allowAllOutbound: true,
-      securityGroupName: `${props.projectSPrefix}-${props.envPrefix}-Sg-alb-Public-3`,
+      securityGroupName: `${props.projectPrefix}-${props.envSPrefix}-Sg-alb-Public-3`,
     });
 
     const AlbShareIpublicPrivateSg = new ec2.SecurityGroup(this, "AlbShareIpublicPrivateSg", {
       vpc: ELBSVpc,
       allowAllOutbound: true,
-      securityGroupName: `${props.projectSPrefix}-${props.envPrefix}-Sg-alb-Share-Ipublic-Private`,
+      securityGroupName: `${props.projectPrefix}-${props.envSPrefix}-Sg-alb-Share-Ipublic-Private`,
     });
 
     const NlbSg = new ec2.SecurityGroup(this, "NlbSg", {
@@ -291,7 +293,7 @@ export class Network extends Construct {
       loadBalancerName: `${props.projectPrefix}-${props.envSPrefix}-ALB-Public-1`,
       securityGroup: AlbSPublic1Sg,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.SPUBLIC, //疑似環境subnet
+        subnetType: ec2.SubnetType.PUBLIC, //疑似環境subnet
       },
     });
    /*アクセスログの設定*/
