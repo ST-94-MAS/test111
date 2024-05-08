@@ -1,0 +1,60 @@
+
+
+複数のApplication Load Balancers（ALB）を設定し、それぞれに異なるSSL証明書を割り当てるためのAWS CDKのコード例を以下に示します。この例では、すでに存在する証明書A、証明書B、証明書CをそれぞれALB1、ALB2、ALB3に割り当てます。TypeScriptを使用しています。
+
+```typescript
+import * as cdk from '@aws-cdk/core';
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as acm from '@aws-cdk/aws-certificatemanager';
+import * as ec2 from '@aws-cdk/aws-ec2';
+
+class MultipleALBStack extends cdk.Stack {
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    // VPCを定義
+    const vpc = new ec2.Vpc(this, 'MyVPC');
+
+    // 証明書のARNを定義
+    const certificateArnA = 'arn:aws:acm:region:account-id:certificate/certificate-id-A';
+    const certificateArnB = 'arn:aws:acm:region:account-id:certificate/certificate-id-B';
+    const certificateArnC = 'arn:aws:acm:region:account-id:certificate/certificate-id-C';
+
+    // 各証明書を取得
+    const certificateA = acm.Certificate.fromCertificateArn(this, 'CertificateA', certificateArnA);
+    const certificateB = acm.Certificate.fromCertificateArn(this, 'CertificateB', certificateArnB);
+    const certificateC = acm.Certificate.fromCertificateArn(this, 'CertificateC', certificateArnC);
+
+    // ALB1の作成と証明書Aの割り当て
+    const alb1 = new elbv2.ApplicationLoadBalancer(this, 'ALB1', { vpc, internetFacing: true });
+    const listener1 = alb1.addListener('Listener1', {
+      port: 443,
+      certificates: [certificateA]
+    });
+
+    // ALB2の作成と証明書Bの割り当て
+    const alb2 = new elbv2.ApplicationLoadBalancer(this, 'ALB2', { vpc, internetFacing: true });
+    const listener2 = alb2.addListener('Listener2', {
+      port: 443,
+      certificates: [certificateB]
+    });
+
+    // ALB3の作成と証明書Cの割り当て
+    const alb3 = new elbv2.ApplicationLoadBalancer(this, 'ALB3', { vpc, internetFacing: true });
+    const listener3 = alb3.addListener('Listener3', {
+      port: 443,
+      certificates: [certificateC]
+    });
+
+    // ターゲットグループとルート設定はここに追記
+    // 例: listener1.addTargets('Target1', { port: 80, targets: [...] });
+  }
+}
+
+const app = new cdk.App();
+new MultipleALBStack(app, 'MultipleALBStack', {
+  env: { region: 'us-west-2' } // 適切なリージョンを設定してください
+});
+```
+
+このコードは、各ALBに対して異なるリスナーを設定し、それぞれのリスナーに異なるSSL証明書を割り当てる方法を示しています。ターゲットグループやルート設定は、実際のアプリケーションの要件に応じて追加してください。v
