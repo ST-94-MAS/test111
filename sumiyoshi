@@ -1,4 +1,23 @@
   */
+  /*Ingress Public subnet用ALB*/
+    const AlbShareIpublic = new elbv2.ApplicationLoadBalancer(this, "AlbShareIpublic", {
+      vpc: props.vpc,
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      http2Enabled: true,
+      idleTimeout: cdk.Duration.seconds(60),
+      internetFacing: true,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Ipublic`,
+      securityGroup: AlbShareIpublicSg,
+      vpcSubnets: props.ingressPublicSubnets,
+    });
+   /*アクセスログの設定*/
+    AlbShareIpublic.logAccessLogs(props.logAlbAccess, `alb/${props.systemPrefix}-${props.envPrefix}-ALB-Share-Ipublic`); /*バケット*/
+    cdk.Tags.of(AlbShareIpublic).add(
+      "Name", 
+      `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Ipublic`
+    );
+
      /*Ingress Public subnet用ALB Httpsリスナー*/
     const AlbLisIpublicHttps = new elbv2.ApplicationListener(this, "AlbLisIpublicHttps ", {
       loadBalancer: AlbShareIpublic,
@@ -10,11 +29,3 @@
     });
     cdk.Tags.of(AlbLisIpublicHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Https`);
 
-    // Listenerのデフォルトルールを設定
-    myAlbShareIpublic.addListener("AlbShareIpublicListener", {
-      open: true,
-      port: 80,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-      defaultAction: elbv2.ListenerAction.fixedResponse(200),
-    });
-    
