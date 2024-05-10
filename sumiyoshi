@@ -1,39 +1,44 @@
-    /*顔認証専用内部ALB*/
-    const AlbBioAuthPrivate= new elbv2.ApplicationLoadBalancer(this, "AlbBioAuthPrivate", {
+    /*開発疑似環境public Subnet用ALB-1*/
+    const AlbSPublic1= new elbv2.ApplicationLoadBalancer(this, "AlbSPublic1", {
       vpc: props.vpc,
       desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
       http2Enabled: true,
       idleTimeout: cdk.Duration.seconds(60),
       internetFacing: true,
       ipAddressType: elbv2.IpAddressType.IPV4,
-      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`,
-      securityGroup: AlbBioAuthPrivateSg,
-      vpcSubnets: props.privateSubnets,
+      loadBalancerName: `${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-1`,
+      securityGroup: AlbSPublic1Sg,
+      vpcSubnets: props.ingressPublicSubnets,
     });
    /*アクセスログの設定*/
-    AlbBioAuthPrivate.logAccessLogs(props.logAlbAccess, `alb/${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
-    cdk.Tags.of(AlbBioAuthPrivate).add(
+    AlbSPublic1.logAccessLogs(AlbAccess, `alb/${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-1`); /*バケット*/
+    cdk.Tags.of(AlbSPublic1).add(
       "Name", 
-      `${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`
+      `${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-1`
     );
 
 上記コードにaddlistnerを使用してコードを追記して
+     /*開発疑似環境public Subnet用ALB-1 Httpsリスナー*/
+    const AlbLissPublic1Https = new elbv2.ApplicationListener(this, "AlbLissPublic1Https ", {
+      loadBalancer: AlbBioAuthPrivate,
+      certificates: [certificateotpstb],  // SSL証明書の追加
+      defaultAction: elbv2.ListenerAction.forward([AlbTgPsotp]),
+      open: true,
+      port: 443,
+      protocol: elbv2.ApplicationProtocol.HTTPS,
+    });
+    cdk.Tags.of(AlbLissPublic1Https).add("Name",`${props.systemSPrefix}-${props.envSPrefix}-ALB-Lis-Public-1-Https`);
 
-//AlbBioAuthPrivate.addListener("AlbLisBioAutheHttps", {
-//  //certificates: [certificateasvsmp],
-//  defaultAction: elbv2.ListenerAction.forward([props.AlbTgScareq]),
-//  open: true,
-//  port: 80, // HTTPSリスナーと記載されているが、ポートが80に設定されているため、443に変更する必要がある場合は調整してください
-//  protocol: elbv2.ApplicationProtocol.HTTP, // HTTPSを使用する場合は、このプロトコルをHTTPSに変更してください
-//});
-//
-// タグの追加
-//cdk.Tags.of(AlbLisBioAutheHttps).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-BioAuth-Https`);
-//
-//// HTTPSリスナールールの追加
-//new elbv2.ApplicationListenerRule(this, "LisRuleBioAuthHttps1c", {
-//  listener: AlbLisBioAutheHttps,
-//  priority: 10,
-//  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
-//  action: elbv2.ListenerAction.forward([props.AlbTgScareq]) // Smp-Dev-TG-Scareqに転送
-//});
+     // HTTPSリスナールールの追加
+    // AlbLissPublic1Https.addRules("${props.systemSPrefix}${props.envSPrefix}LisRulePublic1Https1c", {
+    //   priority: 10,
+    //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
+    //   actions: [elbv2.ListenerAction.forward([AlbTgPsotp])] // Smp-Dev-TG-Psappsに転送
+    // });
+     
+    const myLisRulePublic1Https1c = new elbv2.ApplicationListenerRule(this, "LisRulePublic1Https1c",{
+      listener:  AlbLissPublic1Https,
+      priority: 10,
+      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+      action: elbv2.ListenerAction.forward([AlbTgPsotp]) // Smp-Dev-TG-Psappsに転送
+    });   
