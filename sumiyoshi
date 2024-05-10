@@ -19,26 +19,24 @@
 
 上記コードにaddlistnerを使用してコードを追記して
 
-     /*Ingress Public subnet用ALB Httpsリスナー*/
-    const AlbLisApppublicHttps = new elbv2.ApplicationListener(this, "AlbLisApppublicHttps ", {
-      loadBalancer: AlbAppProIpublic,
-      certificates: [props.appsmp],  // SSL証明書の追加
-      defaultAction: elbv2.ListenerAction.forward([AlbTgSiarec]),
-      open: true,
-      port: 443,
-      protocol: elbv2.ApplicationProtocol.HTTPS,
-    });
-    cdk.Tags.of(AlbLisApppublicHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Appublic-Https`);
+ // アクセスログの設定
+AlbAppProIpublic.logAccessLogs(props.logAlbAccess, `alb/${props.systemPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`);
+cdk.Tags.of(AlbAppProIpublic).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-AppPro-Ipublic`);
 
-     // リスナールールの追加
-    // AlbLisApppublicHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRuleAppublicHttps", {
-    //   priority: 10,
-    // 　conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-    //   actions: [elbv2.ListenerAction.forward([AlbTgApprec])] // Smp-Dev-TG-Apprecに転送
-    // });
-    const myLisRuleAppublicHttps = new elbv2.ApplicationListenerRule(this, "LisRuleAppublicHttps",{
-      listener:  AlbLisApppublicHttps,
-      priority: 10,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgApprec]) // Smp-Dev-TG-Apprecに転送
-    });  
+// HTTPSリスナーを直接追加
+const AlbLisApppublicHttps = AlbAppProIpublic.addListener("AlbLisApppublicHttps", {
+  certificates: [props.appsmp], // SSL証明書の追加
+  defaultAction: elbv2.ListenerAction.forward([props.AlbTgSiarec]),
+  open: true,
+  port: 443,
+  protocol: elbv2.ApplicationProtocol.HTTPS,
+});
+cdk.Tags.of(AlbLisApppublicHttps).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Appublic-Https`);
+
+// リスナールールの追加
+new elbv2.ApplicationListenerRule(this, "LisRuleAppublicHttps", {
+  listener: AlbLisApppublicHttps,
+  priority: 10,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgApprec]) // Smp-Dev-TG-Apprecに転送
+});
