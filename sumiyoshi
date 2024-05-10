@@ -19,53 +19,38 @@
 
 上記コードにaddlistnerを使用してコードを追記して
 
-     /*開発環境Private Subnet用内部ALB Httpsリスナー*/
-    const AlbLisSharePrivateHttps = new elbv2.ApplicationListener(this, "AlbLisSharePrivateHttps ", {
-      loadBalancer: AlbSharePrivate,
-      //certificates: [certificateasvsmp],  // SSL証明書の追加
-      defaultAction: elbv2.ListenerAction.forward([AlbTgSiareq]),
-      open: true,
-      port: 80,
-      protocol: elbv2.ApplicationProtocol.HTTP,
-    });
-    cdk.Tags.of(AlbLisSharePrivateHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Private-Https`);
+ // 開発環境Private Subnet用内部ALB Httpリスナーを追加
+const AlbLisSharePrivateHttps = AlbSharePrivate.addListener("AlbLisSharePrivateHttps", {
+  // certificates: [certificateasvsmp], // この例ではHTTPSではなくHTTPリスナーなので証明書はコメントアウト
+  defaultAction: elbv2.ListenerAction.forward([props.AlbTgSiareq]),
+  open: true,
+  port: 80, // HTTPポート80
+  protocol: elbv2.ApplicationProtocol.HTTP,
+});
 
-      // リスナールールの追加
-      // AlbLisSharePrivateHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRulePrivateHttps1c", {
-      //   priority: 10,
-      //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-      //   actions: [elbv2.ListenerAction.forward([AlbTgSbarec])] // Smp-Dev-TG-Scareqに転送
-      // });
-      
-    const myLisRulePrivateHttps1c = new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps1c",{
-      listener:  AlbLisSharePrivateHttps,
-      priority: 10,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgSbarec]) // Smp-Dev-TG-Scareqに転送
-    });   
+// タグの追加
+cdk.Tags.of(AlbLisSharePrivateHttps).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Private-Https`);
 
-      // AlbLisSharePrivateHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRulePrivateHttps2c", {
-      //   priority: 20,
-      //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-      //   actions: [elbv2.ListenerAction.forward([AlbTgLcm])] // Smp-Dev-TG-Siareqに転送
-      // });
-      
-    const myLisRulePrivateHttps2c = new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps2c",{
-      listener:  AlbLisSharePrivateHttps,
-      priority: 20,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgLcm]) // Smp-Dev-TG-Siareqに転送
-    });   
+// リスナールール 1の追加
+new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps1c", {
+  listener: AlbLisSharePrivateHttps,
+  priority: 10,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgSbarec])
+});
 
-      // AlbLisSharePrivateHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRulePrivateHttps3c", {
-      //   priority: 30,
-      //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-      //   actions: [elbv2.ListenerAction.forward([AlbTgSiareq])] // Smp-Dev-TG-Sbareqに転送
-      // });
-      
-    const myLisRulePrivateHttps3c = new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps3c",{
-      listener:  AlbLisSharePrivateHttps,
-      priority: 30,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgSiareq]) // Smp-Dev-TG-Sbareqに転送
-    });   
+// リスナールール 2の追加
+new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps2c", {
+  listener: AlbLisSharePrivateHttps,
+  priority: 20,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgLcm])
+});
+
+// リスナールール 3の追加
+new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps3c", {
+  listener: AlbLisSharePrivateHttps,
+  priority: 30,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgSiareq])
+});
