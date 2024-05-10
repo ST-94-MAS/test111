@@ -1,39 +1,59 @@
-    /*開発疑似環境public Subnet用ALB-3*/
-    const AlbSPublic3= new elbv2.ApplicationLoadBalancer(this, "AlbSPublic3", {
+    /*開発疑似環境Private Subnet用ALB*/
+    const AlbShareSPrivate= new elbv2.ApplicationLoadBalancer(this, "AlbShareSPrivate", {
       vpc: props.vpc,
       desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
       http2Enabled: true,
       idleTimeout: cdk.Duration.seconds(60),
       internetFacing: true,
       ipAddressType: elbv2.IpAddressType.IPV4,
-      loadBalancerName: `${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-3`,
-      securityGroup: AlbSPublic3Sg,
-      vpcSubnets: props.ingressPublicSubnets,
+      loadBalancerName: `${props.systemSPrefix}-${props.envSPrefix}-ALB-Share-Private`,
+      securityGroup: AlbShareIpublicPrivateSg,
+      vpcSubnets: props.privateSubnets,
     });
    /*アクセスログの設定*/
-    AlbSPublic3.logAccessLogs(AlbAccess, `alb/${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-3`); /*バケット*/
-    cdk.Tags.of(AlbSPublic3).add(
+    AlbShareSPrivate.logAccessLogs(AlbAccess, `alb/${props.systemSPrefix}-${props.envSPrefix}-ALB-Share-Private`); /*バケット*/
+    cdk.Tags.of(AlbShareSPrivate).add(
       "Name", 
-      `${props.systemSPrefix}-${props.envSPrefix}-ALB-Public-3`
+      `${props.systemSPrefix}-${props.envSPrefix}-ALB-Share-Private`
     );
 
 上記コードにaddlistnerを使用してコードを追記して
-// ALBにHTTPSリスナーを直接追加
-const AlbLisPublic3Https = AlbSPublic3.addListener("AlbLisPublic3Https", {
-  certificates: [certificateresstb], // SSL証明書の追加
-  defaultAction: elbv2.ListenerAction.forward([AlbTgPsresp]),
-  open: true,
-  port: 443,
-  protocol: elbv2.ApplicationProtocol.HTTPS,
-});
+    // /*開発疑似環境Private Subnet用ALB Httpsリスナー*/
+    // const AlbLisPrivateHttps = new elbv2.ApplicationListener(this, "AlbLisPrivateHttps ", {
+    //   loadBalancer: AlbShareSPrivate,
+    //   //certificates: [certificateresstb],  // SSL証明書の追加
+    //   defaultAction: elbv2.ListenerAction.forward([AlbTgPsfar]),
+    //   open: true,
+    //   port: 80,
+    //   protocol: elbv2.ApplicationProtocol.HTTPS,
+    // });
+    // cdk.Tags.of(AlbLisPrivateHttps).add("Name",`${props.systemSPrefix}-${props.envSPrefix}-ALB-Lis-Private-Https`);
 
-// リスナーにタグを追加
-cdk.Tags.of(AlbLisPublic3Https).add("Name", `${props.systemSPrefix}-${props.envSPrefix}-ALB-Lis-Public-3-Https`);
+    // // HTTPSリスナールールの追加
+    //   // リスナールール 1
+    // //   AlbLisPrivateHttps.addRules("${props.systemSPrefix}${props.envSPrefix}LisRulePrivateHttps1c", {
+    // //   priority: 10,
+    // //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
+    // //   actions: [elbv2.ListenerAction.forward([AlbTgPsfar])] // Smp-Dev-TG-Pssptに転送
+    // // });
+    
+    // const myLisRuleStbPrivateHttps1c = new elbv2.ApplicationListenerRule(this, "LisRuleStbPrivateHttps1c",{
+    //   listener:  AlbLisPrivateHttps,
+    //   priority: 10,
+    //   conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+    //   action: elbv2.ListenerAction.forward([AlbTgPsfar]) // Smp-Dev-TG-Pssptに転送
+    // });  
 
-// HTTPSリスナールールを追加
-new elbv2.ApplicationListenerRule(this, "LisRulePublic3Https1c", {
-  listener: AlbLisPublic3Https,
-  priority: 10,
-  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp`])],
-  action: elbv2.ListenerAction.forward([AlbTgPsresp]) // トラフィックをSmp-Dev-TG-Psfarに転送
-});
+    //   // リスナールール 2
+    // //   AlbLisPrivateHttps.addRules("${props.systemSPrefix}${props.envSPrefix}LisRulePrivateHttps1c", {
+    // //   priority: 20,
+    // //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
+    // //   actions: [elbv2.ListenerAction.forward([AlbTgPsspt])] // Smp-Dev-TG-Pssptに転送
+    // // });
+     
+    // const myLisRuleStbPrivateHttps2c = new elbv2.ApplicationListenerRule(this, "LisRuleStbPrivateHttps2c",{
+    //   listener:  AlbLisPrivateHttps,
+    //   priority: 20,
+    //   conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+    //   action: elbv2.ListenerAction.forward([AlbTgPsspt]) // Smp-Dev-TG-Pssptに転送
+    // }); 
