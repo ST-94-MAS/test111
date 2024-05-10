@@ -18,35 +18,29 @@
       `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Ipublic`
     );
 
-     /*Ingress Public subnet用ALB Httpsリスナー*/
-    const AlbLisIpublicHttps = new elbv2.ApplicationListener(this, "AlbLisIpublicHttps ", {
-      loadBalancer: AlbShareIpublic,
-      certificates: [props.asvsmp],  // SSL証明書の追加
-      defaultAction: elbv2.ListenerAction.forward([AlbTgCrestf]),
-      open: true,
-      port: 443,
-      protocol: elbv2.ApplicationProtocol.HTTPS,
-    });
-    cdk.Tags.of(AlbLisIpublicHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Https`);
+// HTTPSリスナーを直接追加
+AlbShareIpublic.addListener("AlbLisIpublicHttps", {
+  certificates: [props.asvsmp], // SSL証明書の追加
+  defaultAction: elbv2.ListenerAction.forward([props.AlbTgCrestf]),
+  open: true,
+  port: 443,
+  protocol: elbv2.ApplicationProtocol.HTTPS,
+}).addTags({
+  "Name": `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Https`
+});
 
-      // HTTPSリスナールールの追加
-      // リスナールール 1
-    const myLisRuleIpublicHttps1c = new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps1c",{
-      listener:  AlbLisIpublicHttps,
-      priority: 10,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgCrestf]) // Smp-Dev-TG-Crestfに転送
-    });
+// リスナールール 1の追加
+new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps1c", {
+  listener: AlbLisIpublicHttps,
+  priority: 10,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgCrestf])
+});
 
-      // リスナールール 2
-      // AlbLisIpublicHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRuleIpublicHttps2c", {
-      //   priority: 20,
-      //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-      //   actions: [elbv2.ListenerAction.forward([AlbTgSiarec])] // Smp-Dev-TG-Siarecに転送
-      // });
-    const myLisRuleIpublicHttps2c = new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps2c",{
-      listener:  AlbLisIpublicHttps,
-      priority: 20,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgSiarec]) // Smp-Dev-TG-Siarecに転送
-    });  
+// リスナールール 2の追加
+new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps2c", {
+  listener: AlbLisIpublicHttps,
+  priority: 20,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([props.AlbTgSiarec])
+});
