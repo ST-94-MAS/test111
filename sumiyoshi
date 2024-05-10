@@ -18,27 +18,22 @@
     );
 
 上記コードにaddlistnerを使用してコードを追記して
-     /*開発疑似環境public Subnet用ALB-2 Httpsリスナー*/
-    const AlbLisPublic2Https = new elbv2.ApplicationListener(this, "AlbLisPublic2Https ", {
-      loadBalancer: AlbSPublic2,
-      certificates: [certificateasvstb],  // SSL証明書の追加
-      defaultAction: elbv2.ListenerAction.forward([AlbTgPsapps]),
-      open: true,
-      port: 443,
-      protocol: elbv2.ApplicationProtocol.HTTPS,
-    });
-    cdk.Tags.of(AlbLisPublic2Https).add("Name",`${props.systemSPrefix}-${props.envSPrefix}-ALB-Lis-Public-2-Https`);
+// 開発疑似環境public Subnet用ALB-2 HTTPSリスナーの追加
+const AlbLisPublic2Https = AlbSPublic2.addListener("AlbLisPublic2Https", {
+  certificates: [certificateasvstb], // SSL証明書の追加
+  defaultAction: elbv2.ListenerAction.forward([AlbTgPsapps]),
+  open: true,
+  port: 443,
+  protocol: elbv2.ApplicationProtocol.HTTPS,
+});
 
-     // HTTPSリスナールールの追加
-    // AlbLisPublic2Https.addRules("${props.systemSPrefix}${props.envSPrefix}LisRulePublic2Https1c", {
-    //   priority: 10,
-    //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
-    //   actions: [elbv2.ListenerAction.forward([AlbTgPsapps])] //  Smp-Dev-TG-Psrespに転送
-    // });
-     
-    const myLisRulePublic2Https1c = new elbv2.ApplicationListenerRule(this, "LisRulePublic2Https1c",{
-      listener:  AlbLisPublic2Https,
-      priority: 10,
-      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
-      action: elbv2.ListenerAction.forward([AlbTgPsapps]) //  Smp-Dev-TG-Psrespに転送
-    });   
+// タグの追加
+cdk.Tags.of(AlbLisPublic2Https).add("Name", `${props.systemSPrefix}-${props.envSPrefix}-ALB-Lis-Public-2-Https`);
+
+// HTTPSリスナールールの追加
+new elbv2.ApplicationListenerRule(this, "LisRulePublic2Https1c", {
+  listener: AlbLisPublic2Https,
+  priority: 10,
+  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemSPrefix}-${props.envSPrefix}digital.co.jp`])],
+  action: elbv2.ListenerAction.forward([AlbTgPsapps]) // Smp-Dev-TG-Psappsに転送
+});
