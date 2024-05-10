@@ -29,3 +29,24 @@
     });
     cdk.Tags.of(AlbLisIpublicHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Https`);
 
+      // HTTPSリスナールールの追加
+      // リスナールール 1
+    const myLisRuleIpublicHttps1c = new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps1c",{
+      listener:  AlbLisIpublicHttps,
+      priority: 10,
+      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+      action: elbv2.ListenerAction.forward([AlbTgCrestf]) // Smp-Dev-TG-Crestfに転送
+    });
+
+      // リスナールール 2
+      // AlbLisIpublicHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRuleIpublicHttps2c", {
+      //   priority: 20,
+      //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
+      //   actions: [elbv2.ListenerAction.forward([AlbTgSiarec])] // Smp-Dev-TG-Siarecに転送
+      // });
+    const myLisRuleIpublicHttps2c = new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttps2c",{
+      listener:  AlbLisIpublicHttps,
+      priority: 20,
+      conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+      action: elbv2.ListenerAction.forward([AlbTgSiarec]) // Smp-Dev-TG-Siarecに転送
+    });  
