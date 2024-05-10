@@ -1,56 +1,45 @@
-    /*Private Subnet用内部ALB*/
-    const AlbSharePrivate = new elbv2.ApplicationLoadBalancer(this, "AlbSharePrivate", {
+    /*顔認証専用内部ALB*/
+    const AlbBioAuthPrivate= new elbv2.ApplicationLoadBalancer(this, "AlbBioAuthPrivate", {
       vpc: props.vpc,
       desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
       http2Enabled: true,
       idleTimeout: cdk.Duration.seconds(60),
       internetFacing: true,
       ipAddressType: elbv2.IpAddressType.IPV4,
-      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Private`,
-      securityGroup: AlbSharePrivateSg,
+      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`,
+      securityGroup: AlbBioAuthPrivateSg,
       vpcSubnets: props.privateSubnets,
     });
    /*アクセスログの設定*/
-    AlbSharePrivate.logAccessLogs(props.logAlbAccess, `alb/${props.systemPrefix}-${props.envPrefix}-ALB-Share-Private`); /*バケット*/
-    cdk.Tags.of(AlbSharePrivate).add(
+    AlbBioAuthPrivate.logAccessLogs(props.logAlbAccess, `alb/${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`); /*バケット*/
+    cdk.Tags.of(AlbBioAuthPrivate).add(
       "Name", 
-      `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Private`
+      `${props.systemPrefix}-${props.envPrefix}-ALB-BioAuth-Private`
     );
 
 上記コードにaddlistnerを使用してコードを追記して
 
- // 開発環境Private Subnet用内部ALB Httpリスナーを追加
-const AlbLisSharePrivateHttps = AlbSharePrivate.addListener("AlbLisSharePrivateHttps", {
-  // certificates: [certificateasvsmp], // この例ではHTTPSではなくHTTPリスナーなので証明書はコメントアウト
-  defaultAction: elbv2.ListenerAction.forward([props.AlbTgSiareq]),
-  open: true,
-  port: 80, // HTTPポート80
-  protocol: elbv2.ApplicationProtocol.HTTP,
-});
+    // /*開発環境顔認証専用内部ALB Httpsリスナー*/
+    // const AlbLisBioAutheHttps = new elbv2.ApplicationListener(this, "AlbLisBioAutheHttps ", {
+    //   loadBalancer: AlbBioAuthPrivate,
+    //   //certificates: [certificateasvsmp],  // SSL証明書の追加
+    //   defaultAction: elbv2.ListenerAction.forward([AlbTgScareq]),
+    //   open: true,
+    //   port: 80,
+    //   protocol: elbv2.ApplicationProtocol.HTTPS,
+    // });
+    // cdk.Tags.of(AlbLisBioAutheHttps).add("Name",`${props.systemPrefix}-${props.envPrefix}-ALB-Lis-BioAuth-Https`);
 
-// タグの追加
-cdk.Tags.of(AlbLisSharePrivateHttps).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Private-Https`);
-
-// リスナールール 1の追加
-new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps1c", {
-  listener: AlbLisSharePrivateHttps,
-  priority: 10,
-  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
-  action: elbv2.ListenerAction.forward([props.AlbTgSbarec])
-});
-
-// リスナールール 2の追加
-new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps2c", {
-  listener: AlbLisSharePrivateHttps,
-  priority: 20,
-  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
-  action: elbv2.ListenerAction.forward([props.AlbTgLcm])
-});
-
-// リスナールール 3の追加
-new elbv2.ApplicationListenerRule(this, "LisRulePrivateHttps3c", {
-  listener: AlbLisSharePrivateHttps,
-  priority: 30,
-  conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
-  action: elbv2.ListenerAction.forward([props.AlbTgSiareq])
-});
+    // // HTTPSリスナールールの追加
+    // // AlbLisBioAutheHttps.addRules("${props.systemPrefix}${props.envPrefix}LisRuleBioAuthHttps1c", {
+    // //   priority: 10,
+    // //   conditions: [elbv2.ListenerCondition.hostHeaders(['***.${props.systemPrefix}-${props.envPrefix}digital.co.jp'])],  // ホストヘッダーの条件指定
+    // //   actions: [elbv2.ListenerAction.forward([AlbTgScareq])] // Smp-Dev-TG-Scareqに転送
+    // // });
+    
+    // const myLisRuleBioAuthHttps1c = new elbv2.ApplicationListenerRule(this, "LisRuleBioAuthHttps1c",{
+    //   listener:  AlbLisBioAutheHttps,
+    //   priority: 10,
+    //   conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],  // ホストヘッダーの条件指定
+    //   action: elbv2.ListenerAction.forward([AlbTgScareq]) // Smp-Dev-TG-Scareqに転送
+    // });   
