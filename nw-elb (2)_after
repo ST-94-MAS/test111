@@ -1,3 +1,15 @@
+アルゴリズム
+
+証明書
+
+ポートの変更
+
+NLBの削除
+
+defaultアクションで404を返すようにする　システム運用管理方式
+
+AlbLisIpublicHttps外部通信　
+
 
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
