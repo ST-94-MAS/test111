@@ -1,16 +1,3 @@
-アルゴリズム  LEAST_OUTSTANDING_REQUESTS
-
-証明書
-
-ポートの変更
-
-NLBの削除
-
-defaultアクションで404を返すようにする　システム運用管理方式
-
-AlbLisIpublicHttps外部通信　
-
-
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
@@ -87,7 +74,7 @@ export class ELB extends Construct {
     ########################################################
     ### ALBターゲットグループ ###
     ########################################################
-  */
+    */
      /*開発環境APDUコマンド処理結果転送*/
     const AlbTgCrestf = new elbv2.ApplicationTargetGroup(this, "AlbTgCrestf", {
       vpc: props.vpc,
@@ -98,14 +85,14 @@ export class ELB extends Construct {
         enabled: true,                        
         interval: cdk.Duration.seconds(30),   
         path: '/actuator/health',             
-        port: '8080',                         
+        port: '80',                         
         protocol: elbv2.Protocol.HTTP,        
         timeout: cdk.Duration.seconds(5),     
         healthyThresholdCount: 5,             
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Crestf`,
     });
     cdk.Tags.of(AlbTgCrestf).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Crestf`);
@@ -120,14 +107,14 @@ export class ELB extends Construct {
         enabled: true,                        
         interval: cdk.Duration.seconds(30),   
         path: '/actuator/health',             
-        port: '8080',                         
+        port: '80',                         
         protocol: elbv2.Protocol.HTTP,        
         timeout: cdk.Duration.seconds(5),     
         healthyThresholdCount: 5,             
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Apprec`,
     });
     cdk.Tags.of(AlbTgApprec).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Apprec`);
@@ -148,7 +135,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Siarec`,
     });
     cdk.Tags.of(AlbTgSiarec).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Siarec`);
@@ -169,7 +156,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Sbarec`,
     });
     cdk.Tags.of(AlbTgSbarec).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Sbarec`);
@@ -190,7 +177,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Lcm`,
     });
     cdk.Tags.of(AlbTgLcm).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Lcm`);
@@ -211,7 +198,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Siareq`,
     });
     cdk.Tags.of(AlbTgSiareq).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Siareq`);
@@ -232,7 +219,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Sbareq`,
     });
     cdk.Tags.of(AlbTgSbareq).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Sbareq`);
@@ -254,7 +241,7 @@ export class ELB extends Construct {
         unhealthyThresholdCount: 2,           
         healthyHttpCodes: '200'               
       },
-      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.ROUND_ROBIN,
+      loadBalancingAlgorithmType: elbv2.TargetGroupLoadBalancingAlgorithmType.LEAST_OUTSTANDING_REQUESTS,
       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Scareq`,
     });
     cdk.Tags.of(AlbTgScareq).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Scareq`);
@@ -284,19 +271,19 @@ export class ELB extends Construct {
       `${props.systemPrefix}-${props.envPrefix}-ALB-Share-Ipublic`
     );
     
-    // HTTPリスナーを追加
-   const AlbLisIpublicHttp = AlbShareIpublic.addListener("AlbLisIpublicHttp", {
+    // HTTPSリスナーを追加
+   const AlbLisIpublicHttps = AlbShareIpublic.addListener("AlbLisIpublicHttps", {
        certificates: [props.asvsmp], // SSL証明書の追加
-       defaultAction: elbv2.ListenerAction.forward([AlbTgCrestf]),
+       defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
        open: true,
-       port: 80,
+       port: 443,
        protocol: elbv2.ApplicationProtocol.HTTP,
      });
-     cdk.Tags.of(AlbLisIpublicHttp).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Http`);
+     cdk.Tags.of(AlbLisIpublicHttps).add("Name", `${props.systemPrefix}-${props.envPrefix}-ALB-Lis-Ipublic-Http`);
 
      // リスナールール 1の追加
      new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttp1c", {
-       listener: AlbLisIpublicHttp,
+       listener: AlbLisIpublicHttps,
        priority: 10,
        conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
        action: elbv2.ListenerAction.forward([AlbTgCrestf])
@@ -304,7 +291,7 @@ export class ELB extends Construct {
 
      // リスナールール 2の追加
      new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttp2c", {
-       listener: AlbLisIpublicHttp,
+       listener: AlbLisIpublicHttps,
        priority: 20,
        conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
        action: elbv2.ListenerAction.forward([AlbTgSiarec])
@@ -312,7 +299,7 @@ export class ELB extends Construct {
 
      // リスナールール 3の追加
      new elbv2.ApplicationListenerRule(this, "LisRuleIpublicHttp3c", {
-       listener: AlbLisIpublicHttp,
+       listener: AlbLisIpublicHttps,
        priority: 30,
        conditions: [elbv2.ListenerCondition.hostHeaders([`***.${props.systemPrefix}-${props.envPrefix}digital.co.jp`])],
        action: elbv2.ListenerAction.forward([AlbTgSbarec])
@@ -339,7 +326,7 @@ export class ELB extends Construct {
      // HTTPリスナーを直接追加
      const AlbLisApppublicHttp = AlbAppProIpublic.addListener("AlbLisApppublicHttp", {
        certificates: [props.appsmp], // SSL証明書の追加
-       defaultAction: elbv2.ListenerAction.forward([AlbTgApprec]),
+       defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
        open: true,
        port: 80,
        protocol: elbv2.ApplicationProtocol.HTTP,
@@ -376,7 +363,7 @@ export class ELB extends Construct {
 
      // 開発環境Private Subnet用内部ALB Httpリスナーを追加
      const AlbLisSharePrivateHttp =AlbSharePrivate.addListener("AlbLisSharePrivateHttp", {
-      defaultAction: elbv2.ListenerAction.forward([AlbTgSiareq]),
+     defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
       open: true,
       port: 80, // HTTPポート80
       protocol: elbv2.ApplicationProtocol.HTTP,
@@ -450,28 +437,6 @@ export class ELB extends Construct {
     cdk.Tags.of(NlbSharePrivate).add("Name", `${props.systemPrefix}-${props.envPrefix}-NLB-Opemd-Private`);     /*タグの設定*/
     
   /*NLB ターゲットグループ*/
-     // HTTP用ターゲットグループ
-     const NlbTgPrivateHttp = new elbv2.NetworkTargetGroup(this, "NlbTgPrivateHttp", {
-       vpc: props.vpc,
-       port: 80,
-       protocol: elbv2.Protocol.TCP,
-       deregistrationDelay: cdk.Duration.seconds(300),
-       healthCheck: {
-         enabled: true,
-         interval: cdk.Duration.seconds(30),
-         path: '/actuator/health',
-         port: '9000',
-         protocol: elbv2.Protocol.HTTP,
-         healthyThresholdCount: 3,
-         unhealthyThresholdCount: 2,
-         timeout: cdk.Duration.seconds(10),
-         healthyHttpCodes: '200'
-       },
-       proxyProtocolV2: false,
-       targetGroupName: `${props.systemPrefix}-${props.envPrefix}-TG-Private-Http`
-     });
-     cdk.Tags.of(NlbTgPrivateHttp).add("Name", `${props.systemPrefix}-${props.envPrefix}-TG-Private`);    // タグの追加
-
     // HTTP用ターゲットグループ
     const NlbTgPrivateHttp = new elbv2.NetworkTargetGroup(this, "NlbTgPrivateHttp", {
       vpc: props.vpc,
@@ -579,5 +544,3 @@ export class ELB extends Construct {
     });
   }
 }
-
-
