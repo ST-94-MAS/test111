@@ -274,7 +274,10 @@ export class ELB extends Construct {
     // HTTPSリスナーを追加
    const AlbLisIpublicHttps = AlbShareIpublic.addListener("AlbLisIpublicHttps", {
        certificates: [props.asvsmp], // SSL証明書の追加
-       defaultAction: elbv2.ListenerAction.fixedResponse(404, { contentType: 'text/plain', messageBody: '404 Not Found' }),
+       defaultAction: elbv2.ListenerAction.fixedResponse(404, { 
+         contentType: 'text/plain', 
+         messageBody: '404 Not Found' 
+       }),
 　　　　open: true,,
        open: true,
        port: 443,
