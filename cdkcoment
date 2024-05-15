@@ -20,4 +20,14 @@ D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk synth --app "npx ts-
 Successfully synthesized to /home/ec2-user/environment/mdoc-app/cdk.out
 Supply a stack id (Smp-Dev-Infra-CdkPipeline, cross-region-stack-767856210790:ap-northeast-3) to display its template.
 
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk deploy ELB
+WARNING: No configurations found in configuration directory:/home/ec2-user/environment/mdoc-app/config
+WARNING: To disable this warning set SUPPRESS_NO_CONFIG_WARNING in the environment.
+Error: 環境変数'NODE_ENV'にパラメータファイル名となる環境名を設定してください。
+      　例: export NODE_ENV=Dev
+
+Subprocess exited with error 1
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk deploy ELB --all
+
+You must either specify a list of Stacks or the `--all` argument
 D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ 
