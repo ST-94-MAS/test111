@@ -274,7 +274,8 @@ export class ELB extends Construct {
     // HTTPSリスナーを追加
    const AlbLisIpublicHttps = AlbShareIpublic.addListener("AlbLisIpublicHttps", {
        certificates: [props.asvsmp], // SSL証明書の追加
-       defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: 'text/plain', messageBody: '404 Not Found',}),
+       defaultAction: elbv2.ListenerAction.fixedResponse(404, { contentType: 'text/plain', messageBody: '404 Not Found' }),
+　　　　open: true,,
        open: true,
        port: 443,
        protocol: elbv2.ApplicationProtocol.HTTP,
@@ -326,7 +327,7 @@ export class ELB extends Construct {
      // HTTPSリスナーを直接追加
      const AlbLisApppublicHttps = AlbAppProIpublic.addListener("AlbLisApppublicHttps", {
        certificates: [props.appsmp], // SSL証明書の追加
-       defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: 'text/plain', messageBody: '404 Not Found',}),
+       defaultAction: elbv2.ListenerAction.fixedResponse(404, { contentType: 'text/plain', messageBody: '404 Not Found' }),
        open: true,
        port: 443,
        protocol: elbv2.ApplicationProtocol.HTTPS,
@@ -363,7 +364,7 @@ export class ELB extends Construct {
 
      // 開発環境Private Subnet用内部ALB Httpリスナーを追加
      const AlbLisSharePrivateHttp =AlbSharePrivate.addListener("AlbLisSharePrivateHttp", {
-      defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: 'text/plain', messageBody: '404 Not Found',}),
+      defaultAction: elbv2.ListenerAction.fixedResponse(404, { contentType: 'text/plain', messageBody: '404 Not Found' }),
       open: true,
       port: 80, // HTTPポート80
       protocol: elbv2.ApplicationProtocol.HTTP,
