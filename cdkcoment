@@ -7,3 +7,39 @@ D-Tomoki.Shimamura.bp:~/environment $ cdk synth mdoc-app/lib/resources/nw-elb-3.
 --app is required either in command-line, in cdk.json or in ~/.cdk.json
 D-Tomoki.Shimamura.bp:~/environment $ 
 cdk synth --app "npx ts-node mdoc-app/lib/resources/nw-elb-3.ts"
+
+
+D-Tomoki.Shimamura.bp:~/environment $ cdk synth --app "npx ts-node mdoc-app/lib/resources/nw-elb-3.ts"
+npm WARN exec The following package was not found and will be installed: ts-node@10.9.2
+/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+mdoc-app/lib/resources/nw-elb-3.ts:277:83 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
+
+277        defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
+                                                                                      ~~~~~~~~~~~
+mdoc-app/lib/resources/nw-elb-3.ts:329:83 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
+
+329        defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
+                                                                                      ~~~~~~~~~~~
+mdoc-app/lib/resources/nw-elb-3.ts:366:81 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
+
+366      defaultAction: elbv2.ListenerAction.fixedResponse(404, {contentType: elbv2.ContentType.TEXT_PLAIN,messageBody: '404 Not Found'}),
+                                                                                    ~~~~~~~~~~~
+
+    at createTSError (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (/home/ec2-user/.npm/_npx/1bf7c3c15bf47d04/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12) {
+  diagnosticCodes: [ 2339, 2339, 2339 ]
+}
+
+Subprocess exited with error 1
+D-Tomoki.Shimamura.bp:~/environment $ 
