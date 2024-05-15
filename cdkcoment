@@ -15,11 +15,32 @@ ENOENT: no such file or directory, open 'cdk.out/manifest.json'
 D-Tomoki.Shimamura.bp:~/environment $ 
 
 
-D-Tomoki.Shimamura.bp:~/environment $ npm run bulid
-npm ERR! Missing script: "bulid"
-npm ERR! 
-npm ERR! To see a list of scripts, run:
-npm ERR!   npm run
+//////////////////
+.bp:~/environment/mdoc-app (master) $ cdk synth --app "npx ts-node mdoc-app/lib/resources/nw-elb-3.ts"
+node:internal/modules/cjs/loader:1147
+  throw err;
+  ^
 
-npm ERR! A complete log of this run can be found in: /home/ec2-user/.npm/_logs/2024-05-15T08_17_57_879Z-debug-0.log
-D-Tomoki.Shimamura.bp:~/environment $ 
+Error: Cannot find module './nw-elb-3.ts'
+Require stack:
+- /home/ec2-user/environment/mdoc-app/mdoc-app/lib/resources/imaginaryUncacheableRequireResolveScript
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1144:15)
+    at Function.resolve (node:internal/modules/helpers:187:19)
+    at requireResolveNonCached (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:549:16)
+    at getProjectSearchDir (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:519:40)
+    at phase3 (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:267:27)
+    at bootstrap (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:47:30)
+    at main (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:33:12)
+    at Object.<anonymous> (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/dist/bin.js:579:5)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/ec2-user/environment/mdoc-app/mdoc-app/lib/resources/imaginaryUncacheableRequireResolveScript'
+  ]
+}
+
+Node.js v20.11.1
+
+Subprocess exited with error 1
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ 
