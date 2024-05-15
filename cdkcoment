@@ -6,3 +6,4 @@ D-Tomoki.Shimamura.bp:~/environment $ cdk synth mdoc-app/lib/resources/nw-elb-3.
 
 --app is required either in command-line, in cdk.json or in ~/.cdk.json
 D-Tomoki.Shimamura.bp:~/environment $ 
+cdk synth --app "npx ts-node mdoc-app/lib/resources/nw-elb-3.ts"
