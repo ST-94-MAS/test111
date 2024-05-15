@@ -1,0 +1,8 @@
+D-Tomoki.Shimamura.bp:~/environment $ cdk synth mdoc-app/lib/resources/nw-elb-3.ts 
+****************************************************
+*** Newer version of CDK is available [2.141.0]  ***
+*** Upgrade recommended (npm install -g aws-cdk) ***
+****************************************************
+
+--app is required either in command-line, in cdk.json or in ~/.cdk.json
+D-Tomoki.Shimamura.bp:~/environment $ 
