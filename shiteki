@@ -19,3 +19,12 @@ Error: Validation failed with the following errors:
 
 Subprocess exited with error 1
 D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ 
+
+
+
+Subprocess exited with error 2
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk synth --app "npx ts-node /mdoc-app/lib/resources/nw-elb (2).ts"
+/bin/sh: -c: line 1: syntax error near unexpected token `('
+/bin/sh: -c: line 1: `npx ts-node /mdoc-app/lib/resources/nw-elb (2).ts'
+
+Subprocess exited with error 2
