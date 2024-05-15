@@ -13,3 +13,14 @@ D-Tomoki.Shimamura.bp:~/environment $ cdk synth --app "npx ts-node mdoc-app/lib/
 
 ENOENT: no such file or directory, open 'cdk.out/manifest.json'
 D-Tomoki.Shimamura.bp:~/environment $ 
+
+
+D-Tomoki.Shimamura.bp:~/environment $ npm install
+
+up to date, audited 46 packages in 719ms
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+D-Tomoki.Shimamura.bp:~/environment $ 
