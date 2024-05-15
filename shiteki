@@ -1,36 +1,4 @@
-    at Module._compile (node:internal/modules/cjs/loader:1376:14)
-
-Subprocess exited with error 1
-D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk synth --app "npx ts-node lib/resources/nw-elb-3.ts"
-/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:859
-    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
-           ^
-TSError: ⨯ Unable to compile TypeScript:
-lib/resources/nw-elb-3.ts:278:29 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
-
-278          contentType: elbv2.ContentType.TEXT_PLAIN,
-                                ~~~~~~~~~~~
-lib/resources/nw-elb-3.ts:333:29 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
-
-333          contentType: elbv2.ContentType.TEXT_PLAIN,
-                                ~~~~~~~~~~~
-lib/resources/nw-elb-3.ts:373:29 - error TS2339: Property 'ContentType' does not exist on type 'typeof import("/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/aws-elasticloadbalancingv2/index")'.
-
-373          contentType: elbv2.ContentType.TEXT_PLAIN,
-                                ~~~~~~~~~~~
-
-    at createTSError (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:859:12)
-    at reportTSError (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:863:19)
-    at getOutput (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:1077:36)
-    at Object.compile (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:1433:41)
-    at Module.m._compile (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:1617:30)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
-    at Object.require.extensions.<computed> [as .ts] (/home/ec2-user/environment/mdoc-app/node_modules/ts-node/src/index.ts:1621:12)
-    at Module.load (node:internal/modules/cjs/loader:1207:32)
-    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12) {
-  diagnosticCodes: [ 2339, 2339, 2339 ]
-}
-
-Subprocess exited with error 1
-D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ 
+Error: Validation failed with the following errors:
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/AlbShareIpublic/AlbLisIpublicHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/ALBAppProIpublic/AlbLisApppublicHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/AlbSharePrivate/AlbLisSharePrivateHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
