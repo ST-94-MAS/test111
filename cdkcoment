@@ -15,12 +15,11 @@ ENOENT: no such file or directory, open 'cdk.out/manifest.json'
 D-Tomoki.Shimamura.bp:~/environment $ 
 
 
-D-Tomoki.Shimamura.bp:~/environment $ npm install
+D-Tomoki.Shimamura.bp:~/environment $ npm run bulid
+npm ERR! Missing script: "bulid"
+npm ERR! 
+npm ERR! To see a list of scripts, run:
+npm ERR!   npm run
 
-up to date, audited 46 packages in 719ms
-
-3 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
+npm ERR! A complete log of this run can be found in: /home/ec2-user/.npm/_logs/2024-05-15T08_17_57_879Z-debug-0.log
 D-Tomoki.Shimamura.bp:~/environment $ 
