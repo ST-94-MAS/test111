@@ -1,17 +1,21 @@
-CDKコードのマージ観点のみでのコメントです。
-----
-判定：マージできそう。軽めの全体修正は必要。
-マージの優先度：中 ＃コンテナとかの前提。
-コメント：
-・疑似環境分も1ファイルになっているが実際には分割。
-・LoadBlancer本体と、Listener、TargetGroupはスタック間で分割されるのでマージ側で分割取り込みが必要。
-・リスナールール部分に「Dev」あり。要修正。
-・AWSが提供するコンストラクトクラスの場合、変数名は「my～」。
-参考：AWSが提供するコンストラクトクラスの場合。
-const myFlowLogBucket = new s3.Bucket(this, "FlowLogBucket", {...});
-#変数名は「my + 用途 + 機能名」。idは「my」削除（大文字開始）。
-・疑似環境の名前が連番でやる気がないのは修正してほしい。
-＃リスナールールの「pathPatterns」がまだ仮の値なので、コード修正自体はどうせあるが。
-----
-他：
-・細かいパラメータはまだ見てないがとりあえず「internetFacing」がでたらめっぽかった。
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ cdk deploy --all
+/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3
+  `);throw new Error(`Validation failed with the following errors:
+           ^
+Error: Validation failed with the following errors:
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/AlbShareIpublic/AlbLisIpublicHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/ALBAppProIpublic/AlbLisApppublicHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
+  [Smp-Dev-Infra-CdkPipeline/Smp-Dev-MainStage/NetworkStack/Elb/AlbSharePrivate/AlbLisSharePrivateHttps] Listener needs at least one default action or target group (call addTargetGroups or addAction)
+    at validateTree (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:3:12)
+    at synthesize (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/core/lib/private/synthesis.js:1:1561)
+    at MainStage.synth (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/core/lib/stage.js:1:2263)
+    at pipelineSynth (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/pipelines/lib/private/construct-internals.js:1:833)
+    at Function.fromStage (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/pipelines/lib/blueprint/stage-deployment.js:1:1013)
+    at Wave.addStage (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/pipelines/lib/blueprint/wave.js:1:1008)
+    at CodePipeline.addStage (/home/ec2-user/environment/mdoc-app/node_modules/aws-cdk-lib/pipelines/lib/main/pipeline-base.js:1:1934)
+    at new Pipeline (/home/ec2-user/environment/mdoc-app/cdk_pipeline/cdk-pipeline-stack.ts:134:24)
+    at Object.<anonymous> (/home/ec2-user/environment/mdoc-app/bin/cdk-pipeline.ts:24:1)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+
+Subprocess exited with error 1
+D-Tomoki.Shimamura.bp:~/environment/mdoc-app (master) $ 
