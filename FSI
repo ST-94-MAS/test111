@@ -45,27 +45,63 @@ kmew_dev_alb_sg
 |アウトバウンド
 | タイプ プロトコル ポート範囲 送信先 備考
 例:すべてのトラフィックすべてすべて0.0.0.0/0
-
-Inbound Rules
-セキュリティグループ名	タイプ	プロトコル	ポート範囲	送信元	備考
-kmew_dev_SP_Step_sg	SSH	TCP	22	10.218.xxx.96/27	Internet bastion subnet
-kmew_dev_MC_Step_sg	SSH	TCP	22	10.218.xxx.192/27	Step subnet
-kmew_dev_IN_Step_sg	SSH	TCP	22	0.0.0.0/0	Allow internet access
-kmew_dev_Work_sg	SSH	TCP	22	10.218.xxx.192/27	Allow access from step subnet
-kmew_dev_Web_sg	HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+kmew_dev_SP_Step_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+SSH	TCP	22	10.218.xxx.96/27	Internet bastion subnet
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_MC_Step_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+SSH	TCP	22	10.218.xxx.192/27	Step subnet
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_IN_Step_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+SSH	TCP	22	0.0.0.0/0	Allow internet access
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_Work_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+SSH	TCP	22	10.218.xxx.192/27	Allow access from step subnet
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_Web_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
 HTTPS	TCP	443	0.0.0.0/0	Allow HTTPS access from anywhere
 Custom	TCP	8080	10.218.xxx.32/27	Allow custom port access from trust subnet
-kmew_dev_CG_sg	Custom	TCP	8080	10.218.xxx.32/27	Allow custom port access from trust subnet
-kmew_dev_HR_sg	Custom	TCP	8081	10.218.xxx.32/27	Allow custom port access from trust subnet
-kmew_dev_alb_sg	HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_CG_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+Custom	TCP	8080	10.218.xxx.32/27	Allow custom port access from trust subnet
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_HR_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+Custom	TCP	8081	10.218.xxx.32/27	Allow custom port access from trust subnet
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
+kmew_dev_alb_sg
+Inbound
+タイプ	プロトコル	ポート範囲	送信元	備考
+HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
 HTTPS	TCP	443	0.0.0.0/0	Allow HTTPS access from anywhere
-Outbound Rules
-セキュリティグループ名	タイプ	プロトコル	ポート範囲	送信先	備考
-kmew_dev_SP_Step_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_MC_Step_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_IN_Step_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_Work_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_Web_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_CG_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_HR_sg	All traffic	All	All	0.0.0.0/0	
-kmew_dev_alb_sg	All traffic	All	All	0.0.0.0/0	
+Outbound
+タイプ	プロトコル	ポート範囲	送信先	備考
+All traffic	All	All	0.0.0.0/0	
