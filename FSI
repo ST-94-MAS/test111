@@ -1,18 +1,4 @@
-既存リソースの取得はconstructの中で実施することでよろしいでしょうか。Stackから渡したほうが汎用性の高いconstructになるのではと考えます。
+The Session Manager plugin was installed successfully. Use the AWS CLI to start a session.
 
-  constructor(scope: Construct, id: string, props: NetworkProps) {
-    super(scope, id);
 
-    const myNlbSg = new ec2.SecurityGroup(this, "NlbSg2", {
-      vpc: props.vpc,
-      allowAllOutbound: true,
-      securityGroupName: `${props.systemPrefix}-${props.envPrefix}-Sg-nlb2`,
-    });
-    myNlbSg.addIngressRule(
-      ec2.Peer.anyIpv4(),
-      ec2.Port.tcp(80),
-    );
-    myNlbSg.addIngressRule(
-      ec2.Peer.anyIpv4(),
-      ec2.Port.tcp(8080),
-    );
+An error occurred (InvalidParameterException) when calling the ExecuteCommand operation: The execute command failed because execute command was not enabled when the task was run or the execute command agent isn’t running. Wait and try again or run a new task with execute command enabled and try again.
