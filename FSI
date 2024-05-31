@@ -1,107 +1,14 @@
-●Virtual Private Cloud (10.218.xxx.0/24)
-  Internet Gateway
-
-●availability zone #1(ap-northeast-1a)
- DMZ用サブネット[10.218.xxx.0/27]
-  ALB(InternetGatewayからWebサーバへ)
-
-●availability zone #2(ap-northeast-1c)
- DMZ用サブネット[10.218.xxx.96/27]
-  インターネット踏み台(kmew-dev-IN-Step)
-    →InternetGawayからのアクセス
-
-●踏み台用サブネット[10.218.xxx.192/27]
- SP踏み台(kmew-dev-SP-Step)
- →インターネット踏み台からのアクセスを許可
-   作業用PCへアクセスする
-
-●Trust用サブネット[10.218.xxx.32/27]
-
- WEBサーバ(kmew-dev-Web)
-  →ALBから来てCGサーバとRDSへアクセス
- CGサーバ(kmew-dev-CG)
-  →Webサーバからのアクセス
- 高品位レンダリングサーバ(kmew-dev-HR)
- 作業用PC(kmew-dev-Work)
+vpcSubnets: props.privateSubnets,と設定されていますが、internetFacing: true,となっています。意図通りかご確認いただけると幸いです。
 
 
-
-セキュリティグループ名
-kmew_dev_SP_Step_sg
-kmew_dev_MC_Step_sg
-kmew_dev_IN_Step_sg
-kmew_dev_Work_sg
-kmew_dev_Web_sg
-kmew_dev_CG_sg
-kmew_dev_HR_sg
-kmew_dev_alb_sg
-
-それぞれSGを作成して
-(インバウンドとアウトバウンドはエクセルで表示して)
-インバウンド                              
-タイプ プロトコル ポート範囲 送信元  備考 
-例:SSH  TCP         22       10.218.xxx.32/27 Trust用サブネット
-
-|アウトバウンド
-| タイプ プロトコル ポート範囲 送信先 備考
-例:すべてのトラフィックすべてすべて0.0.0.0/0
-ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
-kmew_dev_SP_Step_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-SSH	TCP	22	10.218.xxx.96/27	Internet bastion subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_MC_Step_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-SSH	TCP	22	10.218.xxx.192/27	Step subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_IN_Step_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-SSH	TCP	22	0.0.0.0/0	Allow internet access
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_Work_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-SSH	TCP	22	10.218.xxx.192/27	Allow access from step subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_Web_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
-HTTPS	TCP	443	0.0.0.0/0	Allow HTTPS access from anywhere
-Custom	TCP	8080	10.218.xxx.32/27	Allow custom port access from trust subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_CG_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-Custom	TCP	8080	10.218.xxx.32/27	Allow custom port access from trust subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_HR_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-Custom	TCP	8081	10.218.xxx.32/27	Allow custom port access from trust subnet
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
-kmew_dev_alb_sg
-Inbound
-タイプ	プロトコル	ポート範囲	送信元	備考
-HTTP	TCP	80	0.0.0.0/0	Allow HTTP access from anywhere
-HTTPS	TCP	443	0.0.0.0/0	Allow HTTPS access from anywhere
-Outbound
-タイプ	プロトコル	ポート範囲	送信先	備考
-All traffic	All	All	0.0.0.0/0	
+    this.myResstbAlb = new elbv2.ApplicationLoadBalancer(this, "ResstbAlb", {
+      vpc: props.vpc,
+      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
+      http2Enabled: true,
+      idleTimeout: cdk.Duration.seconds(60),
+      internetFacing: true,
+      ipAddressType: elbv2.IpAddressType.IPV4,
+      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-resstb`,
+      securityGroup: props.aLBOcspSg,
+      vpcSubnets: props.publicSubnets,
+    });
