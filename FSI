@@ -1,14 +1,18 @@
-vpcSubnets: props.privateSubnets,と設定されていますが、internetFacing: true,となっています。意図通りかご確認いただけると幸いです。
+既存リソースの取得はconstructの中で実施することでよろしいでしょうか。Stackから渡したほうが汎用性の高いconstructになるのではと考えます。
 
+  constructor(scope: Construct, id: string, props: NetworkProps) {
+    super(scope, id);
 
-    this.myResstbAlb = new elbv2.ApplicationLoadBalancer(this, "ResstbAlb", {
+    const myNlbSg = new ec2.SecurityGroup(this, "NlbSg2", {
       vpc: props.vpc,
-      desyncMitigationMode: elbv2.DesyncMitigationMode.DEFENSIVE,
-      http2Enabled: true,
-      idleTimeout: cdk.Duration.seconds(60),
-      internetFacing: true,
-      ipAddressType: elbv2.IpAddressType.IPV4,
-      loadBalancerName: `${props.systemPrefix}-${props.envPrefix}-ALB-resstb`,
-      securityGroup: props.aLBOcspSg,
-      vpcSubnets: props.publicSubnets,
+      allowAllOutbound: true,
+      securityGroupName: `${props.systemPrefix}-${props.envPrefix}-Sg-nlb2`,
     });
+    myNlbSg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(80),
+    );
+    myNlbSg.addIngressRule(
+      ec2.Peer.anyIpv4(),
+      ec2.Port.tcp(8080),
+    );
