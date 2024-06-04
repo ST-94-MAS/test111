@@ -1,14 +1,15 @@
 Ｎｏ.	対象サーバ	本番環境			テスト環境		
 		和名	Nameタグ	ホスト名	和名	Nameタグ	ホスト名
-1	kmew-dev-SP-Step	SP踏み台	kmew-dev-SP-Step	PISCに確認中	SP踏み台	kmew-dev-SP-Step	
-2	kmew-dev-MC-Step	マネージメントコントロール（Mc）踏み台サーバ	kmew-dev-MC-Step		マネージメントコントロール（Mc）踏み台サーバ	kmew-dev-MC-Step	
-3	kmew-dev-IN-Step	インターネット踏み台サーバ	kmew-dev-IN-Step		インターネット踏み台サーバ	kmew-dev-IN-Step	
-4	kmew-dev-Work	作業用PC	kmew-dev-Work		作業用PC	kmew-dev-Work	
-5	kmew-dev-Web	WEBサーバ	kmew-dev-Web		WEBサーバ	kmew-dev-Web	
-6	kmew-dev-CG	CGサーバ	kmew-dev-CG		CGサーバ	kmew-dev-CG	
-7	kmew-dev-HR	高品位レンダリングサーバ	kmew-dev-HR		高品位レンダリングサーバ	kmew-dev-HR	
+1	"環境名"-SP-Step	SP踏み台	prod-SP-Step	PISCに確認中	SP踏み台	dev-SP-Step	
+2	"環境名"-MC-Step	マネージメントコントロール（Mc）踏み台サーバ	prod-MC-Step		マネージメントコントロール（Mc）踏み台サーバ	dev-MC-Step	
+3	"環境名"-IN-Step	インターネット踏み台サーバ	prod-IN-Step		インターネット踏み台サーバ	dev-IN-Step	
+4	"環境名"-Work	作業用PC	prod-Work		作業用PC	dev-Work	
+5	"環境名"-Web	WEBサーバ	prod-Web		WEBサーバ	dev-Web	
+6	"環境名"-CG	CGサーバ	prod-CG		CGサーバ	dev-CG	
+7	"環境名"-HR	高品位レンダリングサーバ	prod-HR		高品位レンダリングサーバ	dev-HR	
 8							
 9							
+
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 
