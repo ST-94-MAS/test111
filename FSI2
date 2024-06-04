@@ -1,3 +1,24 @@
+Ｎｏ.	対象サーバ	本番環境			テスト環境		
+		和名	Nameタグ	ホスト名	和名	Nameタグ	ホスト名
+1	kmew-dev-SP-Step	SP踏み台	kmew-dev-SP-Step	PISCに確認中	SP踏み台	kmew-dev-SP-Step	
+2	kmew-dev-MC-Step	マネージメントコントロール（Mc）踏み台サーバ	kmew-dev-MC-Step		マネージメントコントロール（Mc）踏み台サーバ	kmew-dev-MC-Step	
+3	kmew-dev-IN-Step	インターネット踏み台サーバ	kmew-dev-IN-Step		インターネット踏み台サーバ	kmew-dev-IN-Step	
+4	kmew-dev-Work	作業用PC	kmew-dev-Work		作業用PC	kmew-dev-Work	
+5	kmew-dev-Web	WEBサーバ	kmew-dev-Web		WEBサーバ	kmew-dev-Web	
+6	kmew-dev-CG	CGサーバ	kmew-dev-CG		CGサーバ	kmew-dev-CG	
+7	kmew-dev-HR	高品位レンダリングサーバ	kmew-dev-HR		高品位レンダリングサーバ	kmew-dev-HR	
+8							
+9							
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+
+
+
+
+
+
+
+
 www.kmew.co.jp
 のグローバルIPアドレスとそのNAT先IPアドレスは以下と存じます。
 133.254.5.160（GIP)　133.254.141.65(NAT先）
