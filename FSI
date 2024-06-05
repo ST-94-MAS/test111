@@ -1,64 +1,22 @@
-133.254.141.65	
-www.kmew.co.jp	
-http
-リクエストの文字列が
-/kmewpers
-/kmewsimulation
-の場合
-10.246.36.58:80 
-10.246.36.59:80
-へバランシング
+@echo off
+setlocal enabledelayedexpansion
 
-リクエストの文字列が
-/catalog
-/inquiry
-/designAward
-/download/nintei_k
-の場合
-10.246.36.58:80 
-へバランシング
+rem ファイルが存在するディレクトリに移動
+cd /d "C:\path\to\your\directory"
 
+rem ファイルカウンタを初期化
+set counter=1
 
-上記以外は
-10.246.36.58:80
-へバランシングされる
-downしている場合は
-10.246.36.59:80 
-へバランシング
+rem すべてのPNGファイルをループ
+for %%f in (*.png) do (
+    rem 新しいファイル名を設定
+    set newname=202402-開A01単-19-RLB_01-001-00!counter!.png
+    
+    rem ファイル名を変更
+    ren "%%f" "!newname!"
+    
+    rem カウンタをインクリメント
+    set /a counter+=1
+)
 
-
-	
-https
-リクエストの文字列が
-/kmewpers
-/kmewsimulation
-の場合
-10.246.36.58:80
-10.246.36.59:80
-へバランシング
-
-リクエストの文字列が
-/catalog
-/inquiry
-/designAward
-/download/nintei_k
-の場合
-10.246.36.58:80 
-へバランシング
-
-
-上記以外は
-10.246.36.58:80
-へバランシングされる
-downしている場合は
-10.246.36.59:80
-へバランシング
-
-
-ーーーーーーーーーーーーーーーーーーー
-リスナー						Protocol*								Port*					セキュリティポリシー														証明書																					ルール						パスパターン																		ターゲットグループ名*																			優先度						
-						HTTP								80																																														-																																					default						
-																																																																																																							
-																																																																																																							
-
-
+endlocal
