@@ -1,72 +1,31 @@
-Ｎｏ.	対象サーバ	本番環境			テスト環境		
-		和名	Nameタグ	ホスト名	和名	Nameタグ	ホスト名
-1	"環境名"-SP-Step	SP踏み台	prod-SP-Step	PISCに確認中	SP踏み台	dev-SP-Step	
-2	"環境名"-MC-Step	マネージメントコントロール（Mc）踏み台サーバ	prod-MC-Step		マネージメントコントロール（Mc）踏み台サーバ	dev-MC-Step	
-3	"環境名"-IN-Step	インターネット踏み台サーバ	prod-IN-Step		インターネット踏み台サーバ	dev-IN-Step	
-4	"環境名"-Work	作業用PC	prod-Work		作業用PC	dev-Work	
-5	"環境名"-Web	WEBサーバ	prod-Web		WEBサーバ	dev-Web	
-6	"環境名"-CG	CGサーバ	prod-CG		CGサーバ	dev-CG	
-7	"環境名"-HR	高品位レンダリングサーバ	prod-HR		高品位レンダリングサーバ	dev-HR	
-8							
-9							
+@echo off
+setlocal enabledelayedexpansion
 
-ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+rem ファイルが存在するディレクトリに移動
+cd /d "C:\path\to\your\directory"
 
+rem 各サブディレクトリをループ
+for /d %%d in (*) do (
+    rem サブディレクトリに移動
+    cd "%%d"
+    
+    rem ファイルカウンタを初期化
+    set counter=0
 
+    rem サブディレクトリ内のすべてのPNGファイルをループ
+    for %%f in (*.png) do (
+        rem 新しいファイル名をゼロパディングで設定
+            set newname=202402-開A01単-19-RLB_01-001-00!counter!.png
+        
+        rem ファイル名を変更
+        ren "%%f" "!newname!"
+        
+        rem カウンタをインクリメント
+        set /a counter+=1
+    )
 
+    rem 親ディレクトリに戻る
+    cd ..
+)
 
-
-
-
-
-
-www.kmew.co.jp
-のグローバルIPアドレスとそのNAT先IPアドレスは以下と存じます。
-133.254.5.160（GIP)　133.254.141.65(NAT先）
-これらのIPアドレスが登録されたFWポリシー調査結果をご提供致します。
-
-■調査対象						
-	133.254.5.160					
-	133.254.141.65					
-						
-■調査結果						
-						
-<< DMZ(d-isb6-palo-1a) >>						
-policy ID	送信元	送信元ゾーン	送信先	送信先ゾーン	通信ポート	備考
-1018	any	Trust	133.254.141.65_32	DMZ	"TCP_80
-TCP_443"	
-1567	any	Untrust	133.254.5.160_32	DMZ	"TCP_80
-TCP_443"	
-★下記、NATルール						
-1567-3	any	Untrust	133.254.5.160_32	Untrust	"TCP_80
-TCP_443"	"destination-translation
-133.254.141.65"
-MIP_133.254.5.160	133.254.141.65	any	any	Untrust	any	"source-translation
-133.254.5.160"
-						
-						
-						
-						
-						
-<< K-ing(km-isb7-srx340-01) >>						
-policy ID	送信元	送信元ゾーン	送信先	送信先ゾーン	通信ポート	備考
-168	"192.168.251.233/32
-192.168.251.234/32
-192.168.251.173/32
-192.168.251.174/32"	Trust	133.254.141.65/32	Untrust	TCP_443	
-
-
-ーーーーーーーーーーーーーーー
-流れの要約
-外部クライアント -> 133.254.5.160 (Untrust -> DMZ)
-
-ポリシーID 1567: 外部から133.254.5.160へのHTTP/HTTPSアクセスを許可。
-NATルール 1567-3: 133.254.5.160へのトラフィックを133.254.141.65に転送。
-MIP_133.254.5.160: 送信元アドレスを133.254.5.160に変換。
-内部ネットワーク -> 133.254.141.65 (Trust -> DMZ)
-
-ポリシーID 1018: 内部ネットワーク（Trustゾーン）から133.254.141.65（DMZゾーン）へのHTTP/HTTPSアクセスを許可。
-特定の内部IPアドレス -> 133.254.141.65 (Trust -> Untrust)
-
-ポリシーID 168 (K-ing): 内部の特定のIPアドレスから133.254.141.65（Untrustゾーン）へのHTTPSアクセスを許可。
-この流れでは、外部からのアクセスがNATルールとMIPによって適切に転送され、内部ネットワークの特定のIPアドレスからも目的のWebサーバにアクセスできるようになっています。
+endlocal
