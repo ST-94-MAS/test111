@@ -1,31 +1,23 @@
-@echo off
-setlocal enabledelayedexpansion
+全般																																																																																									
+項目名																					設定値(例)																					設定値																																															
+EFS名																					test-efs																					kmew_pro_efs_01																																															
+自動バックアップ																					有効/無効																					有効																																															
+ライフサイクル管理																					なし																																																																				
+パフォーマンスモード																					汎用/最大IO																																																																				
+スループットモード																					バースト/プロビジョニング済																																																																				
+スループットモード(MiB/秒)																					100MiB/秒																																																																				
+暗号化																					無効																					無効																																															
 
-rem ファイルが存在するディレクトリに移動
-cd /d "C:\path\to\your\directory"
 
-rem 各サブディレクトリをループ
-for /d %%d in (*) do (
-    rem サブディレクトリに移動
-    cd "%%d"
-    
-    rem ファイルカウンタを初期化
-    set counter=0
+ネットワーク																																																																																									
+項目名																					設定値(例)																					設定値																																															
+VPC																					test.vpc01																																																																				
+マウントターゲット(AZ)																					ap-northeast-1a、ap-northeast-1c																					ap-northeast-1a、ap-northeast-1c																																															
+マウントターゲット(サブネット)																					Trust																																																																				
+IPアドレス																					自動割り当て																																																																				
+セキュリティグループ																					test-dv-trust-efs-sg01																					xxxx-trust-efs-sg01																																															
 
-    rem サブディレクトリ内のすべてのPNGファイルをループ
-    for %%f in (*.png) do (
-        rem 新しいファイル名をゼロパディングで設定
-            set newname=202402-開A01単-19-RLB_01-001-00!counter!.png
-        
-        rem ファイル名を変更
-        ren "%%f" "!newname!"
-        
-        rem カウンタをインクリメント
-        set /a counter+=1
-    )
 
-    rem 親ディレクトリに戻る
-    cd ..
-)
-
-endlocal
+EFSポリシー																																																																																										〇：必須　△：設定内容によっては必須																																																				
+項目名																					設定値(例)																					設定値																																																必須				備考																																																
+ポリシー																					無し																																																																					-				EFSの制限する場合は、ポリシーを記入																																																
