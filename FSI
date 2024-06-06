@@ -40,3 +40,9 @@ RDP							TCP											3389							10.51.29.27/32													PMP
 カスタムTCP							TCP											445							10.51.29.27/32													PMP												
 すべての ICMP - IPv4							ICMP											すべて							10.51.29.21/32													PMP												
 すべての ICMP - IPv4							ICMP											すべて							10.51.29.27/32													PMP												
+
+-----------------------------
+インバウンド																																																		
+タイプ							プロトコル											ポート範囲							送信元													備考												
+すべてのトラフィック							すべて											すべて							TrustサブネットCIDR													Trust to Trust(AWS)												
+すべてのトラフィック							すべて											すべて							TrustサブネットCIDR													Trust to Trust(AWS)												
