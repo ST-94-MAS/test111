@@ -1,72 +1,28 @@
-要件定義
-開発IAMユーザーは会社名*2くらい 65～84
-管理者ユーザーは5名 65～１０４まで
-
-
-会社名
- kmew
- PISCTOPPAN
- FIS
- SSS
- powerful concept
- TORA
- FINE
- AIDOMA
- ADC
- Move
- IDA
- 
-各会社名に対して2つの開発IAMユーザー名を提案します。
-
-kmew
-
-kmew_dev_user1
-kmew_dev_user2
-PISCTOPPAN
-
-pisctoppan_dev_user1
-pisctoppan_dev_user2
-FIS
-
-fis_dev_user1
-fis_dev_user2
-SSS
-
-sss_dev_user1
-sss_dev_user2
-powerful concept
-
-powerfulconcept_dev_user1
-powerfulconcept_dev_user2
-TORA
-
-tora_dev_user1
-tora_dev_user2
-FINE
-
-fine_dev_user1
-fine_dev_user2
-AIDOMA
-
-aidoma_dev_user1
-aidoma_dev_user2
-ADC
-
-adc_dev_user1
-adc_dev_user2
-Move
-
-move_dev_user1
-move_dev_user2
-IDA
-
-ida_dev_user1
-ida_dev_user2
-
-管理者ユーザーの名前の提案です。
-
-admin_user1
-admin_user2
-admin_user3
-admin_user4
-admin_user5
+133.254.141.65	
+www.kmew.co.jp	
+http	https
+リクエストの文字列が	リクエストの文字列が
+/kmewpers	/kmewpers
+/kmewsimulation	/kmewsimulation
+の場合	の場合
+10.246.36.58:80 	10.246.36.58:80
+10.246.36.59:80	10.246.36.59:80
+へバランシング	へバランシング
+	
+リクエストの文字列が	リクエストの文字列が
+/catalog	/catalog
+/inquiry	/inquiry
+/designAward	/designAward
+/download/nintei_k	/download/nintei_k
+の場合	の場合
+10.246.36.58:80 	10.246.36.58:80 
+へバランシング	へバランシング
+	
+	
+上記以外は	上記以外は
+10.246.36.58:80	10.246.36.58:80
+へバランシングされる	へバランシングされる
+downしている場合は	downしている場合は
+10.246.36.59:80 	10.246.36.59:80
+へバランシング	へバランシング
+	
