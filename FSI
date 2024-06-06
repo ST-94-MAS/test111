@@ -1,22 +1,6 @@
-@echo off
-setlocal enabledelayedexpansion
-
-rem ファイルが存在するディレクトリに移動
-cd /d "C:\path\to\your\directory"
-
-rem ファイルカウンタを初期化
-set counter=1
-
-rem すべてのPNGファイルをループ
-for %%f in (*.png) do (
-    rem 新しいファイル名を設定
-    set newname=202402-開A01単-19-RLB_01-001-00!counter!.png
-    
-    rem ファイル名を変更
-    ren "%%f" "!newname!"
-    
-    rem カウンタをインクリメント
-    set /a counter+=1
-)
-
-endlocal
+インバウンド																																																		
+タイプ							プロトコル											ポート範囲							送信元													備考												
+すべてのトラフィック							すべて											すべて							dmzサブネットCIDR													DMZ to DMZ(AWS)												
+すべてのトラフィック							すべて											すべて							dmzサブネットCIDR													DMZ to DMZ(AWS)												
+すべてのトラフィック							すべて																		64.39.96.0/20													脆弱性検査用IPセグメント												
+すべてのトラフィック							すべて																		139.87.112.0/23													脆弱性検査用IPセグメント												
