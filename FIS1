@@ -1,28 +1,140 @@
-133.254.141.65	
-www.kmew.co.jp	
-http	https
-リクエストの文字列が	リクエストの文字列が
-/kmewpers	/kmewpers
-/kmewsimulation	/kmewsimulation
-の場合	の場合
-10.246.36.58:80 	10.246.36.58:80
-10.246.36.59:80	10.246.36.59:80
-へバランシング	へバランシング
-	
-リクエストの文字列が	リクエストの文字列が
-/catalog	/catalog
-/inquiry	/inquiry
-/designAward	/designAward
-/download/nintei_k	/download/nintei_k
-の場合	の場合
-10.246.36.58:80 	10.246.36.58:80 
-へバランシング	へバランシング
-	
-	
-上記以外は	上記以外は
-10.246.36.58:80	10.246.36.58:80
-へバランシングされる	へバランシングされる
-downしている場合は	downしている場合は
-10.246.36.59:80 	10.246.36.59:80
-へバランシング	へバランシング
-	
+							
+	■ 2.1 OS情報						
+							
+		・仮想マシン構成情報					
+			ホスト名	kmdb12			
+			OS種別	Red Hat Enterprise Linux 7.7 x64			
+			vCPU	4vCPU			
+			Memory	12GB			
+			文字コード	UTF-8			
+			IPアドレス	10.246.80.187			
+			DNS参照先	"133.254.7.16
+133.254.7.33"			
+							
+	■ 2.2 DISK情報						
+		・ディスク構成 (共通)		NAS共有 SnapMirror無 DR無			
+			マウントポイント	容量	用途		
+			/	50GB	OS領域		
+			swap	4GB	SWAP		
+			/var/dumpsavearea	4GB	DUMP		
+			/extsdd1	210Gb	データ領域		
+							
+	■ 2.3 fstab						
+			UUID=eb7fc8df-03d1-4dfe-9774-5977160ae79b / xfs defaults 1 1				
+			UUID=4f7ad010-da76-41ca-9eed-c356ed3fe04a swap swap defaults 0 0				
+			UUID=05c3d600-14ae-42cf-b6b2-9237a6d6130a /var/dumpsavearea xfs ro 0 2				
+			UUID=99ddc25f-114d-4540-a961-c78c56900aa6 /extsdd1 xfs defaults 1 2				
+			shmfs                                    /dev/shm  tmpfs defaults,size=4096M 0 0	 /dev/shm  tmpfs defaults,size=4096M 0 0			
+			esapsvm811.mew.co.jp:/save_kmdb12 /backup nfs noauto,rw,hard,intr 0 0				
+							
+	■ 2.4 df結果						
+		・	2020年10月27日時点のdfの結果				
+			ファイルシス   タイプ   サイズ  使用  残り 使用% マウント位置				
+			devtmpfs                          devtmpfs   1.8G     0  1.8G    0% /dev				
+			tmpfs                             tmpfs      4.0G  1.9G  2.2G   47% /dev/shm				
+			tmpfs                             tmpfs      1.8G  181M  1.7G   10% /run				
+			tmpfs                             tmpfs      1.8G     0  1.8G    0% /sys/fs/cgroup				
+			/dev/sda1                         xfs         50G   22G   28G   44% /				
+			/dev/sdd1                         xfs        100G   75G   26G   75% /extsdd1				
+			/dev/sdc1                         xfs        4.0G  224K  4.0G    1% /var/dumpsavearea				
+			tmpfs                             tmpfs      368M     0  368M    0% /run/user/0				
+							
+	■ 2.5 主要なソフトウェア						
+		・サービスとして提供するソフトウェア					
+		名称		バージョン	使用ポート		備考
+		SSH		7.4p1	22/tcp		パッケージ版を使用する
+		Oracle		19.3.0.0.0	5500/tcp 1521/tcp		Oracle データベース
+		PostgreSQL		9.2.24	5432		PostgreSQLデータベース
+		Perl		5.16.3	-		一部のアプリケーションに利用
+		Postfix		2.10.1	25/TCP		メール送信サーバ
+							
+	■ 2.6 自動起動設定						
+		・自動起動しているサービス一覧					
+			名称				
+			UMFBaseAgent_2				
+			UMFOperationsAgent_1				
+			accounts-daemon				
+			atd				
+			auditd				
+			autovt@				
+			brandbot.path				
+			chronyd				
+			crond				
+			default				
+			display-manager				
+			dm-event				
+			dmraid-activation				
+			ds_agent				
+			gdm				
+			getty@				
+			initial-setup-reconfiguration				
+			irqbalance				
+			kdump				
+			ksm				
+			ksmtuned				
+			libstoragemgmt				
+			lvm2-lvmetad				
+			lvm2-lvmpolld				
+			lvm2-monitor				
+			mcelog				
+			mdmonitor				
+			microcode				
+			multi-user				
+			multipathd				
+			netcf-transaction				
+			nfs-client				
+			oracledb				
+			postfix				
+			postgresql				
+			remote-fs				
+			rhel-autorelabel-mark				
+			rhel-autorelabel				
+			rhel-configure				
+			rhel-dmesg				
+			rhel-domainname				
+			rhel-import-state				
+			rhel-loadmodules				
+			rhel-readonly				
+			rhsmcertd				
+			rpcbind				
+			rpcbind				
+			rsyslog				
+			rtkit-daemon				
+			runlevel2				
+			runlevel3				
+			runlevel4				
+			smartd				
+			snmpd				
+			sshd				
+			sysstat				
+			systemd-readahead-collect				
+			systemd-readahead-drop				
+			systemd-readahead-replay				
+			tuned				
+			udisks2				
+			unbound-anchor.timer				
+			vdo				
+			vgauthd				
+			vmtoolsd				
+
+
+
+
+
+
+ーーーーーーーーーーーーーーーーーーーーーー
+	■ 6.1 PostgreSQL					
+		・	データ保存は/extsdd1/pgsql/data			
+						
+	■ 6.1.1 pg_hba.conf					
+		・	自ホスト以外はkmtweb11からのみ接続許可			
+		・	以下の制限をかける。			
+			local   all             all                                     password			
+			host    all             all             10.246.36.58/32         password			
+			host    all             all             10.246.36.59/32         password			
+			host    all             all             ::1/128                 ident			
+						
+	■ 6.1.2 postgresql.conf					
+		・	ローカル、実IPアドレスで待ち受け			
+			上記以外はデフォルト			
+			listen_addresses = '*'			
