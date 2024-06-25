@@ -1,22 +1,48 @@
-サーバID	OS種別	ホスト名	IPアドレス	Zabbix利用有無	監視種別	Trigger Request Body (JSON)	Actionfilter Request Body (JSON)	有効/無効	監視設定グループ名	監視設定グループキー
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	CPU使用率	{"server_id":1189,"kind":"cpu_util_win","params":{"threshold_int":85,"threshold_detail":"5","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	CPU使用率	{"server_id":1189,"kind":"cpu_util_win","params":{"threshold_int":95,"threshold_detail":"5","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ロードアベレージ	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	メモリ	{"server_id":1189,"kind":"memory_size_pused","params":{"threshold_int":85,"memory_buffer_cache_required":"1","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	メモリ	{"server_id":1189,"kind":"memory_size_pused","params":{"threshold_int":95,"memory_buffer_cache_required":"1","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	スワップ	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ディスク	{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"C:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ディスク	{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":95,"fs":"C:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ディスク	{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"D:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ディスク	{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":95,"fs":"D:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	トラフィック	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	プロセス	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	サービス	{"server_id":1189,"kind":"service_state","params":{"service_name":"Tomcat7","judgment_count_flag":"0","is_threshold_detail":false,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	PORT	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	Ping	{"server_id":1189,"kind":"icmp_ping","params":{"judgment_count_flag":"0","ping_ip_address":"","is_threshold_detail":false,"os_kind":2}}	[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	AgentPing	{"server_id":1189,"kind":"agent_ping","params":{"agent_ping_time":"170","is_threshold_detail":false,"os_kind":2}}	-	有効	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	イベントログ監視	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ログ監視	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	ファイル	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	SNMPトラップ	no trigger	-	-	-	-
-1189	Windows	kmcgsv11	10.246.35.112	TRUE	WEB監視	no trigger	-	-	-	-
+Trigger Request Body (JSON)
+{"server_id":1189,"kind":"cpu_util_win","params":{"threshold_int":85,"threshold_detail":"5","is_threshold_detail":true,"os_kind":2}}
+{"server_id":1189,"kind":"cpu_util_win","params":{"threshold_int":95,"threshold_detail":"5","is_threshold_detail":true,"os_kind":2}}
+no trigger
+{"server_id":1189,"kind":"memory_size_pused","params":{"threshold_int":85,"memory_buffer_cache_required":"1","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+{"server_id":1189,"kind":"memory_size_pused","params":{"threshold_int":95,"memory_buffer_cache_required":"1","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+no trigger
+{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"C:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":95,"fs":"C:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"D:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+{"server_id":1189,"kind":"fs_size_pused","params":{"threshold_int":95,"fs":"D:","threshold_detail":"1","is_threshold_detail":true,"os_kind":2}}
+no trigger
+no trigger
+{"server_id":1189,"kind":"service_state","params":{"service_name":"Tomcat7","judgment_count_flag":"0","is_threshold_detail":false,"os_kind":2}}
+no trigger
+{"server_id":1189,"kind":"icmp_ping","params":{"judgment_count_flag":"0","ping_ip_address":"","is_threshold_detail":false,"os_kind":2}}
+{"server_id":1189,"kind":"agent_ping","params":{"agent_ping_time":"170","is_threshold_detail":false,"os_kind":2}}
+no trigger
+no trigger
+no trigger
+no trigger
+no trigger
+
+
+
+
+Actionfilter Request Body (JSON)
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+-
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+-
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+-
+-
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+-
+[{"action_id":219,"recovery_action_id":2,"week":"0123456","use_holiday_flag":null,"priority":1,"start_time":"00:00","end_time":"23:59","service_id":5007,"opt":"","default_action_flag":1,"auto_close":1,"reexecutetrigger_invalid_flag":null,"log_all_notification_flag":null,"cluster_monitoring_flag":0}]
+-
+-
+-
+-
+-
+-
