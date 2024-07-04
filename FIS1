@@ -21,3 +21,17 @@ WEBサーバー2
 00 04 * * * /usr/bin/php -q /extsdd1/www/www.kmew.co.jp/kmewpers/batch/wgl_thumbnail_create.php > /dev/null 2>&1
 
 00 06 * * * /usr/bin/php -q /extsdd1/www/www.kmew.co.jp/kmewpers/batch/wgl_flie_clean.php > /dev/null 2>&1
+
+
+提案する実施時間
+WEBサーバー1とWEBサーバー2の共通の空き時間
+00:00 ～ 01:00
+01:30 ～ 02:00
+02:30 ～ 03:00
+03:30 ～ 04:00
+05:30 ～ 06:00
+理由
+00:00 ～ 01:00:
+
+日付変更直後であり、深夜帯のためシステム負荷が低い可能性が高い。
+01:01から始まるCronジョブの前に終了するため、競合しない。
