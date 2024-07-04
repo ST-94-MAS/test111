@@ -4,3 +4,15 @@ mount.nfs4: Connection timed out
 
 aws efs describe-mount-targets --file-system-id fs-0678297198e5a0eac
 sudo systemctl status nfs-client.target
+
+
+[ec2-user@ip-10-6-0-92 ~]$ aws efs describe-mount-targets --file-system-id fs-0678297198e5a0eac
+
+Unable to locate credentials. You can configure credentials by running "aws configure".
+[ec2-user@ip-10-6-0-92 ~]$ sudo systemctl status nfs-client.target
+● nfs-client.target - NFS client services
+     Loaded: loaded (/usr/lib/systemd/system/nfs-client.target; enabled; preset: disabled)
+     Active: active since Thu 2024-07-04 04:55:01 UTC; 1h 31min ago
+
+Jul 04 04:55:01 ip-10-6-0-92.ap-northeast-1.compute.internal systemd[1]: Reached target nfs-client.target - NFS client services.
+[ec2-user@ip-10-6-0-92 ~]$
