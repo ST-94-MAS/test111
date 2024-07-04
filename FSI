@@ -1,2 +1,6 @@
 [ec2-user@ip-10-6-0-92 ~]$ sudo mount -t nfs4 -o nfsvers=4.1 10.6.0.9:/ /mnt/efs
 mount.nfs4: Connection timed out
+
+
+aws efs describe-mount-targets --file-system-id fs-0678297198e5a0eac
+sudo systemctl status nfs-client.target
