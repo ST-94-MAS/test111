@@ -1,14 +1,3 @@
-https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/target-group-health-checks.html
-公式ではヘルスチェックリクエストのパスは/healthcheck.htmlとなっているため、htmlでも問題ないかと思います。
-基本的には、ヘルスチェックリクエストに対して200 OKのステータスコードを返すだけの内容であれば十分の認識です。
-
-healthcheck.html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Health Check</title>
-</head>
-<body>
-    <h1>OK</h1>
-</body>
-</html>
+ec2-user@ip-10-6-0-92 ~]$ sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize                                                                        =1048576,hard,timeo=600,retrans=2,noresvport fs-0678297198e5a0eac.efs.ap-northea                                                                        st-1.amazonaws.com:/ /mnt/efs
+mount.nfs4: Failed to resolve server fs-0678297198e5a0eac.efs.ap-northeast-1.ama                                                                        zonaws.com: Name or service not known
+[ec2-user@ip-10-6-0-92 ~]$
