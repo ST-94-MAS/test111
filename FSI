@@ -1,3 +1,32 @@
-ec2-user@ip-10-6-0-92 ~]$ sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize                                                                        =1048576,hard,timeo=600,retrans=2,noresvport fs-0678297198e5a0eac.efs.ap-northea                                                                        st-1.amazonaws.com:/ /mnt/efs
-mount.nfs4: Failed to resolve server fs-0678297198e5a0eac.efs.ap-northeast-1.ama                                                                        zonaws.com: Name or service not known
+[ec2-user@ip-10-6-0-92 ~]$
+[ec2-user@ip-10-6-0-92 ~]$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=112 time=1.33 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=112 time=1.35 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=112 time=1.37 ms
+^C
+--- 8.8.8.8 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = 1.334/1.350/1.367/0.013 ms
+[ec2-user@ip-10-6-0-92 ~]$ dig fs-0678297198e5a0eac.efs.ap-northeast-1.amazonaws.com
+
+; <<>> DiG 9.16.48-RH <<>> fs-0678297198e5a0eac.efs.ap-northeast-1.amazonaws.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 60453
+;; flags: qr rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;fs-0678297198e5a0eac.efs.ap-northeast-1.amazonaws.com. IN A
+
+;; AUTHORITY SECTION:
+ap-northeast-1.amazonaws.com. 204 IN    SOA     dns-external-master.amazon.com. hostmaster.amazon.com. 2012083412 180 60 2592000 7109
+
+;; Query time: 0 msec
+;; SERVER: 10.6.0.2#53(10.6.0.2)
+;; WHEN: Thu Jul 04 05:58:40 UTC 2024
+;; MSG SIZE  rcvd: 156
+
 [ec2-user@ip-10-6-0-92 ~]$
