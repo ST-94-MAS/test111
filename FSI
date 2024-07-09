@@ -1,2 +1,17 @@
-	
-Health checks failed with these codes: [404]
+CPU使用率
+for /L %i in (1,1,8) do start /b "" cmd /c "ping 127.0.0.1 -t"
+
+メモリ
+for /L %i in (1,1,100) do start /b "" cmd /c "powershell -Command \"$a = New-Object byte[] 104857600; while ($true) { $a += $a; Start-Sleep -Seconds 5 }\""
+
+ディスク使用量を
+fsutil file createnew C:\temp\testfile1.dat 1048576000
+
+スワップ使用量
+for /L %i in (1,1,100) do start /b "" cmd /c "powershell -Command \"$a = New-Object byte[] 104857600; while ($true) { $a += $a; Start-Sleep -Seconds 5 }\""
+
+
+プロセス
+for /L %i in (1,1,100) do start /b cmd /c "timeout /t 300"
+
+
