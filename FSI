@@ -42,3 +42,10 @@ AWSマネジメントコンソールにログインし、AWS Backupサービス�
 EC2インスタンスの起動
 
 作成されたAMIから新しいEC2インスタンスを起動します。
+
+
+[ec2-user@ip-10-6-0-92 ~]$ stress --vm 1 --vm-bytes 902M --timeout 60
+stress: info: [432285] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd
+stress: FAIL: [432285] (415) <-- worker 432286 got signal 9
+stress: WARN: [432285] (417) now reaping child worker processes
+stress: FAIL: [432285] (451) failed run completed in 1s
