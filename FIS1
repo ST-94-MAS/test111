@@ -5,3 +5,47 @@ Error:
   - nothing provides libcrypto.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
   - nothing provides libcrypto.so.1.1(OPENSSL_1_1_0)(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
   - nothing provides libssl.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
+
+
+OpenSSL 1.1のライブラリパスを追加
+
+bash
+コードをコピーする
+sudo tee /etc/ld.so.conf.d/openssl-1.1.conf <<EOF
+/usr/local/openssl-1.1/lib
+EOF
+
+markdown
+コードをコピーする
+
+2. **ライブラリキャッシュの更新**
+
+```bash
+sudo ldconfig
+Zabbixサーバー、ウェブインターフェース、エージェントのインストール
+
+bash
+コードをコピーする
+sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
+これでも依存関係の問題が解決しない場合、Zabbixのパッケージが依存する特定のライブラリバージョンがインストールされていないことが考えられます。その場合、次の手順でZabbixの公式リポジトリを確認し、必要なライブラリをインストールしてください。
+
+追加手順: OpenSSL 1.1のライブラリが適切にインストールされているか確認
+ライブラリが存在するか確認
+
+bash
+コードをコピーする
+ls -l /usr/local/openssl-1.1/lib/libssl.so.1.1
+ls -l /usr/local/openssl-1.1/lib/libcrypto.so.1.1
+環境変数の設定
+
+OpenSSL 1.1のパスを環境変数に追加します。
+
+bash
+コードをコピーする
+export LD_LIBRARY_PATH=/usr/local/openssl-1.1/lib:$LD_LIBRARY_PATH
+Zabbixサーバー、ウェブインターフェース、エージェントのインストール
+
+bash
+コードをコピーする
+sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
+これらの手順を試しても問題が解決しない場合、Zabbixのサポートドキュメントやコミュニティフォーラムで追加のサポートを求めることをお勧めします。
