@@ -1,3 +1,11 @@
+[ec2-user@ip-10-6-0-92 ~]$ sudo amazon-linux-extras install epel
+sudo: amazon-linux-extras: command not found
+[ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y openssl11
+Last metadata expiration check: 0:12:35 ago on Thu Jul 25 06:16:52 2024.
+No match for argument: openssl11
+Error: Unable to find a match: openssl11
+[ec2-user@ip-10-6-0-92 ~]$
+
 [ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pg                                                                                        sql zabbix-agent
 Last metadata expiration check: 0:00:09 ago on Thu Jul 25 06:16:52 2024.
 Error:
