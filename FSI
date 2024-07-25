@@ -16,11 +16,12 @@ PostgreSQLのインストールと設定
 
 bash
 コードをコピーする
-sudo amazon-linux-extras install -y postgresql13
+sudo amazon-linux-extras enable postgresql13
 sudo yum install -y postgresql-server postgresql-contrib
 sudo postgresql-setup initdb
 sudo systemctl start postgresql
 sudo systemctl enable postgresql
+
 データベースの作成
 PostgreSQLにログインします：
 
