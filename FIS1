@@ -4,3 +4,107 @@ No match for argument: zabbix-server-pgsql
 No match for argument: zabbix-web-pgsql
 Error: Unable to find a match: zabbix-server-pgsql zabbix-web-pgsql
 [ec2-user@ip-10-6-0-92 ~]$
+
+
+Zabbixリポジトリの追加と確認
+Zabbixリポジトリファイルの作成
+リポジトリファイルを手動で作成し、正しいURLを設定します。
+
+bash
+コードをコピーする
+sudo tee /etc/yum.repos.d/zabbix.repo <<EOF
+[zabbix]
+name=Zabbix Official Repository - $releasever
+baseurl=https://repo.zabbix.com/zabbix/6.0/rhel/7/x86_64/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.zabbix.com/zabbix-official-repo.key
+EOF
+
+markdown
+コードをコピーする
+
+2. **YUMキャッシュのクリアと更新**
+
+```bash
+sudo yum clean all
+sudo yum makecache
+Zabbixサーバー、ウェブインターフェース、エージェントのインストール
+
+bash
+コードをコピーする
+sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
+PostgreSQLのインストールと設定
+Zabbixがインストールされたら、次にPostgreSQLをインストールして設定します。
+
+bash
+コードをコピーする
+sudo amazon-linux-extras enable postgresql13
+sudo yum install -y postgresql-server postgresql-contrib
+sudo postgresql-setup initdb
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+データベースの作成
+PostgreSQLにログインしてデータベースとユーザーを作成します。
+
+bash
+コードをコピーする
+sudo -u postgres psql
+以下のコマンドを実行してデータベースとユーザーを作成します。
+
+sql
+コードをコピーする
+CREATE DATABASE zabbix;
+CREATE USER zabbix WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE zabbix TO zabbix;
+\q
+データベース初期化スクリプトのインポート
+データベース初期化スクリプトをインポートします。
+
+bash
+コードをコピーする
+zcat /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | sudo -u zabbix psql zabbix
+Zabbixサーバーの設定
+/etc/zabbix/zabbix_server.confファイルを編集します。
+
+bash
+コードをコピーする
+sudo vi /etc/zabbix/zabbix_server.conf
+以下の設定を行います。
+
+conf
+コードをコピーする
+DBPassword=password
+PHP設定の変更
+/etc/httpd/conf.d/zabbix.confファイルを編集します。
+
+bash
+コードをコピーする
+sudo vi /etc/httpd/conf.d/zabbix.conf
+以下の設定を行います。
+
+conf
+コードをコピーする
+php_value date.timezone Asia/Tokyo
+サービスの開始
+サービスを再起動して有効化します。
+
+bash
+コードをコピーする
+sudo systemctl restart zabbix-server zabbix-agent httpd
+sudo systemctl enable zabbix-server zabbix-agent httpd
+トラブルシューティング
+上記の手順でパッケージが見つからない場合、以下の点を確認してください：
+
+リポジトリファイルの確認:
+
+bash
+コードをコピーする
+sudo cat /etc/yum.repos.d/zabbix.repo
+リポジトリが有効か確認:
+
+bash
+コードをコピーする
+sudo yum repolist enabled
+ZabbixリポジトリのURLが正しいか確認:
+ZabbixリポジトリURLが最新バージョンのZabbixに対応しているか確認してください。
