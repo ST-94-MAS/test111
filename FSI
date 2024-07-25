@@ -1,3 +1,17 @@
+sudo yum groupinstall -y "Development Tools"
+sudo yum install -y wget tar
+OpenSSL 1.1のダウンロードとインストール
+bash
+コードをコピーする
+cd /usr/local/src
+sudo wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz
+sudo tar -zxf openssl-1.1.1u.tar.gz
+cd openssl-1.1.1u
+sudo ./config --prefix=/usr/local/openssl-1.1 --openssldir=/usr/local/openssl-1.1 shared zlib
+sudo make
+sudo make install
+
+
 EPELリポジトリの有効化
 sudo amazon-linux-extras install epel
 
