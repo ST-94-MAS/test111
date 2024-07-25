@@ -11,17 +11,17 @@ sudo ./config --prefix=/usr/local/openssl-1.1 --openssldir=/usr/local/openssl-1.
 sudo make
 sudo make install
 
-
-EPELリポジトリの有効化
-sudo amazon-linux-extras install epel
-
-OpenSSL 1.1のインストール
-sudo yum install -y openssl11
-
-
 必要なライブラリのシンボリックリンク作成
-sudo ln -s /usr/lib64/libssl.so.1.1 /usr/lib64/libssl.so.1.1
-sudo ln -s /usr/lib64/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
+sudo ln -s /usr/local/openssl-1.1/lib/libssl.so.1.1 /usr/lib64/libssl.so.1.1
+sudo ln -s /usr/local/openssl-1.1/lib/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
+
+Zabbixサーバー、ウェブインターフェース、エージェントの再インストール
+YUMキャッシュのクリアと更新
+sudo yum clean all
+sudo yum makecache
+
+Zabbixサーバー、ウェブインターフェース、エージェントのインストール
+sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
 
 
 Step 1: Zabbix Serverのインストール
