@@ -1,7 +1,6 @@
-[ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-apache-conf zabbix-sql-scripts zabbix-selinux-policy zabbix-agent
-Last metadata expiration check: 2:02:16 ago on Thu Jul 25 02:52:11 2024.
+[ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
+Last metadata expiration check: 0:00:32 ago on Thu Jul 25 06:06:09 2024.
 No match for argument: zabbix-server-pgsql
 No match for argument: zabbix-web-pgsql
-No match for argument: zabbix-apache-conf
-Error: Unable to find a match: zabbix-server-pgsql zabbix-web-pgsql zabbix-apache-conf
+Error: Unable to find a match: zabbix-server-pgsql zabbix-web-pgsql
 [ec2-user@ip-10-6-0-92 ~]$
