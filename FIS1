@@ -1,9 +1,13 @@
-[ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
-Last metadata expiration check: 0:00:32 ago on Thu Jul 25 06:06:09 2024.
-No match for argument: zabbix-server-pgsql
-No match for argument: zabbix-web-pgsql
-Error: Unable to find a match: zabbix-server-pgsql zabbix-web-pgsql
-[ec2-user@ip-10-6-0-92 ~]$
+[ec2-user@ip-10-6-0-92 ~]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pg                                                                                        sql zabbix-agent
+Last metadata expiration check: 0:00:09 ago on Thu Jul 25 06:16:52 2024.
+Error:
+ Problem 1: conflicting requests
+  - nothing provides libcrypto.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0                                                                                        .0-1.el8.x86_64 from zabbix
+  - nothing provides libcrypto.so.1.1(OPENSSL_1_1_0)(64bit) needed by zabbix-ser                                                                                        ver-pgsql-6.0.0-1.el8.x86_64 from zabbix
+  - nothing provides libssl.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0.0-                                                                                        1.el8.x86_64 from zabbix
+  - nothing provides libssl.so.1.1(OPENSSL_1_1_0)(64bit) needed by zabbix-server                                                                                        -pgsql-6.0.0-1.el8.x86_64 from zabbix
+  - nothing provides libssl.so.1.1(OPENSSL_1_1_1)(64bit) needed by zabbix-server                                                                                        -pgsql-6.0.0-1.el8.x86_64 from zabbix
+  - nothing provides libOpenIPMI.so.0()(64bit) needed by zabbix-server-pgsql-6.0                                                                                        .0-1.el8.x86_64 from zabbix
 
 
 Zabbixリポジトリの追加と確認
