@@ -1,3 +1,15 @@
+EPELリポジトリの有効化
+sudo amazon-linux-extras install epel
+
+OpenSSL 1.1のインストール
+sudo yum install -y openssl11
+
+
+必要なライブラリのシンボリックリンク作成
+sudo ln -s /usr/lib64/libssl.so.1.1 /usr/lib64/libssl.so.1.1
+sudo ln -s /usr/lib64/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
+
+
 Step 1: Zabbix Serverのインストール
 パッケージリポジトリの追加
 
