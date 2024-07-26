@@ -1,136 +1,235 @@
-sudo yum groupinstall -y "Development Tools"
-sudo yum install -y wget tar
-OpenSSL 1.1のダウンロードとインストール
-bash
-コードをコピーする
-cd /usr/local/src
-sudo wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz
-sudo tar -zxf openssl-1.1.1u.tar.gz
-cd openssl-1.1.1u
-sudo ./config --prefix=/usr/local/openssl-1.1 --openssldir=/usr/local/openssl-1.1 shared zlib
-sudo make
-sudo make install
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create VPC, Subnets, Security Groups, NAT Gateway, and EC2 Instances with Zabbix Server Installation
 
-必要なライブラリのシンボリックリンク作成
-sudo ln -s /usr/local/openssl-1.1/lib/libssl.so.1.1 /usr/lib64/libssl.so.1.1
-sudo ln -s /usr/local/openssl-1.1/lib/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
+Resources:
+  # VPC
+  MyVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties: 
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
 
-Zabbixサーバー、ウェブインターフェース、エージェントの再インストール
-YUMキャッシュのクリアと更新
-sudo yum clean all
-sudo yum makecache
+  # Internet Gateway
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MyInternetGateway
 
-Zabbixサーバー、ウェブインターフェース、エージェントのインストール
-sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
+  AttachGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties: 
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref InternetGateway
 
+  # Public Subnet
+  PublicSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
+      Tags:
+        - Key: Name
+          Value: PublicSubnet
 
-Step 1: Zabbix Serverのインストール
-パッケージリポジトリの追加
+  # Private Subnet
+  PrivateSubnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: !Ref "AWS::Region"
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet
 
-bash
-コードをコピーする
-sudo rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/7/x86_64/zabbix-release-6.0-2.el7.noarch.rpm
-sudo yum clean all
-sudo yum makecache
+  # NAT Gateway Elastic IP
+  NatElasticIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: vpc
 
-Zabbixサーバー、ウェブインターフェース、エージェントのインストール
+  # NAT Gateway
+  NatGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt NatElasticIP.AllocationId
+      SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: MyNatGateway
 
-bash
-コードをコピーする
-sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
-PostgreSQLのインストールと設定
+  # Route Table for Public Subnet
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties: 
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: Name
+          Value: PublicRouteTable
 
-bash
-コードをコピーする
-sudo amazon-linux-extras enable postgresql13
-sudo yum install -y postgresql-server postgresql-contrib
-sudo postgresql-setup initdb
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
+  PublicRoute:
+    Type: 'AWS::EC2::Route'
+    Properties: 
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
 
-データベースの作成
-PostgreSQLにログインします：
+  PublicSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
 
-bash
-コードをコピーする
-sudo -u postgres psql
-以下のコマンドを実行してデータベースとユーザーを作成します：
+  # Route Table for Private Subnet
+  PrivateRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties: 
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: Name
+          Value: PrivateRouteTable
 
-sql
-コードをコピーする
-CREATE DATABASE zabbix;
-CREATE USER zabbix WITH PASSWORD 'password';
-GRANT ALL PRIVILEGES ON DATABASE zabbix TO zabbix;
-\q
-データベース初期化スクリプトのインポート
+  PrivateRoute:
+    Type: 'AWS::EC2::Route'
+    Properties: 
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway
 
-bash
-コードをコピーする
-zcat /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | sudo -u zabbix psql zabbix
-Zabbixサーバーの設定
-/etc/zabbix/zabbix_server.confファイルを編集します：
+  PrivateSubnetRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
 
-bash
-コードをコピーする
-sudo vi /etc/zabbix/zabbix_server.conf
-以下の設定を行います：
+  # Security Group
+  MySecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow SSH and HTTP access
+      VpcId: !Ref MyVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: MySecurityGroup
 
-makefile
-コードをコピーする
-DBPassword=password
-PHP設定の変更
-/etc/httpd/conf.d/zabbix.confファイルを編集します：
+  # EC2 Instance in Public Subnet with EIP and Zabbix installation
+  PublicEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      KeyName: test-shima-zabbix
+      SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      ImageId: ami-033c6909beae3b794
+      Tags:
+        - Key: Name
+          Value: PublicEC2Instance
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo yum update -y
 
-bash
-コードをコピーする
-sudo vi /etc/httpd/conf.d/zabbix.conf
-以下の設定を行います：
+          # Install PostgreSQL 13
+          sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+          sudo dnf install -y postgresql13-server postgresql13-contrib
 
-lua
-コードをコピーする
-php_value date.timezone Asia/Tokyo
-サービスの開始
+          # Remove existing data directory if exists and initialize
+          sudo systemctl stop postgresql-13
+          sudo rm -rf /var/lib/pgsql/13/data
+          sudo /usr/pgsql-13/bin/postgresql-13-setup initdb
 
-bash
-コードをコピーする
-sudo systemctl restart zabbix-server zabbix-agent httpd
-sudo systemctl enable zabbix-server zabbix-agent httpd
-Step 2: Zabbixフロントエンドの設定
-ブラウザでZabbixフロントエンドにアクセス
-ZabbixサーバーのパブリックIPアドレスまたはDNS名にアクセスします：
+          # Set permissions and security context
+          sudo chown -R postgres:postgres /var/lib/pgsql/13/data
+          sudo chmod 700 /var/lib/pgsql/13/data
+          sudo mkdir -p /var/lib/pgsql/13/data/log
+          sudo chown -R postgres:postgres /var/lib/pgsql/13/data/log
+          sudo chmod 700 /var/lib/pgsql/13/data/log
+          sudo restorecon -Rv /var/lib/pgsql/13/data
+          sudo systemctl enable postgresql-13
+          sudo systemctl start postgresql-13
 
-arduino
-コードをコピーする
-http://<your-server-ip>/zabbix
-インストールウィザードに従って設定
+          # Configure Zabbix repository
+          sudo tee /etc/yum.repos.d/zabbix.repo <<EOF
+          [zabbix]
+          name=Zabbix Official Repository - \$basearch
+          baseurl=https://repo.zabbix.com/zabbix/6.0/rhel/9/\$basearch
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591
+          EOF
 
-Step 3: 他のEC2インスタンスにZabbixエージェントをインストール
-Zabbixエージェントのインストール
-各監視対象のEC2インスタンスに以下のコマンドを実行します：
+          # Configure EPEL repository manually
+          sudo tee /etc/yum.repos.d/epel.repo <<EOF
+          sudo tee /etc/yum.repos.d/epel.repo <<EOF
+          [epel]
+          name=Extra Packages for Enterprise Linux 9 - \$basearch
+          baseurl=https://dl.fedoraproject.org/pub/epel/9/Everything/\$basearch
+          enabled=1
+          gpgcheck=0
+          EOF
 
-bash
-コードをコピーする
-sudo rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/7/x86_64/zabbix-release-6.0-2.el7.noarch.rpm
-sudo yum clean all
-sudo yum install -y zabbix-agent
-Zabbixエージェントの設定
-/etc/zabbix/zabbix_agentd.confファイルを編集します：
+          # Install fping and Zabbix
+          sudo dnf clean all
+          sudo dnf repolist
+          sudo dnf install -y fping
+          sudo dnf install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent httpd
 
-bash
-コードをコピーする
-sudo vi /etc/zabbix/zabbix_agentd.conf
-以下の設定を行います：
+          # Configure PostgreSQL for Zabbix
+          sudo -u postgres psql -c "CREATE DATABASE zabbix;"
+          sudo -u postgres psql -c "CREATE USER zabbix WITH PASSWORD 'zabbix_password';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE zabbix TO zabbix;"
+          sudo zcat /usr/share/doc/zabbix-server-pgsql*/create.sql.gz | sudo -u postgres psql -d zabbix
 
-arduino
-コードをコピーする
-Server=<ZabbixサーバーのIP>
-サービスの開始
+          # Configure Zabbix server
+          sudo sed -i 's/# DBPassword=/DBPassword=zabbix_password/' /etc/zabbix/zabbix_server.conf
 
-bash
-コードをコピーする
-sudo systemctl start zabbix-agent
-sudo systemctl enable zabbix-agent
-Step 4: Zabbixサーバーで監視対象を追加
-Zabbixフロントエンドにログイン
-「設定」 -> 「ホスト」 -> 「ホストの作成」
-新しいホストの詳細を入力し、Zabbixエージェントを設定
+          # Start and enable Zabbix services
+          sudo systemctl enable zabbix-server zabbix-agent httpd
+          sudo systemctl start zabbix-server zabbix-agent httpd
+
+          # Configure PHP timezone
+          sudo sed -i 's/;date.timezone =/date.timezone = Asia\/Tokyo/' /etc/php.ini
+          sudo systemctl restart httpd
+
+  PublicElasticIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      InstanceId: !Ref PublicEC2Instance
+
+  # EC2 Instance in Private Subnet
+  PrivateEC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      KeyName: test-shima-zabbix
+      SubnetId: !Ref PrivateSubnet
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      ImageId: ami-06708ae97ebafbaa9
+      Tags:
+        - Key: Name
+          Value: PrivateEC2Instance
