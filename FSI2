@@ -1,30 +1,55 @@
-{"server_id":7160,"kind":"cpu_util","params":{"threshold_int":85,"threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"cpu_util","params":{"threshold_int":90,"threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-no trigger
-{"server_id":7160,"kind":"memory_size_pused","params":{"threshold_int":90,"memory_buffer_cache_required":"0","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"memory_size_pused","params":{"threshold_int":85,"memory_buffer_cache_required":"0","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"swap_size_pused","params":{"threshold_int":90,"threshold_detail":"60","performance_counter":"0","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"swap_size_pused","params":{"threshold_int":85,"threshold_detail":"60","performance_counter":"0","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"fs_size_pused","params":{"threshold_int":90,"fs":"/","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"/","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"fs_size_pused","params":{"threshold_int":90,"fs":"/extsdd1","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-{"server_id":7160,"kind":"fs_size_pused","params":{"threshold_int":85,"fs":"/extsdd1","threshold_detail":"60","is_threshold_detail":true,"os_kind":1}}
-no trigger
-no trigger
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/lib/systemd/systemd","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/sbin/chronyd","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/sbin/crond","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/sbin/rsyslogd","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/sbin/snmpd","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"/usr/sbin/sshd","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"proc_num","params":{"process_name":"^/usr/.*/vmtoolsd$","process_sign":"<","process_num":"1","judgment_count_flag":"0","kernel_thread_flag":"0","is_threshold_detail":false,"os_kind":1}}
-no trigger
-{"server_id":7160,"kind":"icmp_ping","params":{"judgment_count_flag":"0","ping_ip_address":"","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"agent_ping","params":{"agent_ping_time":"170","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"agent_ping","params":{"agent_ping_time":"1800","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"log","params":{"log_file":"/var/log/err_messages","log_regex_flag":"1","log_display_regexps_name":"kmtweb11_シスログ監視_2","log_encoding":"UTF-8","log_rotate":"1","log_all_detection_flag":"0","log_zabbix_regexps_relation_id":"5848","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"log","params":{"log_file":"/var/log/messages","log_regex_flag":"1","log_display_regexps_name":"kmtweb11_シスログ監視_1","log_encoding":"UTF-8","log_rotate":"1","log_all_detection_flag":"0","log_zabbix_regexps_relation_id":"5847","is_threshold_detail":false,"os_kind":1}}
-{"server_id":7160,"kind":"log","params":{"log_file":"/var/log/warn_messages","log_regex_flag":"1","log_display_regexps_name":"kmtweb11_シスログ監視_2","log_encoding":"UTF-8","log_rotate":"1","log_all_detection_flag":"0","log_zabbix_regexps_relation_id":"5848","is_threshold_detail":false,"os_kind":1}}
-no trigger
-no trigger
-no trigger
+1.	作業実績報告
+＜1.サマリ＞
+・iFlex設定シート（本番環境）の作成が完了。PISCによるiFlex環境（本番環境）の構築が完了するまで試験成績書や運用手順書等のドキュメント作成を進める。（FSI阿部）
+→承知した。（TOPPAN岡本）
+	iFlex設定シートにデグレがあり、連絡、修正した。(FSI阿部)
+→承知している。(TOPPAN 岡本)
+・AWS Backupなどの作成済みのドキュメントをBOXに配置し、その後連絡する(FSI阿部)
+　→承知した。（TOPPAN岡本）
+・8/10、11にFSI全社のGIPが変更するため、iFlex設定シートに記載するが、まずはALBのSGを修正したiFlex設定シートを提出いただき、別途GIPを記載するようにする。(FSI阿部)
+→承知した。（TOPPAN岡本）
+
+
+＜2.全体スケジュール＞
+	再見積もりスケジュールについて社内手続きがあり、お盆明けに提出する(FSI阿部)
+→承知した。(TOPPAN 岡本)
+
+＜3.納品物＞
+・納品日については新スケジュールがFIXしてから記載する。（FSI阿部）
+→承知した。（TOPPAN岡本）
+
+＜4.進捗管理（詳細設計）＞
+・PISC向けヒアリングについて、PISCから回答が来ているため100%としている。(FSI阿部)
+→承知した。（TOPPAN岡本）　
+
+＜4.進捗管理（運用引継ぎ）＞
+	iFlexシートのtest環境の作成するために申し込みしていただけますでしょうか。(FSI阿部)
+→認識した。（TOPPAN岡本）
+
+＜5.作業遅延＞
+特になし
+
+＜6.WBS変更点＞
+・再見積もり後に反映させる。（FSI阿部）
+→承知した。（TOPPAN岡本）
+
+＜7.変更管理＞
+特になし
+
+＜8.課題管理＞
+	・今後のやり取りは下記の課題を使用して行っていく(FSI阿部)
+KMEWIFLEX-23 運用に関するヒアリング
+KMEWIFLEX-24 テスト環境構築に関するヒアリング
+→承知した。(TOPPAN 岡本)　→承知した。(TOPPAN岡本)
+
+	KMEWIFLEX-25 elfinderについて
+ 松永さんが使用したいがセキュリティに引っかかるか不明(TOPPAN 岡本)
+
+
+	KMEWIFLEX-26 OSインストールでセットアップされるミドルウェアについて
+  Apacheやtomcatなどインストールされてかが不明なのでPISCに確認。(TOPPAN 岡本)
+
+＜その他＞
+	夏休みについて
+ TOPPAN様 8/10～8/15(日)まで　
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　以上
