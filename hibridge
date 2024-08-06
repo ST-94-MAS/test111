@@ -1,6 +1,13 @@
 以下のアドレスより「PumapWebService-Satelite-Template.zip」をダウンロードします。
 https:// dsy1xm230537a.cloudfront.net/latest/PumapWebService-Satelite-Template.zip
 
+PumapWebServiceのサテライトサイトに関連するS3バケットの名前は以下の通りです：
+
+pumap-content: コンテンツデータを格納するためのバケット。
+pumap-enduser: エンドユーザーデータを格納するためのバケット。
+pumap-usage-log: ログデータを保存するためのバケット。
+pumap-content-zip: CloudFrontのOAIを介してアクセスするためのバケット。
+
 サテライトサイトをAWS上に作成したい。
 使用するサービスはAPI Gateway、lambda、firehose、IAM、OAI、cloudfront
 作成するにあたって懸念点や実施すべきこと、そのほかに必要なことを記載して。
