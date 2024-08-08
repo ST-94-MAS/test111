@@ -167,4 +167,5 @@ API Gateway のカスタムドメイン名の設定と同様、CloudFormation �
 コンソールから CloudFormation の代替ドメイン名を設定する必要があります。
 ・CloudFront – ディストリビューション（オリジン 「pumap-content-zip.s3.amazonaws.com」）
 └ 設定 – 代替ドメイン名 ： ドメイン名を指定
- └ 設定 – カスタム SSL 証明書 ： ACM(バージニア北部)に登
+ └ 設定 – カスタム SSL 証明書 ： ACM(バージニア北部)に登録されている SSL 証明書を選択
+　└ 　設定 – セキュリティポリシー ： 「TLSv1.2_2019」を選択
