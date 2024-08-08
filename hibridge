@@ -28,3 +28,117 @@ Hi_Bridge管理するAWS上に配信(サテライト)サイトの作成を行う
 
 ●今後決定すべきこと
 管理サイトのS3のエンドポイント(管理場所)
+
+
+
+ envrc.sandboxの追加
+history_wsのルートディレクトリに「envrc.sandbox」を追加し、下記のように書き換えてください。
+HI_CLOUD_S3_SUFFIXは一意なUUIDを作成してください。
+HI_CLOUD_MAIN_DOMAIN_ZONE_IDは、Route53のsandbox.historyws.netのホストゾーンIDを入れてください。
+
+
+•	envrc.sandbox
+export AWS_PROFILE=sandbox
+
+export HI_CLOUD_ACTIVE_AVAILABILITY_ZONE="ap-northeast-1a"
+export HI_CLOUD_MAIN_DOMAIN='sandbox.historyws.net'
+export HI_CLOUD_MAIN_DOMAIN_ZONE_ID=Z01164761R7YR7KZSQJ9G
+
+export HI_CLOUD_AUTH_SERVER_COUNT=1
+export HI_CLOUD_S3_SUFFIX=7fd76ad8-46a0-4b3a-b32d-051e604e6df
+
+export HI_CLOUD_USER_RDS=$(cat << EOF
+{
+	"sandbox-0001" : {
+		snapshot_identifier = ""
+		engine = "ex"
+		instance_class = "db.t3.small"
+		multi_az = "false"
+		allocated_storage = 150
+		apply_immediately = true
+	},
+}
+EOF
+)
+
+export HI_CLOUD_AUTH_SERVER=$(cat << EOF
+{
+	count = 1
+	instance_type = "t2.nano"
+}
+EOF
+)
+
+export HI_CLOUD_APP_SERVER=$(cat << EOF
+{
+	count = 1
+	instance_type = "t2.nano"
+}
+EOF
+)
+
+export HI_CLOUD_REGION=ap-northeast-1
+export HI_CLOUD_VPC_NAME=history
+export HI_CLOUD_ENV=$AWS_PROFILE
+export HI_CLOUD_BUILD_DIR=$(readlink -f ./src/bin)
+ Makefileの編集
+Makefileにsandboxに変更できる行を追加してください。
+.PHONY: switch-prod-env
+switch-prod-env:
+	@echo "本番環境に切り替えます。"
+	-rm .envrc
+	ln -s envrc.prod .envrc
+	direnv allow
+
+.PHONY: switch-sandbox-env
+switch-sandbox-env:
+	@echo "XXX環境に切り替えます。"
+	-rm .envrc
+	ln -s envrc.sandbox .envrc
+	direnv allow
+
+・・・
+ makeの実行
+makeの各コマンドを下記の順で実行してください。
+make terraform-init
+make key
+make master-data
+make ami-auth-server
+make ami-app-server
+make ami-manage-server
+make ami-migration-windows
+make vpc
+これで新環境の作成ができあがります。
+ 管理DBの初期化
+管理サーバーに入って、
+$HOME/bin/init-script/init-manage-rds.sh
+$HOME/bin/update/2021.1/run.sh
+$HOME/bin/update/2022.2/run.sh
+を実行してください。
+ クラウドのセットアップ
+「aws_アップデーターアップロード手順.docx」を参考に、共通DBとアップデーターを配置します。添付文書PDFはS3バケット「s3://users-common-xxxxxxx/medicine_pdf/」に配置します。アップデーター作成時に、全ての添付文書PDFを作成して社内に保管しているはずなので、左記の場所にアップロードしてください。
+Hi-Story C管理サーバーで下記のコマンドを実行します。
+	共通DBのセットアップ
+/home/ec2-user/bin/init-scripts/init-user-rds.sh -v <バージョン番号>
+	アップデーターの配信
+hi-add-new-client-version --date <配信日> --version <バージョン番号>
+ クライアントのセットアップ
+次のリンクを参考にMSBuildをインストールします。https://learn.microsoft.com/ja-jp/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019
+MSBuildのパスを環境変数に登録するか、「developer command prompt」を起動してインストールしたMSBuildが起動する状態にしておいてください。
+ソースコードのリポジトリ「git@gitlab.com:hi-bridge/history-cloudclient.git」をチェックアウトして、クライアントのセットアップを作成します。
+既存の類似ファイルを参考に次のファイルを追加し、各ドメインの情報を記載してください。既存のファイルをコピーして作成してもいいですが、「ファイルに記載されているドメインの情報が作成した環境のドメインの情報になっていることしっかり確認する」ようにしてください。間違えると運用中の別のドメインに接続されます。
+	build_{環境名}.bat
+	ドメインを記載する。
+	History_cloud_DataB_Upload_{環境名}.bat
+	作成した環境のエンドポイントを記載する
+	known_hosts_{環境名}
+	ドメインと認証サーバーの公開鍵を記載する。公開鍵の文字列は「AWS System Manager」-「パラメーターストア」-「/master/ca/public_key」のエントリに保存されています。
+下記のファイルを更新します。
+	build_all.bat
+	各ドメイン用のバッチファイルの名称を追記します。
+「build.ps1」を実行します。※全てのドメインがビルドされるので「build_{環境名}.bat」のみでも可。
+「bin\{環境名}」にクライアントのセットアップが作成されます。
+薬局スペースを作成してからDBを移行し、クライアントから端末登録を実施してHistoryCが利用できることを確認し完了です。
+ 運用の開始
+作成したクライアントのセットアップを使い、薬局スペースを作成してからDBを移行し、端末登録を実施してください。
+HistoryCが使えることを確認できれば完了です
