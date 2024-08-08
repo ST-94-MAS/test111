@@ -142,3 +142,29 @@ MSBuildのパスを環境変数に登録するか、「developer command prompt�
  運用の開始
 作成したクライアントのセットアップを使い、薬局スペースを作成してからDBを移行し、端末登録を実施してください。
 HistoryCが使えることを確認できれば完了です
+
+
+
+API Gateway のカスタムドメイン名の設定
+テンプレートからのスタック作成によって、薬歴システムから呼び出される API も作成されます。
+テンプレート「PumapWebService_Build_Satelite_*_*_*_WithApiCustomDomain.yaml」にてスタックを作成した場
+合には、作成時に指定したドメイン名（カスタムドメイン名）にて API も作成されますので、設定作業は不要です。
+また、CloudFormation のスタック「PumapService」の出力タブの「APIBaseEndpoint」に、指定したドメイン名が反映
+された基本ドメイン名が表示されます。
+テンプレート「PumapWebService_Build_Satelite_*_*_*_WithApiCustomDomain.yaml」を使用せずにスタックを作
+成した場合で、「カスタムドメイン名」を設定したい場合には、
+コンソールから API Gateway のカスタムドメイン名を設定する必要があります。
+・API Gateway – カスタムドメイン名にて作成
+・TLS バージョンは「TLS 1.2」
+・API マッピングは「PumapService」ステージ「Prod」を指定
+
+
+CloudFront 代替ドメイン名の設定
+テンプレートからのスタック作成によって、管理サイトのバケットに配置されているコンテンツファイルと薬剤判定リストファイ
+ル CloudFront ディストリビューションが作成されます。薬歴システムは、このディストリビューションを利用してファイルをダ
+ウンロードします。
+API Gateway のカスタムドメイン名の設定と同様、CloudFormation の代替ドメイン名を設定する場合には、
+コンソールから CloudFormation の代替ドメイン名を設定する必要があります。
+・CloudFront – ディストリビューション（オリジン 「pumap-content-zip.s3.amazonaws.com」）
+└ 設定 – 代替ドメイン名 ： ドメイン名を指定
+ └ 設定 – カスタム SSL 証明書 ： ACM(バージニア北部)に登
