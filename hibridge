@@ -1,3 +1,13 @@
+
+・サテライトサイト上で、APIGatewayのカスタムドメイン名と、CloudFrontの代替ドメインで同じ証明書を使えない
+→「pumap.historyws.net」をAPIGatewayのカスタムドメイン名として使いたい。
+  「pumapcf.historyws.net」をcloudfrontの代替ドメインドメインとしたい。
+
+
+
+
+
+
 以下のアドレスより「PumapWebService-Satelite-Template.zip」をダウンロードします。
 https:// dsy1xm230537a.cloudfront.net/latest/PumapWebService-Satelite-Template.zip
 
