@@ -1,23 +1,4 @@
-Linuxの場合
-EC2インスタンスにSSHで接続します。
-新しいデバイスが認識されているか確認します。例：lsblkコマンドを使用。
-必要に応じて、デバイスをマウントポイントにマウントします。例：
-bash
-コードをコピーする
-sudo mkdir /mnt/recovery
-sudo mount /dev/xvdf /mnt/recovery
-上記の例では、/dev/xvdfが新しいEBSボリュームのデバイス名で、/mnt/recoveryがマウントポイントです。
-必要なデータをコピーまたは移動します。例：
-bash
-コードをコピーする
-cp -r /mnt/recovery/path/to/data /path/to/destination
-データ回収が完了したら、ボリュームをアンマウントします。例：
-bash
-コードをコピーする
-sudo umount /mnt/recovery
-Windowsの場合
-RDPでEC2インスタンスに接続します。
-ディスクの管理ツールを開き、新しいボリュームが認識されているか確認します。
-ボリュームにドライブレターを割り当て、エクスプローラでアクセスできるようにします。
-必要なデータをコピーまたは移動します。
-データ回収が完了したら、ボリュームをアンマウントします。
+sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+sudo dnf repolist
+sudo dnf install epel-release
+sudo dnf install stress
