@@ -53,6 +53,20 @@ TTL (秒)
 Simple
 
 
+-------------
+cf.pumap.historyws.net
+CNAMEシンプル  
+cloudfront:d19vlqhmyouxqt.cloudfront.net
+300
+-------------
+_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net
+CNAME シンプル
+_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
+300
+-------------
+
+
+
 
 以下のアドレスより「PumapWebService-Satelite-Template.zip」をダウンロードします。
 https:// dsy1xm230537a.cloudfront.net/latest/PumapWebService-Satelite-Template.zip
