@@ -3,6 +3,32 @@
 →「pumap.historyws.net」をAPIGatewayのカスタムドメイン名として使いたい。
   「pumapcf.historyws.net」をcloudfrontの代替ドメインドメインとしたい。
 
+●Route 53
+ホストゾーン:pumap.historyws.net
+ホストゾーン名:pumap.historyws.net
+
+
+
+pumap.historyws.net NS シンプル - 
+  ns-1727.awsdns-23.co.uk.
+  ns-772.awsdns-32.net.
+  ns-1311.awsdns-35.org.
+  ns-199.awsdns-24.com.
+  172800
+
+cf.pumap.historyws.net CNAME シンプル -
+ d19vlqhmyouxqt.cloudfront.net
+ 300
+
+●Cloudfront
+ディストリビューションドメイン名
+d19vlqhmyouxqt.cloudfront.net
+
+●ACM
+cf.pumap.historyws.net
+ステータス:保留中の検証
+CNAME
+_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net.
 
 
 
