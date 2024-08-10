@@ -31,6 +31,26 @@ CNAME
 _d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net.
 
 
+●ACM
+ドメイン名:cf.pumap.historyws.net
+で作成し、Rpute53でレコードを作成した。
+
+
+
+●Route53のホストゾーン名:pumap.historyws.net内に下記が出てきた。
+これで正しく代替えドメイン:cf.pumap.historyws.netとして使用できる？
+レコード名
+_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net
+レコードタイプ
+CNAME
+値
+_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
+エイリアス
+いいえ
+TTL (秒)
+300
+ルーティングポリシー
+Simple
 
 
 
