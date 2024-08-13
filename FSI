@@ -7,3 +7,6 @@ sudo dnf install stress
 $memoryHog = @(); for ($i = 0; $i -lt 10; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)); Start-Sleep -Seconds 1 }; [GC]::KeepAlive($memoryHog)
 
 New-Item -Path "C:\temp" -ItemType Directory -Force; $buffer = New-Object byte[] (1MB); for ($i = 0; $i -lt 10240; $i++) { [System.IO.File]::WriteAllBytes("C:\temp\largefile_$i.dat", $buffer) }
+
+
+ $memoryHog = @(); for ($i = 0; $i -lt 1000; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)) }
