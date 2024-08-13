@@ -2,3 +2,11 @@ sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.
 sudo dnf repolist
 sudo dnf install epel-release
 sudo dnf install stress
+
+
+$memoryHog = @()
+for ($i = 0; $i -lt 10; $i++) {
+    $memoryHog += ,(New-Object Byte[] (1GB))
+    Start-Sleep -Seconds 1
+}
+[GC]::KeepAlive($memoryHog)
