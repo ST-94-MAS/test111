@@ -1,3 +1,51 @@
+route53のホストゾーンにpumap.historyws.netを作成
+
+pumap.historyws.net内のレコードは以下
+
+pumap.historyws.net NS シンプル - いいえ
+ns-1727.awsdns-23.co.uk.
+ns-772.awsdns-32.net.
+ns-1311.awsdns-35.org.
+ns-199.awsdns-24.com.
+172800
+-
+-
+-
+pumap.historyws.net SOA シンプル - いいえ
+ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400
+900
+-
+-
+-
+
+_57834371eacf7e054d0b56729284fe05.pumap.historyws.net CNAME シンプル - いいえ
+_23734d462eea1c996402f8cdb4b307c6.sdgjtdhdhz.acm-validations.aws.
+300
+-
+-
+-
+cf.pumap.historyws.net CNAME シンプル - いいえ d19vlqhmyouxqt.cloudfront.net 300
+-
+-
+-
+_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net CNAME シンプル - いいえ
+_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
+300
+-
+-
+-
+
+
+
+
+
+
+
+
+
+
+
+-----------------
 ACMでバージニアで「cf.pumap.historyws.net」「pumap.historyws.net」をリスエストしている。
 「cf.pumap.historyws.net」はcloudfrontに
 「pumap.historyws.net」はAPIGatewayのカスタムドメイン名として使用している
