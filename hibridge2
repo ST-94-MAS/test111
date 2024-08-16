@@ -1,0 +1,50 @@
+API-Gateway-Execution-Logs_4tpm687eng/Prod
+
+2024-08-16T07:08:37.084Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Extended Request Id: clwmVGtANjMEOcg=
+2024-08-16T07:08:37.084Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Verifying Usage Plan for request: 516a429f-f670-45dc-a567-5d8de1cf3349. API Key: **********************************qPhwZB API Stage: 4tpm687eng/Prod
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Usage Plan check succeeded for API Key **********************************qPhwZB and API Stage 4tpm687eng/Prod
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Starting execution for request: 516a429f-f670-45dc-a567-5d8de1cf3349
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) HTTP Method: POST, Resource Path: /api/content/settings
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) API Key: **********************************qPhwZB
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) API Key ID: f7l22tbt20
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method request path: {}
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method request query string: {}
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method request headers: {Accept=application/json, X-Forwarded-Proto=https, X-API-Key=**********************************qPhwZB, X-Forwarded-For=203.171.8.123, Host=4tpm687eng.execute-api.ap-northeast-1.amazonaws.com, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387, Content-Type=application/json}
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method request body before transformations: {"SystemID":"sys-8a156284-0ce6-41d3-9743-9525f0e8cf84","PharmacyID":"Test","LibrarySchemaVersion":15,"SettingsCsv":"薬局名,薬局ID,プログラムID,プログラム名,利用状況,バージョンアップ日,手動ポップアップ,利用状況更新日\r\n,1166BC0C-54F5-D00B-809A-388DC95A615B,agrylin,アグリリンの服薬指導情報,1,2024/08/16,0,\r\n,1166BC0C-54F5-D00B-809A-388DC95A615B,rybelsus,リベルサス錠の服薬指導情報,1,2024/08/16,0,"}
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request URI: https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageSettingsPostFunction/invocations
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request headers: {X-Amz-Date=20240816T070837Z, x-amzn-apigateway-api-id=4tpm687eng, Accept=application/json, User-Agent=AmazonAPIGateway_4tpm687eng, Host=lambda.ap-northeast-1.amazonaws.com, X-Amz-Content-Sha256=632f632e696cf9a69fa6a2c9719af22f833e4b174d9d4f4d3dde0ed44d2d1e85, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387;Parent=1571aee598e8cdc6;Sampled=1, x-amzn-lambda-integration-tag=516a429f-f670-45dc-a567-5d8de1cf3349, Authorization=**************************************************************************************************************************************************************************************************************************************************************************************************************************************************fcdcd7, X-Amz-Source-Arn=arn:aws:execute-api:ap-northeast-1:818340512984:4tpm687eng/Prod/POST/api/content/settings, X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO7//////////wEaDmFwLW5vcnRoZWFzdC0xIkYwRAIgOMUZJVtXk2oDGB+7e01eClRzzAnx [TRUNCATED]
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request body after transformations: {"resource":"/api/content/settings","path":"/api/content/settings","httpMethod":"POST","headers":{"Accept":"application/json","Content-Type":"application/json","Host":"4tpm687eng.execute-api.ap-northeast-1.amazonaws.com","X-Amzn-Trace-Id":"Root=1-66befaf5-084ea87f54b18bf22519f387","X-API-Key":"OIhl5xBwZy76CSGi2wgvxa5OdGjgpRpN5CqPhwZB","X-Forwarded-For":"203.171.8.123","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Content-Type":["application/json"],"Host":["4tpm687eng.execute-api.ap-northeast-1.amazonaws.com"],"X-Amzn-Trace-Id":["Root=1-66befaf5-084ea87f54b18bf22519f387"],"X-API-Key":["OIhl5xBwZy76CSGi2wgvxa5OdGjgpRpN5CqPhwZB"],"X-Forwarded-For":["203.171.8.123"],"X-Forwarded-Port":["443"],"X-Forwarded-Proto":["https"]},"queryStringParameters":null,"multiValueQueryStringParameters":null,"pathParameters":null,"stageVariables":null,"requestContext":{"resourceId":"ty8gnj","resourcePath":"/api/content/settings" [TRUNCATED]
+2024-08-16T07:08:37.088Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Sending request to https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageSettingsPostFunction/invocations
+2024-08-16T07:08:37.255Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Received response. Status: 200, Integration latency: 167 ms
+2024-08-16T07:08:37.255Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint response headers: {Date=Fri, 16 Aug 2024 07:08:37 GMT, Content-Type=application/json, Content-Length=150, Connection=keep-alive, x-amzn-RequestId=b890f004-54d4-47b7-94a1-f0ce99328a47, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-66befaf5-084ea87f54b18bf22519f387;parent=1571aee598e8cdc6;sampled=1;lineage=7eb52648:0}
+2024-08-16T07:08:37.255Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint response body before transformations: {"isBase64Encoded": "true", "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "{\"Status\": 201, \"Message\": \"Created\"}"}
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method response body after transformations: {"Status": 201, "Message": "Created"}
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method response headers: {Content-Type=application/json, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387}
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Successfully completed execution
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) Method completed with status: 200
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) AWS Integration Endpoint RequestId : b890f004-54d4-47b7-94a1-f0ce99328a47
+2024-08-16T07:08:37.256Z
+(516a429f-f670-45dc-a567-5d8de1cf3349) X-ray Tracing ID : Root=1-66befaf5-084ea87f54b18bf22519f387
