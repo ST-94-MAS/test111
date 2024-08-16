@@ -1,3 +1,10 @@
+APIBaseEndpoint
+https://4tpm687eng.execute-api.ap-northeast-1.amazonaws.com/Prod/
+
+からアクセスできるがカスタムドメインを使用するとアクセスできない原因は？
+
+
+
 ドメイン名pumap.historyws.net
 API Gateway ドメイン名 d-1nhpm6li58.execute-api.ap-northeast-1.amazonaws.com
 
