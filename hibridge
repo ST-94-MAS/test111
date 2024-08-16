@@ -1,3 +1,23 @@
+ACMでバージニアで「cf.pumap.historyws.net」「pumap.historyws.net」をリスエストしている。
+「cf.pumap.historyws.net」はcloudfrontに
+「pumap.historyws.net」はAPIGatewayのカスタムドメイン名として使用している
+
+●バージニアにあるS3のバケット
+cf-templates-by2dr0atd87o-ap-northeast-1 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:05:38 PM JST
+cf-templates-by2dr0atd87o-us-east-1 米国東部 (バージニア北部) us-east-1 us-east-1 のアナライザーを見る 2024/07/19 05:42:21 PM JST
+cm-members-cloudtrail-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:27 PM JST
+cm-members-config-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:22 PM JST
+pumap-source--818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:03:59 PM JST
+
+●東京にあるS3バケット
+
+cf-templates-by2dr0atd87o-us-east-1 米国東部 (バージニア北部) us-east-1 us-east-1 のアナライザーを見る 2024/07/19 05:42:21 PM JST
+cf-templates-by2dr0atd87o-ap-northeast-1 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:05:38 PM JST
+pumap-source--818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:03:59 PM JST
+cm-members-cloudtrail-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:27 PM JST
+cm-members-config-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:22 PM JST
+
+
 
 ・サテライトサイト上で、APIGatewayのカスタムドメイン名と、CloudFrontの代替ドメインで同じ証明書を使えない
 →「pumap.historyws.net」をAPIGatewayのカスタムドメイン名として使いたい。
