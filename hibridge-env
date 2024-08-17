@@ -41,3 +41,10 @@ ACM 証明書 ARN:arn:aws:acm:ap-northeast-1:818340512984:certificate/862944e2-b
 :
 API マッピング
 PumapService:Prod	(none)	有効
+
+APIBaseEndpointだとちゃんと繋がる
+https://4tpm687eng.execute-api.ap-northeast-1.amazonaws.com/Prod/
+APIGatewayドメインで入ろうとすると認証エラーで入れない
+https://pumap.historyws.net/prod
+
+問題点を挙げて
