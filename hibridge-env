@@ -1,0 +1,43 @@
+■Route53
+ホストゾーン名:pumap.historyws.net
+タイプ:パブリック
+レコード名
+pumap.historyws.net A シンプル - はい 4tpm687eng.execute-api.ap-no
+pumap.historyws.net NS シンプル - いいえ ns-1727.awsdns-23.co.uk. ns-772.awsdns-32.net. ns-1311.awsdns-35.org. ns-199.awsdns-24.com. 172800
+pumap.historyws.net SOA シンプル - いいえ ns-1727.awsdns-23.co.uk. awsd
+_57834371eacf7e054d0b56729284fe05.pumap.historyws.net CNAME シンプル - いいえ _23734d462eea1c996402f8cdb
+cf.pumap.historyws.net CNAME シンプル - いいえ d19vlqhmyouxqt.cloudfront.net 300
+_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net CNAME シンプル - いいえ _4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws. 300 - - -
+
+■ACM
+pumap.historyws.net 東京リージョン発行済み
+cf.pumap.historyws.net バージニア発行済み
+
+■cloudfront
+
+ID:E1MSZKNP8CST73
+説明:PumapService distribution
+タイプ:本番
+ドメイン名:d19vlqhmyouxqt.cloudfront.net
+代替えドメイン名：cf.pumap.historyws.net
+オリジン:pumap-content-zip.s3.amazonaws.com
+カスタム SSL 証明書:cf.pumap.historyws.net 
+セキュリティポリシー:TLSv1.2_2019
+
+・オリジン
+Origin domain:pumap-content-zip.s3.amazonaws.com
+Legacy access identities:PumapService
+バケットポリシー:いいえ、バケットポリシーを手動で更新します
+
+■Amazon API Gateway
+カスタムドメイン名:pumap.historyws.net
+ドメイン名:pumap.historyws.net
+TLS バージョン:TLS 1.2
+エンドポイント設定
+API Gateway ドメイン名:d-1nhpm6li58.execute-api.ap-northeast-1.amazonaws.com
+API エンドポイントタイプ:リージョン
+ホストゾーン ID:Z1YSHQZHG15GKL
+ACM 証明書 ARN:arn:aws:acm:ap-northeast-1:818340512984:certificate/862944e2-b5cf-41d7-b6a7-34497af58bba
+:
+API マッピング
+PumapService:Prod	(none)	有効
