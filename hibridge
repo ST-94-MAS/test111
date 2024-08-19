@@ -1,4 +1,55 @@
+/api/content/log - POST メソッドテストの結果
+リクエスト
+/api/content/log?https://pumap.historyws.net/Prod/
+レイテンシー ms
+41
+ステータス
+502
+レスポンス本文
+{"message": "Internal server error"}
+レスポンスヘッダー
+{
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+  "Access-Control-Allow-Methods": "OPTIONS,POST",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Expose-Headers": "Authorization,X-custom-Header",
+  "Access-Control-Max-Age": "3600",
+  "x-amzn-ErrorType": "InternalServerErrorException"
+}
+ログ
+Execution log for request cf9ef800-075c-4126-bd4a-05570bc097e4
+Mon Aug 19 05:00:07 UTC 2024 : Starting execution for request: cf9ef800-075c-4126-bd4a-05570bc097e4
+Mon Aug 19 05:00:07 UTC 2024 : HTTP Method: POST, Resource Path: /api/content/log
+Mon Aug 19 05:00:07 UTC 2024 : Method request path: {}
+Mon Aug 19 05:00:07 UTC 2024 : Method request query string: {}
+Mon Aug 19 05:00:07 UTC 2024 : Method request headers: {}
+Mon Aug 19 05:00:07 UTC 2024 : Method request body before transformations: 
+Mon Aug 19 05:00:07 UTC 2024 : Endpoint request URI: https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageLogPostFunction/invocations
+Mon Aug 19 05:00:07 UTC 2024 : Endpoint request headers: {X-Amz-Date=20240819T050007Z, x-amzn-apigateway-api-id=4tpm687eng, Accept=application/json, User-Agent=AmazonAPIGateway_4tpm687eng, Host=lambda.ap-northeast-1.amazonaws.com, X-Amz-Content-Sha256=d267a34a5382a872fefb912602c42b8045d53817a6480b4cdb17a950d88b1abc, X-Amzn-Trace-Id=Root=1-66c2d157-d82c3e5f25bef8993d4fc905, x-amzn-lambda-integration-tag=cf9ef800-075c-4126-bd4a-05570bc097e4, Authorization=**************************************************************************************************************************************************************************************************************************************************************************************************************************************************836427, X-Amz-Source-Arn=arn:aws:execute-api:ap-northeast-1:818340512984:4tpm687eng/test-invoke-stage/POST/api/content/log, X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDQaDmFwLW5vcnRoZWFzdC0xIkcwRQIhAMaSEB1FRN5b3YjVPRKaxn5+Pam1cqyBYnXq42IqeDFmAiB3fv5rQBuOz7ZE3h0PLo [TRUNCATED]
+Mon Aug 19 05:00:07 UTC 2024 : Endpoint request body after transformations: {"resource":"/api/content/log","path":"/api/content/log","httpMethod":"POST","headers":null,"multiValueHeaders":null,"queryStringParameters":null,"multiValueQueryStringParameters":null,"pathParameters":null,"stageVariables":null,"requestContext":{"resourceId":"xw8jes","resourcePath":"/api/content/log","httpMethod":"POST","extendedRequestId":"cvWlpF01NjMFTAg=","requestTime":"19/Aug/2024:05:00:07 +0000","path":"/api/content/log","accountId":"818340512984","protocol":"HTTP/1.1","stage":"test-invoke-stage","domainPrefix":"testPrefix","requestTimeEpoch":1724043607089,"requestId":"cf9ef800-075c-4126-bd4a-05570bc097e4","identity":{"cognitoIdentityPoolId":null,"cognitoIdentityId":null,"apiKey":"test-invoke-api-key","principalOrgId":null,"cognitoAuthenticationType":null,"userArn":"arn:aws:iam::818340512984:user/t-shimamura","apiKeyId":"test-invoke-api-key-id","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safar [TRUNCATED]
+Mon Aug 19 05:00:07 UTC 2024 : Sending request to https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageLogPostFunction/invocations
+Mon Aug 19 05:00:07 UTC 2024 : Received response. Status: 200, Integration latency: 35 ms
+Mon Aug 19 05:00:07 UTC 2024 : Endpoint response headers: {Date=Mon, 19 Aug 2024 05:00:07 GMT, Content-Type=application/json, Content-Length=206, Connection=keep-alive, x-amzn-RequestId=f2a429dd-6bd3-4710-bca7-f74f3419dee5, X-Amz-Function-Error=Unhandled, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-66c2d157-d82c3e5f25bef8993d4fc905;parent=1eed19163c0d0070;sampled=0;lineage=fbe722d5:0}
+Mon Aug 19 05:00:07 UTC 2024 : Endpoint response body before transformations: {"errorMessage": "'NoneType' object has no attribute 'get'", "errorType": "AttributeError", "stackTrace": ["  File \"/var/task/app.py\", line 27, in lambda_handler\n    systemID  = body.get('SystemID')\n"]}
+Mon Aug 19 05:00:07 UTC 2024 : Lambda execution failed with status 200 due to customer function error: 'NoneType' object has no attribute 'get'. Lambda request id: f2a429dd-6bd3-4710-bca7-f74f3419dee5
+Mon Aug 19 05:00:07 UTC 2024 : Gateway response type: DEFAULT_5XX with status code: 502
+Mon Aug 19 05:00:07 UTC 2024 : Gateway response body: {"message": "Internal server error"}
+Mon Aug 19 05:00:07 UTC 2024 : Gateway response headers: {Access-Control-Expose-Headers=Authorization,X-custom-Header, Access-Control-Allow-Credentials=true, Access-Control-Allow-Headers=Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Access-Control-Allow-Origin=*, Access-Control-Max-Age=3600, Access-Control-Allow-Methods=OPTIONS,POST, x-amzn-ErrorType=InternalServerErrorException}
+Mon Aug 19 05:00:07 UTC 2024 : Method completed with status: 502
 
+
+
+
+
+
+
+
+
+
+
+
+ーーーーーーーーーーーーーーーー
 /api/content/log - OPTIONS メソッドテストの結果
 リクエスト
 /api/content/log?https://pumap.historyws.net/Prod/api/content/log
