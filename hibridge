@@ -1,3 +1,41 @@
+
+/api/content/log - OPTIONS メソッドテストの結果
+リクエスト
+/api/content/log?https://pumap.historyws.net/Prod/api/content/log
+レイテンシー ms
+5
+ステータス
+200
+レスポンス本文
+No data
+レスポンスヘッダー
+{
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
+  "Access-Control-Allow-Methods": "OPTIONS,POST",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Expose-Headers": "Authorization,X-custom-Header",
+  "Access-Control-Max-Age": "3600",
+  "Content-Type": "application/json"
+}
+ログ
+Execution log for request 8c35be4d-4bf7-4edf-9896-e9d0a1824839
+Mon Aug 19 04:57:38 UTC 2024 : Starting execution for request: 8c35be4d-4bf7-4edf-9896-e9d0a1824839
+Mon Aug 19 04:57:38 UTC 2024 : HTTP Method: OPTIONS, Resource Path: /api/content/log
+Mon Aug 19 04:57:38 UTC 2024 : Method request path: {}
+Mon Aug 19 04:57:38 UTC 2024 : Method request query string: {}
+Mon Aug 19 04:57:38 UTC 2024 : Method request headers: {}
+Mon Aug 19 04:57:38 UTC 2024 : Method request body before transformations: 
+Mon Aug 19 04:57:38 UTC 2024 : Method response body after transformations: 
+Mon Aug 19 04:57:38 UTC 2024 : Method response headers: {Access-Control-Max-Age=3600, Access-Control-Allow-Headers=Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Access-Control-Expose-Headers=Authorization,X-custom-Header, Access-Control-Allow-Origin=*, Access-Control-Allow-Credentials=true, Access-Control-Allow-Methods=OPTIONS,POST, Content-Type=application/json}
+Mon Aug 19 04:57:38 UTC 2024 : Successfully completed execution
+Mon Aug 19 04:57:38 UTC 2024 : Method completed with status: 200
+
+作成したCROSからテストした。
+どういうこと？
+
+
+
 薬歴システムに登録する情報の取得
 薬歴システムから API を利用する上で、「API の基本ドメイン名」「API キー」（API 利用時の認証キー、環境作成時に自
 動生成される文字列）の情報を薬歴システムに登録する必要があります。各情報の取得については以下になります。
