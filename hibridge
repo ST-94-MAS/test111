@@ -1,3 +1,30 @@
+CORS の設定
+ゲートウェイのレスポンス
+ DEFAULT 4XX ←選択する？
+ DEFAULT 5XX ←選択する？
+ 無効な API キー ←選択する？
+ 
+Access-Control-Allow-Methods
+ OPTIONS(グレーアウトされ選択できない)
+ POST ←選択する？
+
+Access-Control-Allow-Headers
+ Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token
+ 上記であっている？
+Access-Control-Allow-Origin
+ https://pumap.historyws.net
+ 
+その他の設定
+Access-Control-Expose-Headers
+ 何を入れたらいい？
+Access-Control-Max-Age
+ 何を入れたらいい？
+Access-Control-Allow-Credentials
+ チェックボックスにチェックをつける？
+
+
+
+
 2.本番利用時のドメイン設定
 例えば本テストサイトであれば接続を許可するサイトは下記になります。
 Web API : pumap.magus-inc.co.jp
