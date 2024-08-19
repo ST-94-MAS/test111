@@ -1,3 +1,26 @@
+このメールで、「別名をつければ対応可能かと思います」ってありますけど、CloudFrontの方と同じ証明書使う話だったりしますかね……？
+あれ上手くできないから追加発行したはずですけど、何かやりようあったとか……？
+
+
+
+
+
+11:00
+2.本番利用時のドメイン設定
+例えば本テストサイトであれば接続を許可するサイトは下記になります。
+Web API : pumap.magus-inc.co.jp
+CloudFront : d2cqusfvcql7gj.cloudfront.net
+これをWeb APIとCloudFrontを同一ドメインに置く事は出来ません。別名
+を着ければ対応可能かと思います。
+設定例
+Web API : pumap.magus-inc.co.jp
+CloudFront : cf.magus-inc.co.jp
+DNS設定
+　CNAME:cf.magus-inc.co.jp -> d2cqusfvcql7gj.cloudfront.net
+11:00
+この辺の話……
+
+
 result:リモートサーバーがエラーを返しました(403)使用不可能
 [HTTPステータスコード]=403(Forbidden)
 
