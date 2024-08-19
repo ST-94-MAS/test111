@@ -1,3 +1,20 @@
+薬歴システムに登録する情報の取得
+薬歴システムから API を利用する上で、「API の基本ドメイン名」「API キー」（API 利用時の認証キー、環境作成時に自
+動生成される文字列）の情報を薬歴システムに登録する必要があります。各情報の取得については以下になります。
+◎ API の基本ドメイン名
+https://[ 対象のドメイン名（API Gateway – カスタムドメイン名）]/
+例） https://pumap-service.testdomain.jp/
+あるいは、
+CloudFormation のスタック「PumapService」の出力タブの「APIBaseEndpoint」
+◎ API キー
+・API Gateway – API「PumapService」 - API キー「PumapServiceAPIKey」
+・API キーの「表示」をクリックし、表示される API キー
+
+
+
+
+
+
 CORS の設定
 ゲートウェイのレスポンス
  DEFAULT 4XX ←選択する？
