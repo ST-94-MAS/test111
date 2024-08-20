@@ -1,494 +1,127 @@
-/api/content/log - POST メソッドテストの結果
-リクエスト
-/api/content/log?https://pumap.historyws.net/Prod/
-レイテンシー ms
-41
-ステータス
-502
-レスポンス本文
-{"message": "Internal server error"}
-レスポンスヘッダー
-{
-  "Access-Control-Allow-Credentials": "true",
-  "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-  "Access-Control-Allow-Methods": "OPTIONS,POST",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Expose-Headers": "Authorization,X-custom-Header",
-  "Access-Control-Max-Age": "3600",
-  "x-amzn-ErrorType": "InternalServerErrorException"
-}
-ログ
-Execution log for request cf9ef800-075c-4126-bd4a-05570bc097e4
-Mon Aug 19 05:00:07 UTC 2024 : Starting execution for request: cf9ef800-075c-4126-bd4a-05570bc097e4
-Mon Aug 19 05:00:07 UTC 2024 : HTTP Method: POST, Resource Path: /api/content/log
-Mon Aug 19 05:00:07 UTC 2024 : Method request path: {}
-Mon Aug 19 05:00:07 UTC 2024 : Method request query string: {}
-Mon Aug 19 05:00:07 UTC 2024 : Method request headers: {}
-Mon Aug 19 05:00:07 UTC 2024 : Method request body before transformations: 
-Mon Aug 19 05:00:07 UTC 2024 : Endpoint request URI: https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageLogPostFunction/invocations
-Mon Aug 19 05:00:07 UTC 2024 : Endpoint request headers: {X-Amz-Date=20240819T050007Z, x-amzn-apigateway-api-id=4tpm687eng, Accept=application/json, User-Agent=AmazonAPIGateway_4tpm687eng, Host=lambda.ap-northeast-1.amazonaws.com, X-Amz-Content-Sha256=d267a34a5382a872fefb912602c42b8045d53817a6480b4cdb17a950d88b1abc, X-Amzn-Trace-Id=Root=1-66c2d157-d82c3e5f25bef8993d4fc905, x-amzn-lambda-integration-tag=cf9ef800-075c-4126-bd4a-05570bc097e4, Authorization=**************************************************************************************************************************************************************************************************************************************************************************************************************************************************836427, X-Amz-Source-Arn=arn:aws:execute-api:ap-northeast-1:818340512984:4tpm687eng/test-invoke-stage/POST/api/content/log, X-Amz-Security-Token=IQoJb3JpZ2luX2VjEDQaDmFwLW5vcnRoZWFzdC0xIkcwRQIhAMaSEB1FRN5b3YjVPRKaxn5+Pam1cqyBYnXq42IqeDFmAiB3fv5rQBuOz7ZE3h0PLo [TRUNCATED]
-Mon Aug 19 05:00:07 UTC 2024 : Endpoint request body after transformations: {"resource":"/api/content/log","path":"/api/content/log","httpMethod":"POST","headers":null,"multiValueHeaders":null,"queryStringParameters":null,"multiValueQueryStringParameters":null,"pathParameters":null,"stageVariables":null,"requestContext":{"resourceId":"xw8jes","resourcePath":"/api/content/log","httpMethod":"POST","extendedRequestId":"cvWlpF01NjMFTAg=","requestTime":"19/Aug/2024:05:00:07 +0000","path":"/api/content/log","accountId":"818340512984","protocol":"HTTP/1.1","stage":"test-invoke-stage","domainPrefix":"testPrefix","requestTimeEpoch":1724043607089,"requestId":"cf9ef800-075c-4126-bd4a-05570bc097e4","identity":{"cognitoIdentityPoolId":null,"cognitoIdentityId":null,"apiKey":"test-invoke-api-key","principalOrgId":null,"cognitoAuthenticationType":null,"userArn":"arn:aws:iam::818340512984:user/t-shimamura","apiKeyId":"test-invoke-api-key-id","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safar [TRUNCATED]
-Mon Aug 19 05:00:07 UTC 2024 : Sending request to https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageLogPostFunction/invocations
-Mon Aug 19 05:00:07 UTC 2024 : Received response. Status: 200, Integration latency: 35 ms
-Mon Aug 19 05:00:07 UTC 2024 : Endpoint response headers: {Date=Mon, 19 Aug 2024 05:00:07 GMT, Content-Type=application/json, Content-Length=206, Connection=keep-alive, x-amzn-RequestId=f2a429dd-6bd3-4710-bca7-f74f3419dee5, X-Amz-Function-Error=Unhandled, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-66c2d157-d82c3e5f25bef8993d4fc905;parent=1eed19163c0d0070;sampled=0;lineage=fbe722d5:0}
-Mon Aug 19 05:00:07 UTC 2024 : Endpoint response body before transformations: {"errorMessage": "'NoneType' object has no attribute 'get'", "errorType": "AttributeError", "stackTrace": ["  File \"/var/task/app.py\", line 27, in lambda_handler\n    systemID  = body.get('SystemID')\n"]}
-Mon Aug 19 05:00:07 UTC 2024 : Lambda execution failed with status 200 due to customer function error: 'NoneType' object has no attribute 'get'. Lambda request id: f2a429dd-6bd3-4710-bca7-f74f3419dee5
-Mon Aug 19 05:00:07 UTC 2024 : Gateway response type: DEFAULT_5XX with status code: 502
-Mon Aug 19 05:00:07 UTC 2024 : Gateway response body: {"message": "Internal server error"}
-Mon Aug 19 05:00:07 UTC 2024 : Gateway response headers: {Access-Control-Expose-Headers=Authorization,X-custom-Header, Access-Control-Allow-Credentials=true, Access-Control-Allow-Headers=Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Access-Control-Allow-Origin=*, Access-Control-Max-Age=3600, Access-Control-Allow-Methods=OPTIONS,POST, x-amzn-ErrorType=InternalServerErrorException}
-Mon Aug 19 05:00:07 UTC 2024 : Method completed with status: 502
-
-
-
-
-
-
-
-
-
-
-
-
-ーーーーーーーーーーーーーーーー
-/api/content/log - OPTIONS メソッドテストの結果
-リクエスト
-/api/content/log?https://pumap.historyws.net/Prod/api/content/log
-レイテンシー ms
-5
-ステータス
-200
-レスポンス本文
-No data
-レスポンスヘッダー
-{
-  "Access-Control-Allow-Credentials": "true",
-  "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-  "Access-Control-Allow-Methods": "OPTIONS,POST",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Expose-Headers": "Authorization,X-custom-Header",
-  "Access-Control-Max-Age": "3600",
-  "Content-Type": "application/json"
-}
-ログ
-Execution log for request 8c35be4d-4bf7-4edf-9896-e9d0a1824839
-Mon Aug 19 04:57:38 UTC 2024 : Starting execution for request: 8c35be4d-4bf7-4edf-9896-e9d0a1824839
-Mon Aug 19 04:57:38 UTC 2024 : HTTP Method: OPTIONS, Resource Path: /api/content/log
-Mon Aug 19 04:57:38 UTC 2024 : Method request path: {}
-Mon Aug 19 04:57:38 UTC 2024 : Method request query string: {}
-Mon Aug 19 04:57:38 UTC 2024 : Method request headers: {}
-Mon Aug 19 04:57:38 UTC 2024 : Method request body before transformations: 
-Mon Aug 19 04:57:38 UTC 2024 : Method response body after transformations: 
-Mon Aug 19 04:57:38 UTC 2024 : Method response headers: {Access-Control-Max-Age=3600, Access-Control-Allow-Headers=Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, Access-Control-Expose-Headers=Authorization,X-custom-Header, Access-Control-Allow-Origin=*, Access-Control-Allow-Credentials=true, Access-Control-Allow-Methods=OPTIONS,POST, Content-Type=application/json}
-Mon Aug 19 04:57:38 UTC 2024 : Successfully completed execution
-Mon Aug 19 04:57:38 UTC 2024 : Method completed with status: 200
+● 方法1: SQL Server監査機能の利用
+【説明】:
+   SQL Serverには監査機能があり、ログインイベントや特定のクエリ実行などのアクティビティを記録できます。
+   これにより、誰がどのデータベースに接続したか、どのクエリを実行したかを把握できます。
+
+【手順】:
+   SQL Server Management Studioで監査を設定し、対象となるイベントを指定してログを保存します。
+   監査ログはS3バケットやCloudWatch Logsに保存することも可能です。
+
+【メリット】:
+   - SQL Serverに組み込み済みの機能で、簡単に設定できる。
+   - 接続やクエリの詳細なログを記録できるため、誰が何を行ったかを正確に把握できる。
+   - ログの保存先をCloudWatch LogsやS3に設定可能。
+
+【デメリット】:
+   - 監査ログのサイズが大きくなりやすく、長期間の保存にはコストがかかる可能性がある。
+   - 初期設定が必要で、監査範囲を適切に設定しないと過剰なログが記録されるリスクがある。
+
+● 方法2: AWS CloudTrailの利用
+【説明】:
+   CloudTrailを有効にすることで、RDSインスタンスへのAPI呼び出し（例: 接続や設定変更）を記録できます。
+   これは誰がいつインスタンスにアクセスしたかを追跡するのに役立ちます。
+
+【手順】:
+   CloudTrailを有効にし、関連するRDSイベントを記録します。ログはS3バケットやCloudWatch Logsに保存されます。
+
+【メリット】:
+   - AWSサービス全体のAPIアクティビティを記録できる。
+   - 監査ログと連携することで、全体的なアクセス監視が可能。
+   - クラウド環境における標準的なセキュリティツールであり、簡単に設定できる。
+
+【デメリット】:
+   - RDS内の詳細なクエリやデータ操作の記録はできず、APIレベルの操作に限定される。
+   - SQL Server内部のアクティビティを追跡するには不十分。
+
+● 方法3: SQL Server ログイントリガー
+【説明】:
+   ログイン時にトリガーを設定し、アクセスログをカスタムログテーブルに記録します。
+   これにより、特定のログインアクションを検知し、誰がアクセスしたかを確認できます。
+
+【手順】:
+   ログイントリガーを作成し、接続時にログを記録するスクリプトを設定します。
+
+【メリット】:
+   - カスタムで細かいログを記録でき、特定の条件下でのみログを取るなど柔軟な設定が可能。
+   - ログはデータベース内に格納されるため、外部ストレージが不要。
+
+【デメリット】:
+   - トリガー設定に関するSQLスクリプトの知識が必要。
+   - トリガーのパフォーマンスへの影響やトラブルシューティングが複雑になる場合がある。
+
+● 方法4: VPCフローログの利用
+【説明】:
+   VPCフローログを使用して、ネットワークレベルでRDSインスタンスへの接続情報を取得できます。
+   誰がどのIPアドレスからアクセスしたかを確認できます。
+
+【手順】:
+   VPCフローログを有効にし、接続の出入りを記録します。
+   これもCloudWatch LogsやS3バケットに保存可能です。
+
+【メリット】:
+   - ネットワークレベルでの接続情報を収集でき、どのIPアドレスがアクセスしたかを確認可能。
+   - ネットワーク層のセキュリティ監視が簡単に行える。
+
+【デメリット】:
+   - アプリケーションやデータベースレベルのログが記録されないため、詳細なアクティビティを確認するには不十分。
+   - フローログの設定が複雑で、フィルタリングが適切でないとノイズが多くなる可能性がある。
+
+● 方法5: SQL Server Extended Events
+【説明】:
+   SQL ServerのExtended Eventsを使用して、アクセスやクエリ実行の監視を詳細に行うことができます。
+   これは監査よりも柔軟で、特定の操作に対して細かいログを取得できます。
+
+【手順】:
+   SSMSでExtended Eventsセッションを作成し、監視したいイベント（接続、クエリ実行など）を設定します。
+
+【メリット】:
+   - より詳細かつ柔軟に監視対象のイベントを設定できる。
+   - パフォーマンスに与える影響を最小限に抑えつつ、重要なイベントのみを記録可能。
+
+【デメリット】:
+   - 設定が複雑で、深いSQL Serverの知識が必要。
+   - 監視対象が多い場合、管理が難しくなる可能性がある。
+
+● 方法6: CloudWatch Logsの利用
+【説明】:
+   CloudWatch Logsを使用して、SQL Serverの監査ログやVPCフローログ、RDSログなどを中央で管理・監視できます。
+   誰がRDSにアクセスしたか、どのようなクエリが実行されたかをリアルタイムで確認可能。
+
+【メリット】:
+   - AWSのサービスと統合されており、複数のログを一元管理できる。
+   - ログに対してリアルタイムでアラート設定やモニタリングが可能。
+
+【デメリット】:
+   - CloudWatch Logsの保存コストがかかる。
+   - 多くのログが生成されるため、ノイズが多くなり、適切なフィルタリングが必要。
+   
+ーーーーーーーーーーーーーーーーーーーー
+最も推奨されるのは 方法1: SQL Server監査機能の利用 です。
+
+理由
+正確で詳細なログ取得:
 
-作成したCROSからテストした。
-どういうこと？
+SQL Server監査機能は、誰がいつデータベースにアクセスし、どのクエリを実行したかを正確に記録できるため、最も直接的かつ包括的なログ管理が可能です。
+組み込み機能で簡単に設定可能:
 
+SQL Serverに標準で搭載されている機能であり、SSMSからGUIで設定できるため、特別なスクリプトの知識がなくても設定が容易です。
+クラウド環境に統合可能:
 
+監査ログはCloudWatch LogsやS3に保存でき、AWSの他のツールと連携して監視やアラートを設定することができます。これにより、運用コストや効率性も高まります。
+運用の安定性:
 
-薬歴システムに登録する情報の取得
-薬歴システムから API を利用する上で、「API の基本ドメイン名」「API キー」（API 利用時の認証キー、環境作成時に自
-動生成される文字列）の情報を薬歴システムに登録する必要があります。各情報の取得については以下になります。
-◎ API の基本ドメイン名
-https://[ 対象のドメイン名（API Gateway – カスタムドメイン名）]/
-例） https://pumap-service.testdomain.jp/
-あるいは、
-CloudFormation のスタック「PumapService」の出力タブの「APIBaseEndpoint」
-◎ API キー
-・API Gateway – API「PumapService」 - API キー「PumapServiceAPIKey」
-・API キーの「表示」をクリックし、表示される API キー
+一度設定すれば、自動的にログが記録されるため、運用の負担が少なく、長期的に安定した監視が可能です。
 
+ーーーーーーーーーーーーーーーーーーーー
 
+1. SQL Serverレベルのログ（内部アカウントログ）
+内容: SQL Serverにログインしたユーザーアカウントの操作ログを記録します。
+たとえば、SQL Server認証やWindows認証を使ってログインしたユーザーのアクション（ログイン、クエリ実行、データの変更など）が対象です。
+特徴: RDSの内部で動作しているSQL Serverのユーザーやデータベースに対する操作を監視できます。
 
-
-
-
-CORS の設定
-ゲートウェイのレスポンス
- DEFAULT 4XX ←選択する？
- DEFAULT 5XX ←選択する？
- 無効な API キー ←選択する？
- 
-Access-Control-Allow-Methods
- OPTIONS(グレーアウトされ選択できない)
- POST ←選択する？
-
-Access-Control-Allow-Headers
- Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token
- 上記であっている？
-Access-Control-Allow-Origin
- https://pumap.historyws.net
- 
-その他の設定
-Access-Control-Expose-Headers
- 何を入れたらいい？
-Access-Control-Max-Age
- 何を入れたらいい？
-Access-Control-Allow-Credentials
- チェックボックスにチェックをつける？
-
-
-
-
-2.本番利用時のドメイン設定
-例えば本テストサイトであれば接続を許可するサイトは下記になります。
-Web API : pumap.magus-inc.co.jp
-CloudFront : d2cqusfvcql7gj.cloudfront.net
-これをWeb APIとCloudFrontを同一ドメインに置く事は出来ません。別名
-を着ければ対応可能かと思います。
-設定例
-Web API : pumap.magus-inc.co.jp
-CloudFront : cf.magus-inc.co.jp
-DNS設定
-　CNAME:cf.magus-inc.co.jp -> d2cqusfvcql7gj.cloudfront.net
-11:00
-この辺の話……
-
-
-result:リモートサーバーがエラーを返しました(403)使用不可能
-[HTTPステータスコード]=403(Forbidden)
-
-場所 System.Net.HttpWebRequest.GetResponse()\r\n   場所 EastJapanMedicom.PumapWebService.PumapWebClient.PumapWebServiceAccess.GetResponse[T](HttpWebRequest httpWebRequest, HttpContentType responseContentType, HttpStatusCode& httpStatusCode, String& httpStatusDescription, DateTime& responseTime, Exception& responseException)
-見た感じ、普通にレスポンスでエラーが返ってきましたよってくらいっぽいですね……
-
-
-
-
-
-
-
-
-
-
-
-The certificate that is attached to your distribution doesn't cover the alternate domain name (CNAME) that you're trying to add. For more details, see: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-requirements (Service: AmazonCloudFront; Status Code: 400; Error Code: InvalidViewerCertificate; Request ID: 1f44a161-6a4a-44e1-a105-bee938166189; Proxy: null)
-
-
-APIBaseEndpoint
-https://4tpm687eng.execute-api.ap-northeast-1.amazonaws.com/Prod/
-
-からアクセスできるがカスタムドメインを使用するとアクセスできない原因は？
-
-
-
-ドメイン名pumap.historyws.net
-API Gateway ドメイン名 d-1nhpm6li58.execute-api.ap-northeast-1.amazonaws.com
-
-
-
-エラーが発生しました
-不正なリクエストです。
-(InvalidChangeBatch 400: RRSet of type CNAME with DNS name pumap.historyws.net. is not permitted at apex in zone pumap.historyws.net.)
-
-
-
-route53のホストゾーンにpumap.historyws.netを作成
-
-pumap.historyws.net内のレコードは以下
-
-pumap.historyws.net NS シンプル - いいえ
-ns-1727.awsdns-23.co.uk.
-ns-772.awsdns-32.net.
-ns-1311.awsdns-35.org.
-ns-199.awsdns-24.com.
-172800
--
--
--
-pumap.historyws.net SOA シンプル - いいえ
-ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400
-900
--
--
--
-
-_57834371eacf7e054d0b56729284fe05.pumap.historyws.net CNAME シンプル - いいえ
-_23734d462eea1c996402f8cdb4b307c6.sdgjtdhdhz.acm-validations.aws.
-300
--
--
--
-cf.pumap.historyws.net CNAME シンプル - いいえ d19vlqhmyouxqt.cloudfront.net 300
--
--
--
-_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net CNAME シンプル - いいえ
-_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
-300
--
--
--
-
-
-
-
-
-
-
-
-
-
-
------------------
-ACMでバージニアで「cf.pumap.historyws.net」「pumap.historyws.net」をリスエストしている。
-「cf.pumap.historyws.net」はcloudfrontに
-「pumap.historyws.net」はAPIGatewayのカスタムドメイン名として使用している
-
-●バージニアにあるS3のバケット
-cf-templates-by2dr0atd87o-ap-northeast-1 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:05:38 PM JST
-cf-templates-by2dr0atd87o-us-east-1 米国東部 (バージニア北部) us-east-1 us-east-1 のアナライザーを見る 2024/07/19 05:42:21 PM JST
-cm-members-cloudtrail-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:27 PM JST
-cm-members-config-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:22 PM JST
-pumap-source--818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:03:59 PM JST
-
-●東京にあるS3バケット
-
-cf-templates-by2dr0atd87o-us-east-1 米国東部 (バージニア北部) us-east-1 us-east-1 のアナライザーを見る 2024/07/19 05:42:21 PM JST
-cf-templates-by2dr0atd87o-ap-northeast-1 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:05:38 PM JST
-pumap-source--818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/05/22 06:03:59 PM JST
-cm-members-cloudtrail-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:27 PM JST
-cm-members-config-818340512984 アジアパシフィック (東京) ap-northeast-1 ap-northeast-1 のアナライザーを見る 2024/04/23 02:42:22 PM JST
-
-
-
-・サテライトサイト上で、APIGatewayのカスタムドメイン名と、CloudFrontの代替ドメインで同じ証明書を使えない
-→「pumap.historyws.net」をAPIGatewayのカスタムドメイン名として使いたい。
-  「pumapcf.historyws.net」をcloudfrontの代替ドメインドメインとしたい。
-
-●Route 53
-ホストゾーン:pumap.historyws.net
-ホストゾーン名:pumap.historyws.net
-
-
-
-pumap.historyws.net NS シンプル - 
-  ns-1727.awsdns-23.co.uk.
-  ns-772.awsdns-32.net.
-  ns-1311.awsdns-35.org.
-  ns-199.awsdns-24.com.
-  172800
-
-cf.pumap.historyws.net CNAME シンプル -
- d19vlqhmyouxqt.cloudfront.net
- 300
-
-●Cloudfront
-ディストリビューションドメイン名
-d19vlqhmyouxqt.cloudfront.net
-
-●ACM
-cf.pumap.historyws.net
-ステータス:保留中の検証
-CNAME
-_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net.
-
-
-●ACM
-ドメイン名:cf.pumap.historyws.net
-で作成し、Rpute53でレコードを作成した。
-
-
-
-●Route53のホストゾーン名:pumap.historyws.net内に下記が出てきた。
-これで正しく代替えドメイン:cf.pumap.historyws.netとして使用できる？
-レコード名
-_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net
-レコードタイプ
-CNAME
-値
-_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
-エイリアス
-いいえ
-TTL (秒)
-300
-ルーティングポリシー
-Simple
-
-
--------------
-cf.pumap.historyws.net
-CNAMEシンプル  
-cloudfront:d19vlqhmyouxqt.cloudfront.net
-300
--------------
-_d8ee16f7ae46b643f9f0e4b60af9c521.cf.pumap.historyws.net
-CNAME シンプル
-_4d5d413f95fefb3f718f586575fe3229.sdgjtdhdhz.acm-validations.aws.
-300
--------------
-
-
-
-
-以下のアドレスより「PumapWebService-Satelite-Template.zip」をダウンロードします。
-https://dsy1xm230537a.cloudfront.net/latest/PumapWebService-Satelite-Template.zip
-
-PumapWebServiceのサテライトサイトに関連するS3バケットの名前は以下の通りです：
-
-pumap-content: コンテンツデータを格納するためのバケット。
-pumap-enduser: エンドユーザーデータを格納するためのバケット。
-pumap-usage-log: ログデータを保存するためのバケット。
-pumap-content-zip: CloudFrontのOAIを介してアクセスするためのバケット。
-
-サテライトサイトをAWS上に作成したい。
-使用するサービスはAPI Gateway、lambda、firehose、IAM、OAI、cloudfront
-作成するにあたって懸念点や実施すべきこと、そのほかに必要なことを記載して。
-
-実施したい内容は下記
-
-・ユーザーがAPIキーを指定して今回作成するサテライトサイトのAPI Gateway(public)にアクセスする
-API Gatewayからlamdaを使用してFirehose(間にroleとpolicy)を使用して他の会社が管理するS3にアクセス(クロスアカウントアクセス)をしてこちらの情報を渡したり、別lambdaが受け取ったりする。
-とってきたデータ(JSONファイルやzipファイル)をOAIからcloudfrontでダウンロードしてデータを渡すサービスがある。
-ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
-
-業務として
-Hi_Bridge管理するAWS上にcloud版としてHi storyが乗っているはず。
-Hi_Bridge管理するAWS上に配信(サテライト)サイトの作成を行う。
-通常は管理サイトの作成は行わないが、Hi_Bridge管理するAWS上にサンプルでは作成する必要あり。
-
-●サテライトサイトを作成するにあたり必要なもの
-
-●今後決定すべきこと
-管理サイトのS3のエンドポイント(管理場所)
-
-
-
- envrc.sandboxの追加
-history_wsのルートディレクトリに「envrc.sandbox」を追加し、下記のように書き換えてください。
-HI_CLOUD_S3_SUFFIXは一意なUUIDを作成してください。
-HI_CLOUD_MAIN_DOMAIN_ZONE_IDは、Route53のsandbox.historyws.netのホストゾーンIDを入れてください。
-
-
-•	envrc.sandbox
-export AWS_PROFILE=sandbox
-
-export HI_CLOUD_ACTIVE_AVAILABILITY_ZONE="ap-northeast-1a"
-export HI_CLOUD_MAIN_DOMAIN='sandbox.historyws.net'
-export HI_CLOUD_MAIN_DOMAIN_ZONE_ID=Z01164761R7YR7KZSQJ9G
-
-export HI_CLOUD_AUTH_SERVER_COUNT=1
-export HI_CLOUD_S3_SUFFIX=7fd76ad8-46a0-4b3a-b32d-051e604e6df
-
-export HI_CLOUD_USER_RDS=$(cat << EOF
-{
-	"sandbox-0001" : {
-		snapshot_identifier = ""
-		engine = "ex"
-		instance_class = "db.t3.small"
-		multi_az = "false"
-		allocated_storage = 150
-		apply_immediately = true
-	},
-}
-EOF
-)
-
-export HI_CLOUD_AUTH_SERVER=$(cat << EOF
-{
-	count = 1
-	instance_type = "t2.nano"
-}
-EOF
-)
-
-export HI_CLOUD_APP_SERVER=$(cat << EOF
-{
-	count = 1
-	instance_type = "t2.nano"
-}
-EOF
-)
-
-export HI_CLOUD_REGION=ap-northeast-1
-export HI_CLOUD_VPC_NAME=history
-export HI_CLOUD_ENV=$AWS_PROFILE
-export HI_CLOUD_BUILD_DIR=$(readlink -f ./src/bin)
- Makefileの編集
-Makefileにsandboxに変更できる行を追加してください。
-.PHONY: switch-prod-env
-switch-prod-env:
-	@echo "本番環境に切り替えます。"
-	-rm .envrc
-	ln -s envrc.prod .envrc
-	direnv allow
-
-.PHONY: switch-sandbox-env
-switch-sandbox-env:
-	@echo "XXX環境に切り替えます。"
-	-rm .envrc
-	ln -s envrc.sandbox .envrc
-	direnv allow
-
-・・・
- makeの実行
-makeの各コマンドを下記の順で実行してください。
-make terraform-init
-make key
-make master-data
-make ami-auth-server
-make ami-app-server
-make ami-manage-server
-make ami-migration-windows
-make vpc
-これで新環境の作成ができあがります。
- 管理DBの初期化
-管理サーバーに入って、
-$HOME/bin/init-script/init-manage-rds.sh
-$HOME/bin/update/2021.1/run.sh
-$HOME/bin/update/2022.2/run.sh
-を実行してください。
- クラウドのセットアップ
-「aws_アップデーターアップロード手順.docx」を参考に、共通DBとアップデーターを配置します。添付文書PDFはS3バケット「s3://users-common-xxxxxxx/medicine_pdf/」に配置します。アップデーター作成時に、全ての添付文書PDFを作成して社内に保管しているはずなので、左記の場所にアップロードしてください。
-Hi-Story C管理サーバーで下記のコマンドを実行します。
-	共通DBのセットアップ
-/home/ec2-user/bin/init-scripts/init-user-rds.sh -v <バージョン番号>
-	アップデーターの配信
-hi-add-new-client-version --date <配信日> --version <バージョン番号>
- クライアントのセットアップ
-次のリンクを参考にMSBuildをインストールします。https://learn.microsoft.com/ja-jp/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019
-MSBuildのパスを環境変数に登録するか、「developer command prompt」を起動してインストールしたMSBuildが起動する状態にしておいてください。
-ソースコードのリポジトリ「git@gitlab.com:hi-bridge/history-cloudclient.git」をチェックアウトして、クライアントのセットアップを作成します。
-既存の類似ファイルを参考に次のファイルを追加し、各ドメインの情報を記載してください。既存のファイルをコピーして作成してもいいですが、「ファイルに記載されているドメインの情報が作成した環境のドメインの情報になっていることしっかり確認する」ようにしてください。間違えると運用中の別のドメインに接続されます。
-	build_{環境名}.bat
-	ドメインを記載する。
-	History_cloud_DataB_Upload_{環境名}.bat
-	作成した環境のエンドポイントを記載する
-	known_hosts_{環境名}
-	ドメインと認証サーバーの公開鍵を記載する。公開鍵の文字列は「AWS System Manager」-「パラメーターストア」-「/master/ca/public_key」のエントリに保存されています。
-下記のファイルを更新します。
-	build_all.bat
-	各ドメイン用のバッチファイルの名称を追記します。
-「build.ps1」を実行します。※全てのドメインがビルドされるので「build_{環境名}.bat」のみでも可。
-「bin\{環境名}」にクライアントのセットアップが作成されます。
-薬局スペースを作成してからDBを移行し、クライアントから端末登録を実施してHistoryCが利用できることを確認し完了です。
- 運用の開始
-作成したクライアントのセットアップを使い、薬局スペースを作成してからDBを移行し、端末登録を実施してください。
-HistoryCが使えることを確認できれば完了です
-
-
-
-API Gateway のカスタムドメイン名の設定
-テンプレートからのスタック作成によって、薬歴システムから呼び出される API も作成されます。
-テンプレート「PumapWebService_Build_Satelite_*_*_*_WithApiCustomDomain.yaml」にてスタックを作成した場
-合には、作成時に指定したドメイン名（カスタムドメイン名）にて API も作成されますので、設定作業は不要です。
-また、CloudFormation のスタック「PumapService」の出力タブの「APIBaseEndpoint」に、指定したドメイン名が反映
-された基本ドメイン名が表示されます。
-テンプレート「PumapWebService_Build_Satelite_*_*_*_WithApiCustomDomain.yaml」を使用せずにスタックを作
-成した場合で、「カスタムドメイン名」を設定したい場合には、
-コンソールから API Gateway のカスタムドメイン名を設定する必要があります。
-・API Gateway – カスタムドメイン名にて作成
-・TLS バージョンは「TLS 1.2」
-・API マッピングは「PumapService」ステージ「Prod」を指定
-
-
-CloudFront 代替ドメイン名の設定
-テンプレートからのスタック作成によって、管理サイトのバケットに配置されているコンテンツファイルと薬剤判定リストファイ
-ル CloudFront ディストリビューションが作成されます。薬歴システムは、このディストリビューションを利用してファイルをダ
-ウンロードします。
-API Gateway のカスタムドメイン名の設定と同様、CloudFormation の代替ドメイン名を設定する場合には、
-コンソールから CloudFormation の代替ドメイン名を設定する必要があります。
-・CloudFront – ディストリビューション（オリジン 「pumap-content-zip.s3.amazonaws.com」）
-└ 設定 – 代替ドメイン名 ： ドメイン名を指定
- └ 設定 – カスタム SSL 証明書 ： ACM(バージニア北部)に登録されている SSL 証明書を選択
-　└ 　設定 – セキュリティポリシー ： 「TLSv1.2_2019」を選択
+2. AWS RDSレベルのログ（RDSアカウントログ）
+内容: RDSインスタンス全体に対する操作（例: インスタンスの起動/停止、パラメータグループの変更など）を記録します。
+これはRDSそのものに関連する操作で、主にAWS管理者アカウントのアクティビティにフォーカスしています。
+特徴: CloudTrailやCloudWatch Logsを通じて、RDSインスタンスに対するAPI呼び出しや設定変更を記録しますが、
+SQL Server内のデータベース操作までは含まれません。
+ーーーーーーーーーーーーーーーーーーーー
