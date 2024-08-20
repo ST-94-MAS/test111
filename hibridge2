@@ -1,50 +1,24 @@
-API-Gateway-Execution-Logs_4tpm687eng/Prod
+下記のような、本番環境のユーザーDBに直接アクセスして特定のデータを閲覧、変更する場合の手順となります。
+HIPRJ-1303 顧客コード［0381］鶴岡仁成堂薬局高砂店　hoppe連動をアプリ側で解除した患者のhoppe推奨のQRコードの用紙が印刷できない
+１．	接続する薬局からサーバーデータ使用承諾書を受領する。
+２．	SQL Server Management Studio (以下、SSMS)で薬局のDBに接続する。
+①	接続したい薬局に端末登録（※1）する。
+②	「Hi-Story Cloud Connection」を起動して、接続したい薬局を選択した状態にする。
+③	SFTP「/Hi-Story/tools/HistoryCloudSqlConectionDecoder.zip」にある接続情報を復号して表示するツール「HistoryCloudSqlConectionDecoder.exe」を実行する。※通常、接続情報は暗号化された状態で運用されているので、復号した接続情報は保存しないように。
+④	表示された接続情報でSSMSからDBに接続する。
+	サーバー名：復号ツールで表示されている「DataSource」の値（通常は127.0.0.1,50000）
+	認証：SQL Server 認証
+	ログイン：復号ツールで表示されている「UserID」の値（薬局IDと同じ）
+	パスワード：復号ツールで表示されている「Password」の値
+３．	SSMSの「オブジェクトエクスプローラー」から接続したい薬局のIDと「同じ名称のDB」を探して選択する。※SSMSのログインで指定した薬局ID以外のDBを選択しても権限がないので操作できません。必要に応じて「PAD薬局設定」に記録されている薬局名などを確認して、意図せず別の薬局のDBを操作しようとしていないか確認してください。
+４．	DBのデータを閲覧、変更する。以下は変更の推奨手順。
+①	薬局のDBをバックアップ（※1）する。
+②	変更するテーブルの全レコードをエクスポートして控えておく。
+③	変更するテーブルのレコードを変更する。※テーブルを「すべての行の編集」で開いて直接編集すると、誤操作で他のレコードを変えてしまう可能性があるので、クエリを作成して変更することを推奨する。
+④	変更した後の全レコードをエクスポートする。
+⑤	手順②と④のデータを比較して意図しない変更をしていないか確認する。
+５．	「Hi-Story Cloud Connection」を終了する。
+６．	端末登録を削除（※1）する。
+７．	「%LOCALAPPDATA%\Hibridge」フォルダを削除する。
 
-2024-08-16T07:08:37.084Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Extended Request Id: clwmVGtANjMEOcg=
-2024-08-16T07:08:37.084Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Verifying Usage Plan for request: 516a429f-f670-45dc-a567-5d8de1cf3349. API Key: **********************************qPhwZB API Stage: 4tpm687eng/Prod
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Usage Plan check succeeded for API Key **********************************qPhwZB and API Stage 4tpm687eng/Prod
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Starting execution for request: 516a429f-f670-45dc-a567-5d8de1cf3349
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) HTTP Method: POST, Resource Path: /api/content/settings
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) API Key: **********************************qPhwZB
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) API Key ID: f7l22tbt20
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method request path: {}
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method request query string: {}
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method request headers: {Accept=application/json, X-Forwarded-Proto=https, X-API-Key=**********************************qPhwZB, X-Forwarded-For=203.171.8.123, Host=4tpm687eng.execute-api.ap-northeast-1.amazonaws.com, X-Forwarded-Port=443, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387, Content-Type=application/json}
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method request body before transformations: {"SystemID":"sys-8a156284-0ce6-41d3-9743-9525f0e8cf84","PharmacyID":"Test","LibrarySchemaVersion":15,"SettingsCsv":"薬局名,薬局ID,プログラムID,プログラム名,利用状況,バージョンアップ日,手動ポップアップ,利用状況更新日\r\n,1166BC0C-54F5-D00B-809A-388DC95A615B,agrylin,アグリリンの服薬指導情報,1,2024/08/16,0,\r\n,1166BC0C-54F5-D00B-809A-388DC95A615B,rybelsus,リベルサス錠の服薬指導情報,1,2024/08/16,0,"}
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request URI: https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageSettingsPostFunction/invocations
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request headers: {X-Amz-Date=20240816T070837Z, x-amzn-apigateway-api-id=4tpm687eng, Accept=application/json, User-Agent=AmazonAPIGateway_4tpm687eng, Host=lambda.ap-northeast-1.amazonaws.com, X-Amz-Content-Sha256=632f632e696cf9a69fa6a2c9719af22f833e4b174d9d4f4d3dde0ed44d2d1e85, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387;Parent=1571aee598e8cdc6;Sampled=1, x-amzn-lambda-integration-tag=516a429f-f670-45dc-a567-5d8de1cf3349, Authorization=**************************************************************************************************************************************************************************************************************************************************************************************************************************************************fcdcd7, X-Amz-Source-Arn=arn:aws:execute-api:ap-northeast-1:818340512984:4tpm687eng/Prod/POST/api/content/settings, X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO7//////////wEaDmFwLW5vcnRoZWFzdC0xIkYwRAIgOMUZJVtXk2oDGB+7e01eClRzzAnx [TRUNCATED]
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint request body after transformations: {"resource":"/api/content/settings","path":"/api/content/settings","httpMethod":"POST","headers":{"Accept":"application/json","Content-Type":"application/json","Host":"4tpm687eng.execute-api.ap-northeast-1.amazonaws.com","X-Amzn-Trace-Id":"Root=1-66befaf5-084ea87f54b18bf22519f387","X-API-Key":"OIhl5xBwZy76CSGi2wgvxa5OdGjgpRpN5CqPhwZB","X-Forwarded-For":"203.171.8.123","X-Forwarded-Port":"443","X-Forwarded-Proto":"https"},"multiValueHeaders":{"Accept":["application/json"],"Content-Type":["application/json"],"Host":["4tpm687eng.execute-api.ap-northeast-1.amazonaws.com"],"X-Amzn-Trace-Id":["Root=1-66befaf5-084ea87f54b18bf22519f387"],"X-API-Key":["OIhl5xBwZy76CSGi2wgvxa5OdGjgpRpN5CqPhwZB"],"X-Forwarded-For":["203.171.8.123"],"X-Forwarded-Port":["443"],"X-Forwarded-Proto":["https"]},"queryStringParameters":null,"multiValueQueryStringParameters":null,"pathParameters":null,"stageVariables":null,"requestContext":{"resourceId":"ty8gnj","resourcePath":"/api/content/settings" [TRUNCATED]
-2024-08-16T07:08:37.088Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Sending request to https://lambda.ap-northeast-1.amazonaws.com/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:818340512984:function:PumapService-UsageSettingsPostFunction/invocations
-2024-08-16T07:08:37.255Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Received response. Status: 200, Integration latency: 167 ms
-2024-08-16T07:08:37.255Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint response headers: {Date=Fri, 16 Aug 2024 07:08:37 GMT, Content-Type=application/json, Content-Length=150, Connection=keep-alive, x-amzn-RequestId=b890f004-54d4-47b7-94a1-f0ce99328a47, x-amzn-Remapped-Content-Length=0, X-Amz-Executed-Version=$LATEST, X-Amzn-Trace-Id=root=1-66befaf5-084ea87f54b18bf22519f387;parent=1571aee598e8cdc6;sampled=1;lineage=7eb52648:0}
-2024-08-16T07:08:37.255Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Endpoint response body before transformations: {"isBase64Encoded": "true", "statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "{\"Status\": 201, \"Message\": \"Created\"}"}
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method response body after transformations: {"Status": 201, "Message": "Created"}
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method response headers: {Content-Type=application/json, X-Amzn-Trace-Id=Root=1-66befaf5-084ea87f54b18bf22519f387}
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Successfully completed execution
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) Method completed with status: 200
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) AWS Integration Endpoint RequestId : b890f004-54d4-47b7-94a1-f0ce99328a47
-2024-08-16T07:08:37.256Z
-(516a429f-f670-45dc-a567-5d8de1cf3349) X-ray Tracing ID : Root=1-66befaf5-084ea87f54b18bf22519f387
+※1本番環境での操作権限が必要なので、権限がある人間（開発課）に依頼して実施してもらうこと。
