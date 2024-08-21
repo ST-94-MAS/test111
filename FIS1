@@ -1,36 +1,12 @@
-[ec2-user@ip-10-6-0-92 openssl-1.1.1u]$ sudo yum install -y zabbix-server-pgsql zabbix-web-pgsql zabbix-agent
-Last metadata expiration check: 0:00:04 ago on Thu Jul 25 07:51:45 2024.
-Error:
- Problem 1: conflicting requests
-  - nothing provides libcrypto.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
-  - nothing provides libcrypto.so.1.1(OPENSSL_1_1_0)(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
-  - nothing provides libssl.so.1.1()(64bit) needed by zabbix-server-pgsql-6.0.0-1.el8.x86_64 from zabbix
-
-OpenSSL 1.1のソースからのインストール
-bash
-コードをコピーする
-cd /usr/local/src
-sudo wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz
-sudo tar -zxf openssl-1.1.1u.tar.gz
-cd openssl-1.1.1u
-sudo ./config --prefix=/usr/local/openssl-1.1 --openssldir=/usr/local/openssl-1.1 shared zlib
-sudo make
-sudo make install
-
-
-ライブラリパスの設定
-bash
-コードをコピーする
-sudo tee /etc/ld.so.conf.d/openssl-1.1.conf <<EOF
-/usr/local/openssl-1.1/lib
-EOF
-sudo ldconfig
-
-シンボリックリンクの作成
-bash
-コードをコピーする
-sudo ln -s /usr/local/openssl-1.1/lib/libssl.so.1.1 /usr/lib64/libssl.so.1.1
-sudo ln -s /usr/local/openssl-1.1/lib/libcrypto.so.1.1 /usr/lib64/libcrypto.so.1.1
-
-
-
+結合テストを記載してほしい
+　EBSとRDSはリストアできる。
+　機能観点で、確認(RDSでpostgresにアクセスするなど、ALBが正しくパスが)
+　
+　中項目にサービス名
+　　　　　区分にバックアップとリストア
+　
+　バックアップ
+　AMI
+　EFS
+　EBS
+　ALB
