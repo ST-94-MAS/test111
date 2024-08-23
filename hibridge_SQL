@@ -1,0 +1,173 @@
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+SQL Severのログ監視の設定
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+■監査ログの確認
+
+SELECT * 
+FROM msdb.dbo.rds_fn_get_audit_file('D:\rdsdbdata\SQLAudit\*.sqlaudit', default, default);
+hi
+■結果
+以下監査ログの確認コマンドから下記を確認することができました。
+・adminやuser1やuser3がログインしていること。
+・またログインの可否やパスワードの変更の監視。
+・CREATEコマンド、DROPコマンドの監視。
+
+取得したログはS3バケットに保存されるようにした。
+S３バケットの中身はsqlauditファイルであり、中身を確認するのに手間取っている状況です。
+DBのログに関してもまだ確認できておりません。(sqlauditファイル内に記述があるかも)
+
+
+
+
+■現時点での結論
+管理者、開発者がアクセスした際のログ、CREATE、DROPコマンドログなどは確認できた。
+しかし、現状S3に挙げられたログ(sqlauditファイルの)に記載されていると思われるが中身が確認できていない状況です。
+
+■監査の作成
+-- masterデータベースに接続
+USE [master];
+GO
+
+-- サーバー監査の作成（ファイルパスはRDSで自動的に管理されます）
+CREATE SERVER AUDIT [ServerAudit]
+TO FILE 
+(	FILEPATH = N'D:\rdsdbdata\SQLAudit',  -- このパスはRDSのオプショングループ設定に従います
+	MAXSIZE = 10 MB,
+	RESERVE_DISK_SPACE = OFF
+) WITH (ON_FAILURE = CONTINUE);
+GO
+
+■サーバー監査仕様の作成 + 有効化
+-- サーバー監査仕様の作成 + 有効化
+CREATE SERVER AUDIT SPECIFICATION [ServerAuditSpec]
+FOR SERVER AUDIT [ServerAudit]
+    ADD (LOGIN_CHANGE_PASSWORD_GROUP),           -- パスワード変更の監視
+    ADD (FAILED_LOGIN_GROUP),                    -- 失敗したログインの監視
+    ADD (SUCCESSFUL_LOGIN_GROUP),                -- 成功したログインの監視
+    ADD (DATABASE_OBJECT_ACCESS_GROUP),          -- データベースオブジェクトへのアクセスの監視
+    ADD (DATABASE_OBJECT_CHANGE_GROUP),          -- データベースオブジェクトの変更（INSERT, UPDATE, DELETE）の監視
+    ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),        -- データベースオブジェクトの作成（CREATE）の監視
+    ADD (SCHEMA_OBJECT_CHANGE_GROUP)  -- スキーマオブジェクトの変更（DROPなど）の監視
+WITH (STATE = ON);
+GO
+
+■監査開始 (監査の有効化)
+-- 監査開始 (監査の有効化)
+ALTER SERVER AUDIT [ServerAudit]
+WITH (STATE = ON);
+GO
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+
+
+■ユーザー登録したり、パスワード変更
+CREATE LOGIN [user1] WITH PASSWORD = 'Password123!';
+CREATE LOGIN [user2] WITH PASSWORD = 'Password123!';
+CREATE LOGIN [user3] WITH PASSWORD = 'Password123!';
+CREATE LOGIN [user4] WITH PASSWORD = 'Password123!';
+ALTER LOGIN [admin] WITH PASSWORD = 'Password1234567!' OLD_PASSWORD = 'Password123456!';
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+DBの作成
+
+■新しいデータベースを作成するSQLコマンド
+CREATE DATABASE TestDB;
+
+
+■テーブルを作成するSQLコマンド
+USE TestDB;  -- TestDBを使用する
+GO
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,           -- 従業員ID (主キー)
+    FirstName NVARCHAR(50),               -- 名
+    LastName NVARCHAR(50),                -- 姓
+    HireDate DATE,                        -- 採用日
+    Salary DECIMAL(10, 2)                 -- 給与
+);
+
+■データを挿入するSQLコマンド
+USE TestDB;  -- TestDBを使用する
+GO
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, Salary)
+VALUES 
+(1, 'John', 'Doe', '2020-01-15', 55000.00),
+(2, 'Jane', 'Smith', '2019-03-23', 60000.00),
+(3, 'Michael', 'Johnson', '2021-07-10', 52000.00),
+(4, 'Emily', 'Davis', '2018-09-15', 67000.00),
+(5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+DBの監査設定
+
+-- 監査対象のデータベースに接続 : 事前に TestDBデータベースを作成済み
+USE [master];
+GO
+
+-- データベース監査仕様の作成 + 有効化
+-- サーバー監査の設定に基づいてデータベース監査仕様を作成
+CREATE DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec]
+FOR SERVER AUDIT [ServerAudit]
+    ADD (DATABASE_CHANGE_GROUP),                -- データベースの変更の監視
+    ADD (DATABASE_OBJECT_ACCESS_GROUP),         -- データベースオブジェクトへのアクセスの監視
+    ADD (DATABASE_OBJECT_CHANGE_GROUP),         -- データベースオブジェクトの変更（INSERT, UPDATE, DELETE）の監視
+    ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),      -- データベースオブジェクトの作成（CREATE）の監視
+    ADD (FAILED_DATABASE_AUTHENTICATION_GROUP)  -- データベース認証の失敗の監視
+WITH (STATE = ON);
+GO
+
+
+-- データベース監査の開始はサーバー監査が開始されていればOK
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+■TestDB データベースに対して user3 にアクセス権を付与
+-- TestDB データベースに対して user3 にアクセス権を付与
+USE [TestDB];
+GO
+
+CREATE USER [user3] FOR LOGIN [user3];
+GO
+
+-- 必要な権限（例えば、db_datareader や db_datawriter のようなロール）を付与
+ALTER ROLE [db_datareader] ADD MEMBER [user3];
+ALTER ROLE [db_datawriter] ADD MEMBER [user3];
+GO
+
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+aws rds describe-events --source-identifier test-rds-cloudwatch-shimardsinstance-ef4dgsnd8jil --source-type db-instance --start-time $(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)
+
+
+IAMロール
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetBucketACL",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::shima-sql-server-audit-logs"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:ListMultipartUploadParts",
+                "s3:AbortMultipartUpload"
+            ],
+            "Resource": "arn:aws:s3:::shima-sql-server-audit-logs/*"
+        }
+    ]
+}
+
