@@ -4,6 +4,25 @@ SQLServer単位 : ログイン者名  :  Server設定が必要
 DB単位 : テーブルの読み書き  :  DB設定が必要
 みたいな
 
+SQL Serverとデータベース単位で取得できる情報や設定が必要な項目の一覧になります。
+過不足ありましたらご指摘いただきますと幸いです。
+
+●SQL Server単位
+  ログイン者名: SUCCESSFUL_LOGIN_GROUP および FAILED_LOGIN_GROUP - SQL Serverにログインした成功および失敗したログイン試行の監視
+  パスワード変更の監視: LOGIN_CHANGE_PASSWORD_GROUP - ユーザーのパスワード変更操作の監視
+  サーバーパフォーマンスメトリクス: SERVER_STATE_CHANGE_GROUP - サーバーのパフォーマンス状態や変更の監視（例: CPU使用率、メモリ使用量など）
+  サーバーレベルの監査ログ: SERVER_AUDIT_GROUP - サーバーレベルで行われる監査操作全般の監視
+  インスタンスレベルのエラーログ: SERVER_ERROR_STATE_CHANGE_GROUP - サーバーエラーやエラーステートの変更に関する監視
+  CREATE文の実行監視: DATABASE_PRINCIPAL_CHANGE_GROUP - テーブル、ビュー、ストアドプロシージャなどのオブジェクト作成操作の監視
+●データベース(DB)単位
+  テーブルの読み書き: DATABASE_OBJECT_ACCESS_GROUP - 特定のテーブルに対する読み書きアクセス操作の監視
+  データベースの変更の監視: DATABASE_CHANGE_GROUP - データベース全体に対する変更操作の監視
+  データベースオブジェクトの変更の監視: DATABASE_OBJECT_CHANGE_GROUP - データベースオブジェクトに対するINSERT、UPDATE、DELETEなどの変更操作の監視
+  データベースの権限変更の監視: DATABASE_PRINCIPAL_CHANGE_GROUP - データベース内のユーザー権限やロールの変更操作の監視
+  データベース認証の失敗監視: FAILED_DATABASE_AUTHENTICATION_GROUP - データベース内での認証失敗操作の監視
+  データベースのバックアップ履歴の監視: DATABASE_BACKUP_RESTORE_GROUP - データベースのバックアップやリストア操作の監視
+
+参考URL:https://learn.microsoft.com/en-us/sql/relational-databases/security/auditing/sql-server-audit-action-groups-and-actions?view=sql-server-ver16
 
 
 
