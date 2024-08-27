@@ -53,3 +53,344 @@ CloudShellアクセス
 ・監査ログをS3やcloudwatch logsに保存する
 ・RDSインスタンスのオプショングループでSQLSERVER_AUDITオプションを有効にする
 
+
+
+
+
+
+
+
+----------------------------------
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+SQL Severのログ監視の設定
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+目的各アカウントで実施したクエリにログが出力されることを確認する
+■手順の流れ
+1.SQL に管理者でログイン。
+2.監査の作成
+3.サーバー監査仕様の作成
+4.SQLユーザー登録(20人分)
+5.DBの作成(20個)
+6.複数のDBに監査設定を付与
+7.SQLユーザーとDBユーザーを紐づけ(user5とuserDB5)
+8.テーブルを作成する(例としてuser5)
+9.INSERT、DELETE、UPDATEトリガーをテーブルに作成
+10.user5でSQLログイン
+11.user5でINSERT、DELETE、UPDATEコマンドを実施。
+
+SQL Server ログイン (SQL Login)
+データベース ユーザー (Database User)
+データベース内のユーザーを作成する手順がない？
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+1.管理者でログイン
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+2.監査の作成
+-- masterデータベースに接続
+USE [master];
+GO
+
+-- サーバー監査の作成（ファイルパスはRDSで自動的に管理されます）
+CREATE SERVER AUDIT [ServerAudit]
+TO FILE 
+(	FILEPATH = N'D:\rdsdbdata\SQLAudit',  -- このパスはRDSのオプショングループ設定に従います
+	MAXSIZE = 10 MB,
+	RESERVE_DISK_SPACE = OFF
+) WITH (ON_FAILURE = CONTINUE);
+GO
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+3.サーバー監査仕様の作成
+-- サーバー監査仕様の作成
+CREATE SERVER AUDIT SPECIFICATION [ServerAuditSpec]
+FOR SERVER AUDIT [ServerAudit]
+    ADD (LOGIN_CHANGE_PASSWORD_GROUP),           -- パスワード変更の監視
+    ADD (FAILED_LOGIN_GROUP),                    -- 失敗したログインの監視
+    ADD (SUCCESSFUL_LOGIN_GROUP),                -- 成功したログインの監視
+    ADD (DATABASE_OBJECT_ACCESS_GROUP),          -- データベースオブジェクトへのアクセスの監視
+    ADD (DATABASE_OBJECT_CHANGE_GROUP),          -- データベースオブジェクトの変更（INSERT, UPDATE, DELETE）の監視
+    ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),       -- データベースオブジェクトの作成（CREATE）の監視
+    ADD (SCHEMA_OBJECT_CHANGE_GROUP),            -- スキーマオブジェクトの変更（DROPなど）の監視
+    ADD (SERVER_STATE_CHANGE_GROUP)             -- サーバーパフォーマンス状態や変更の監視
+WITH (STATE = ON);
+GO
+
+-- 監査開始 (監査の有効化)
+ALTER SERVER AUDIT [ServerAudit]
+WITH (STATE = ON);
+GO
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+4.ユーザー登録
+DECLARE @i INT = 1;
+WHILE @i <= 20
+BEGIN
+    DECLARE @dbName NVARCHAR(50) = 'TestDB' + CAST(@i AS NVARCHAR(2));
+    DECLARE @sql NVARCHAR(MAX) = 'CREATE DATABASE ' + @dbName;
+    EXEC sp_executesql @sql;
+    SET @i = @i + 1;
+END
+GO
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+DBの作成
+
+5.新しいデータベースを作成するSQLコマンド
+DECLARE @i INT = 1;
+WHILE @i <= 20
+BEGIN
+    -- SQL Serverログインの作成
+    DECLARE @loginName NVARCHAR(50) = 'user' + CAST(@i AS NVARCHAR(2));
+    DECLARE @password NVARCHAR(50) = 'Password123!';
+    DECLARE @sql NVARCHAR(MAX) = 'CREATE LOGIN [' + @loginName + '] WITH PASSWORD = ''' + @password + ''';';
+    EXEC sp_executesql @sql;
+    
+    -- データベース内のユーザー名は "userXXDB" にする
+    DECLARE @dbUserName NVARCHAR(50) = @loginName + 'DB';
+    DECLARE @dbName NVARCHAR(50) = 'TestDB' + CAST(@i AS NVARCHAR(2));
+    
+    -- 各データベースにユーザーを作成し、ログインにマッピング
+    SET @sql = 'USE ' + @dbName + '; CREATE USER [' + @dbUserName + '] FOR LOGIN [' + @loginName + '];';
+    EXEC sp_executesql @sql;
+    
+    SET @i = @i + 1;
+END
+GO
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+6.複数のDBに監査設定を付与
+sys.databasesシステムビューを使用して、現在のSQL Serverインスタンス内のすべてのデータベースを取得します。システムデータベース（master、model、msdb、tempdb）は除外します。
+
+DECLARE @dbName NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
+
+-- データベースカーソルを使用して、すべてのユーザーデータベースに対して操作を実行
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb');  -- システムデータベースを除外
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @dbName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- 各データベースに対して監査設定を動的に実行
+    SET @sql = '
+    USE [' + @dbName + '];
+    IF NOT EXISTS (SELECT * FROM sys.database_audit_specifications WHERE name = ''DatabaseAuditSpec'')
+    BEGIN
+        CREATE DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec]
+        FOR SERVER AUDIT [ServerAudit]
+            ADD (DATABASE_CHANGE_GROUP),                
+            ADD (DATABASE_OBJECT_ACCESS_GROUP),         
+            ADD (DATABASE_OBJECT_CHANGE_GROUP),         
+            ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),      
+            ADD (FAILED_DATABASE_AUTHENTICATION_GROUP), 
+            ADD (BACKUP_RESTORE_GROUP)                  -- バックアップやリストア操作の監視
+        WITH (STATE = ON);
+    END
+    ';
+
+    -- 動的SQLを実行
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM db_cursor INTO @dbName;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+7.SQL Server ログイン user5 を TestDB5 データベースのユーザーとして設定する
+
+USE [TestDB5];  -- データベースを指定
+CREATE USER [user5] FOR LOGIN [user5];  -- SQL Server ログイン user5 をデータベースユーザーとして作成
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+8. Employees テーブルを作成する
+
+CREATE TABLE [dbo].[Employees] (
+    EmployeeID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    HireDate DATE,
+    Salary DECIMAL(10, 2)
+);
+
+■Employees テーブルへの権限を user5 に付与する
+GRANT INSERT, DELETE, UPDATE ON [dbo].[Employees] TO [user5];
+
+■必要に応じてデータベース全体の管理権限を付与する
+USE [TestDB5];
+ALTER ROLE db_owner ADD MEMBER [user5];
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+9.INSERT、DELETE、UPDATEトリガーを作成
+
+-- 監査テーブルの作成
+USE [TestDB5];
+CREATE TABLE Employees_Audit (
+    AuditID INT IDENTITY(1,1) PRIMARY KEY,
+    TableName NVARCHAR(128),
+    AuditAction NVARCHAR(50),
+    EmployeeID INT,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    HireDate DATE,
+    Salary DECIMAL(10, 2),
+    AuditDate DATETIME DEFAULT GETDATE()
+);
+
+DECLARE @table_name NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
+
+DECLARE table_cursor CURSOR FOR
+SELECT TABLE_NAME 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = 'dbo';
+
+OPEN table_cursor;
+FETCH NEXT FROM table_cursor INTO @table_name;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- INSERT トリガーを作成
+    SET @sql = '
+    CREATE TRIGGER trg_AfterInsert_' + @table_name + '
+    ON dbo.' + @table_name + '
+    AFTER INSERT
+    AS
+    BEGIN
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+        SELECT ''' + @table_name + ''', ''INSERT'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        FROM inserted;
+    END;
+    ';
+    EXEC sp_executesql @sql;
+
+    -- DELETE トリガーを作成
+    SET @sql = '
+    CREATE TRIGGER trg_AfterDelete_' + @table_name + '
+    ON dbo.' + @table_name + '
+    AFTER DELETE
+    AS
+    BEGIN
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+        SELECT ''' + @table_name + ''', ''DELETE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        FROM deleted;
+    END;
+    ';
+    EXEC sp_executesql @sql;
+
+    -- UPDATE トリガーを作成
+    SET @sql = '
+    CREATE TRIGGER trg_AfterUpdate_' + @table_name + '
+    ON dbo.' + @table_name + '
+    AFTER UPDATE
+    AS
+    BEGIN
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+        SELECT ''' + @table_name + ''', ''UPDATE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        FROM inserted;
+    END;
+    ';
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM table_cursor INTO @table_name;
+END;
+
+CLOSE table_cursor;
+DEALLOCATE table_cursor;
+
+
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+10.user5でSQLログイン
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
+11.user5でINSERT、DELETE、UPDATEコマンドを実施。
+
+-- TestDB5 データベースを使用する
+USE TestDB5;
+GO
+
+
+-- TestDB5 にテーブルを作成
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    HireDate DATE,
+    Salary DECIMAL(10, 2)
+);
+
+-- INSERT文：Employeesテーブルに5件のデータを挿入
+INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, Salary)
+VALUES 
+(1, 'John', 'Doe', '2020-01-15', 55000.00),
+(2, 'Jane', 'Smith', '2019-03-23', 60000.00),
+(3, 'Michael', 'Johnson', '2021-07-10', 52000.00),
+(4, 'Emily', 'Davis', '2018-09-15', 67000.00),
+(5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
+GO
+
+-- UPDATE文：Salaryを更新
+UPDATE Employees
+SET Salary = Salary + 5000  -- すべての従業員の給与を5000増加
+WHERE HireDate < '2020-01-01';  -- 2020年以前に雇用された従業員が対象
+GO
+
+-- DELETE文：特定の従業員を削除
+DELETE FROM Employees
+WHERE EmployeeID = 5;  -- EmployeeIDが5の従業員を削除
+GO
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+■TestDB データベースに対して user3 にアクセス権を付与
+-- TestDB データベースに対して user3 にアクセス権を付与
+USE [TestDB19];
+GO
+-- user3DB に権限を付与
+ALTER ROLE [db_datareader] ADD MEMBER [user3DB];
+ALTER ROLE [db_datawriter] ADD MEMBER [user3DB];
+GO
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+■user3でログイン
+
+■テーブルを作成するSQLコマンド
+USE TestDB19;  -- TestDBを使用する
+GO
+
+CREATE TABLE Empltest (
+    EmployeeID INT PRIMARY KEY,           -- 従業員ID (主キー)
+    FirstName NVARCHAR(50),               -- 名
+    LastName NVARCHAR(50),                -- 姓
+    HireDate DATE,                        -- 採用日
+    Salary DECIMAL(10, 2)                 -- 給与
+);
+
+■データを挿入するSQLコマンド
+USE TestDB;  -- TestDBを使用する
+GO
+
+INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, Salary)
+VALUES 
+(1, 'John', 'Doe', '2020-01-15', 55000.00),
+(2, 'Jane', 'Smith', '2019-03-23', 60000.00),
+(3, 'Michael', 'Johnson', '2021-07-10', 52000.00),
+(4, 'Emily', 'Davis', '2018-09-15', 67000.00),
+(5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
+
+
+
+
