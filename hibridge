@@ -1,3 +1,8 @@
+お疲れ様です。
+作業報告書なのですが、hibridge社としてのフォーマットなどありますでしょうか？
+もしなければギークスのフォーマットを使用しても問題ないでしょうか？
+
+
 .sqlauditファイルを読み取るためには、通常、sys.fn_get_audit_fileやsys.fn_xe_file_target_read_file関数を使用しますが、これらの関数を実行するためには「sysadminロール」が必要です。
 RDS for SQL Serverでは、adminアカウントにはsysadmin権限が付与されず、代わりにrdsadminロールが割り当てられるため、これらの関数を使用して直接監査ファイルを読み取ることができません。
 
