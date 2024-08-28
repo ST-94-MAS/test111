@@ -392,5 +392,109 @@ VALUES
 (5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
 
 
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+--すべてのユーザーデータベースに「Employees_Audit」監査テーブルを作成し、各テーブルに対してINSERT、DELETE、UPDATE操作を監査するトリガーを自動生成する
+-- カーソルがすでに存在している場合は閉じて解放する
+IF CURSOR_STATUS('global', 'db_cursor') >= -1
+BEGIN
+    CLOSE db_cursor;
+    DEALLOCATE db_cursor;
+END;
 
+DECLARE @dbName NVARCHAR(128);
+DECLARE @tableName NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
 
+-- ユーザーデータベースのみを対象にする
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースと rdsadmin を除外
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @dbName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- 監査テーブルを作成
+    SET @sql = '
+    USE [' + @dbName + '];
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees_Audit'')
+    BEGIN
+        CREATE TABLE dbo.Employees_Audit (
+            AuditID INT IDENTITY(1,1) PRIMARY KEY,
+            TableName NVARCHAR(128),
+            AuditAction NVARCHAR(50),
+            EmployeeID INT,
+            FirstName NVARCHAR(50),
+            LastName NVARCHAR(50),
+            HireDate DATE,
+            Salary DECIMAL(10, 2),
+            AuditDate DATETIME DEFAULT GETDATE()
+        );
+    END;
+    ';
+    EXEC sp_executesql @sql;
+
+    -- テーブルカーソルを使用して、各テーブルにトリガーを作成
+    SET @sql = '
+    DECLARE table_cursor CURSOR FOR
+    SELECT TABLE_NAME 
+    FROM [' + @dbName + '].INFORMATION_SCHEMA.TABLES 
+    WHERE TABLE_TYPE = ''BASE TABLE'' AND TABLE_SCHEMA = ''dbo'';
+
+    OPEN table_cursor;
+    FETCH NEXT FROM table_cursor INTO @tableName;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- INSERT トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterInsert_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER INSERT
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''INSERT'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+            FROM inserted;
+        END;'';
+        EXEC sp_executesql @sql;
+
+        -- DELETE トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterDelete_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER DELETE
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''DELETE'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+            FROM deleted;
+        END;'';
+        EXEC sp_executesql @sql;
+
+        -- UPDATE トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterUpdate_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER UPDATE
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''UPDATE'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+            FROM inserted;
+        END;'';
+        EXEC sp_executesql @sql;
+
+        FETCH NEXT FROM table_cursor INTO @tableName;
+    END;
+
+    CLOSE table_cursor;
+    DEALLOCATE table_cursor;
+    ';
+
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM db_cursor INTO @dbName;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
