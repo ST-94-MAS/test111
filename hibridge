@@ -1,3 +1,164 @@
+Employees_Audit テーブルの監査トリガーを作成し、特定のテーブル（Employees）に対する INSERT、DELETE、UPDATE 操作を監視する
+
+-- 監査テーブルの作成
+USE [TestDB5];
+CREATE TABLE Employees_Audit (
+    AuditID INT IDENTITY(1,1) PRIMARY KEY,
+    AuditAction NVARCHAR(50),
+    EmployeeID INT,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    HireDate DATE,
+    Salary DECIMAL(10, 2),
+    AuditDate DATETIME DEFAULT GETDATE()
+);
+GO  -- バッチを区切る
+
+-- INSERTトリガーの作成
+CREATE TRIGGER trg_AfterInsert_Employees
+ON dbo.Employees_Audit
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+    SELECT 'INSERT', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+    FROM inserted;
+END;
+GO  -- バッチを区切る
+
+-- DELETEトリガーの作成
+CREATE TRIGGER trg_AfterDelete_Employees
+ON dbo.Employees
+AFTER DELETE
+AS
+BEGIN
+    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+    SELECT 'DELETE', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+    FROM deleted;
+END;
+GO  -- バッチを区切る
+
+-- UPDATEトリガーの作成
+CREATE TRIGGER trg_AfterUpdate_Employees
+ON dbo.Employees
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
+    SELECT 'UPDATE', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+    FROM inserted;
+END;
+GO  -- バッチを区切る
+
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+テーブルのカラム構造に依存せず、共通の監査情報（TableName、AuditAction、AuditDate など）だけを記録するように変更
+→まだ試せていない
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+IF CURSOR_STATUS('global', 'db_cursor') >= -1
+BEGIN
+    CLOSE db_cursor;
+    DEALLOCATE db_cursor;
+END;
+
+DECLARE @dbName NVARCHAR(128);
+DECLARE @tableName NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
+
+-- ユーザーデータベースのみを対象にする
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースと rdsadmin を除外
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @dbName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- 監査テーブルを作成
+    SET @sql = '
+    USE [' + @dbName + '];
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees_Audit'')
+    BEGIN
+        CREATE TABLE dbo.Employees_Audit (
+            AuditID INT IDENTITY(1,1) PRIMARY KEY,
+            TableName NVARCHAR(128),
+            AuditAction NVARCHAR(50),
+            AuditDate DATETIME DEFAULT GETDATE()
+        );
+    END;
+    ';
+    EXEC sp_executesql @sql;
+
+    -- テーブルカーソルを使用して、各テーブルにトリガーを作成
+    SET @sql = '
+    DECLARE table_cursor CURSOR FOR
+    SELECT TABLE_NAME 
+    FROM [' + @dbName + '].INFORMATION_SCHEMA.TABLES 
+    WHERE TABLE_TYPE = ''BASE TABLE'' AND TABLE_SCHEMA = ''dbo'';
+
+    OPEN table_cursor;
+    FETCH NEXT FROM table_cursor INTO @tableName;
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+        -- INSERT トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterInsert_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER INSERT
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''INSERT'''', GETDATE();
+        END;'';
+        EXEC sp_executesql @sql;
+
+        -- DELETE トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterDelete_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER DELETE
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''DELETE'''', GETDATE();
+        END;'';
+        EXEC sp_executesql @sql;
+
+        -- UPDATE トリガーの作成
+        SET @sql = ''CREATE TRIGGER trg_AfterUpdate_'' + @tableName + ''
+        ON dbo.'' + @tableName + ''
+        AFTER UPDATE
+        AS
+        BEGIN
+            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
+            SELECT ''''' + @tableName + ''''', ''''UPDATE'''', GETDATE();
+        END;'';
+        EXEC sp_executesql @sql;
+
+        FETCH NEXT FROM table_cursor INTO @tableName;
+    END;
+
+    CLOSE table_cursor;
+    DEALLOCATE table_cursor;
+    ';
+
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM db_cursor INTO @dbName;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+
+ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+
+
+
+
+
+
+
 お疲れ様です。
 作業報告書なのですが、hibridge社としてのフォーマットなどありますでしょうか？
 もしなければギークスのフォーマットを使用しても問題ないでしょうか？
