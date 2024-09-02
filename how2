@@ -1,350 +1,410 @@
+[635C:40BC][2024-09-02T16:28:52]i001: Burn v3.14.1.8722, Windows v10.0 (Build 22621: Service Pack 0), path: C:\WINDOWS\Temp\{E9539A6D-5E31-4915-A584-C48F6DED6CC4}\.cr\SSMS-Setup-JPN.exe
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SSMSINSTALLROOT' to value '[ProgramFilesFolder]Microsoft SQL Server Management Studio 20'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing numeric variable 'SSMSInstallExists' to value '0'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SSMSInstalledLanguageKeyExists' to value 'false'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SSMSInstalledLanguageMatch' to value 'true'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SSMSInstalledVersion' to value ''
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'ProductVersionVar' to value '20.2.30.0'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'HeaderText' to value 'リリース 20.2'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SubHeaderText' to value 'Microsoft SQL Server Management Studio'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LicenseTermsSSMSUrl' to value 'https://go.microsoft.com/fwlink/?LinkID=620835&clcid=0x411'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'PreviewStatementUrl' to value 'https://go.microsoft.com/fwlink/?LinkID=824140'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'TelemetryDocumentationUrl' to value 'https://go.microsoft.com/fwlink/?LinkID=869476'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing numeric variable 'InstallerLcid' to value '1041'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'CancelText' to value 'キャンセル(_A)'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'CloseText' to value '閉じる(_C)'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'ContinuePastWarningText' to value '続行しますか?'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'InstallText' to value 'インストール(_I)'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LicenseTermsSSMSText' to value 'SQL Server Management Studio'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LoadingPackagesText' to value 'パッケージを読み込んでいます。しばらくお待ちください...'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'OverallProgressText' to value '全体的な進行状況'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'PackageProgressText' to value 'パッケージの進捗状況'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'PrivacyStatementText' to value 'プライバシーに関する声明'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'TelemetryDocumentationText' to value 'ドキュメント'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'PrivacyDisclaimerText' to value 'SQL Server Management Studio では、インストール操作に関する情報と、他の使用状況とパフォーマンスのデータを Microsoft に送信し、製品の品質向上に役立てます。データ処理とプライバシー管理に関する詳細と、インストール後にこの情報の収集を無効にする方法については、{documentation} をご覧ください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'RepairText' to value '修復'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'RestartText' to value '再起動'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupBlockedDescriptionText' to value 'なんらかの問題によって、セットアップの続行がブロックされました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupBlockedText' to value 'セットアップがブロックされました'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupCanceledDescriptionText' to value 'セットアップ操作が取り消されました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupCanceledText' to value 'セットアップが取り消されました'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupCompletedText' to value 'セットアップが完了しました'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupFailedDescriptionText' to value 'インストール中にエラーが発生しました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupFailedText' to value 'セットアップに失敗しました'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupHelpDescriptionText' to value '/install | /repair | /uninstall - インストール、修復、アンインストールします。インストールが既定値です。
 
+/passive | /quiet - プロンプトなしの最小限の UI を表示するか、または UI もプロンプトも表示しません。既定では、UI とすべてのプロンプトが表示されます。
 
-サーバー監査ログを特定のファイルパス（例：D:\rdsdbdata\SQLAudit）に保存することはできる。
-テーブルに挿入されたデータ（今回はEmployees_Auditテーブルのデータ）を直接サーバー監査ログファイルに記録することはできない。
+/norestart - 再起動の試行をすべて抑止します。既定では、再起動の前に UI によりプロンプトが表示されます。
 
-監査テーブルの内容をS3に保存する
+/log <ログ ファイルのプレフィックス> - SSMS セットアップ ログの先頭文字です。既定では、ログ ファイルは  %TEMP%\SSMSSetup の下に作成されます。
 
-定期的なエクスポート: Employees_Auditテーブルの内容を定期的にエクスポートし、そのファイルをS3に保存します。
-これにより、監査ログの内容をバックアップとして保存することができます。
-
-やりたいこと
-SQL Serverの監視ログを取得(S3に)
-DBの各テーブルに各ログ(アクセスログ、CREATE,INSERT,DELETE,UPDATE)を取得(S3)
-
-3の手順でEmployeesテーブルに対するINSERT、DELETE、UPDATE操作を監視するコマンドを追記する必要がある？
-
-■手順の流れ
-1.SQL に管理者でログイン。
-2.サーバー監査ログの作成
-3.サーバー監査仕様の作成
-4.SQLユーザー登録(20人分)
-5.DBの作成(20個)
-6.複数のDBに監査設定を付与
-7.INSERT、DELETE、UPDATEトリガーをテーブルに作成
-8.SQLユーザーとDBユーザーを紐づけ(user5とuserDB5)
-9.user5でSQLログイン
-10.user5でINSERT、DELETE、UPDATEコマンドを実施。
-
-■実際のスクリプト
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-1.管理者でログイン
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-2.監査の作成
--- masterデータベースに接続
-USE [master];
-GO
-
--- サーバー監査の作成（ファイルパスはRDSで自動的に管理されます）
-CREATE SERVER AUDIT [ServerAudit]
-TO FILE 
-(	FILEPATH = N'D:\rdsdbdata\SQLAudit',  -- このパスはRDSのオプショングループ設定に従います
-	MAXSIZE = 10 MB,
-	RESERVE_DISK_SPACE = OFF
-) WITH (ON_FAILURE = CONTINUE);
-GO
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-3.サーバー監査仕様の作成
--- サーバー監査仕様の作成
-CREATE SERVER AUDIT SPECIFICATION [ServerAuditSpec]
-FOR SERVER AUDIT [ServerAudit]
-    ADD (LOGIN_CHANGE_PASSWORD_GROUP),           -- パスワード変更の監視
-    ADD (FAILED_LOGIN_GROUP),                    -- 失敗したログインの監視
-    ADD (SUCCESSFUL_LOGIN_GROUP),                -- 成功したログインの監視
-    ADD (DATABASE_OBJECT_ACCESS_GROUP),          -- データベースオブジェクトへのアクセスの監視
-    ADD (DATABASE_OBJECT_CHANGE_GROUP),          -- データベースオブジェクトの変更（INSERT, UPDATE, DELETE）の監視
-    ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),       -- データベースオブジェクトの作成（CREATE）の監視
-    ADD (SCHEMA_OBJECT_CHANGE_GROUP),            -- スキーマオブジェクトの変更（DROPなど）の監視
-    ADD (SERVER_STATE_CHANGE_GROUP)             -- サーバーパフォーマンス状態や変更の監視
-WITH (STATE = ON);
-GO
-
--- 監査開始 (監査の有効化)
-ALTER SERVER AUDIT [ServerAudit]
-WITH (STATE = ON);
-GO
-
--- 2. 監査仕様の追加作成
-CREATE SERVER AUDIT SPECIFICATION [AuditSpecification]
-FOR SERVER AUDIT [ServerAudit]
-ADD (INSERT ON OBJECT::dbo.Employees BY dbo),
-ADD (DELETE ON OBJECT::dbo.Employees BY dbo),
-ADD (UPDATE ON OBJECT::dbo.Employees BY dbo);
-GO
-
-
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-4.ユーザー登録
-DECLARE @i INT = 1;
-WHILE @i <= 20
-BEGIN
-    DECLARE @dbName NVARCHAR(50) = 'TestDB' + CAST(@i AS NVARCHAR(2));
-    DECLARE @sql NVARCHAR(MAX) = 'CREATE DATABASE ' + @dbName;
-    EXEC sp_executesql @sql;
-    SET @i = @i + 1;
-END
-GO
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-5.DBの作成
-
-DECLARE @i INT = 1;
-WHILE @i <= 20
-BEGIN
-    -- SQL Serverログインの作成
-    DECLARE @loginName NVARCHAR(50) = 'user' + CAST(@i AS NVARCHAR(2));
-    DECLARE @password NVARCHAR(50) = 'Password123!';
-    DECLARE @sql NVARCHAR(MAX) = 'CREATE LOGIN [' + @loginName + '] WITH PASSWORD = ''' + @password + ''';';
-    EXEC sp_executesql @sql;
-    
-    -- データベース内のユーザー名は "userXXDB" にする
-    DECLARE @dbUserName NVARCHAR(50) = @loginName + 'DB';
-    DECLARE @dbName NVARCHAR(50) = 'TestDB' + CAST(@i AS NVARCHAR(2));
-    
-    -- 各データベースにユーザーを作成し、ログインにマッピング
-    SET @sql = 'USE ' + @dbName + '; CREATE USER [' + @dbUserName + '] FOR LOGIN [' + @loginName + '];';
-    EXEC sp_executesql @sql;
-    
-    SET @i = @i + 1;
-END
-GO
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-6.すべてのDBにEmployeesテーブルを作成する
-DECLARE @dbName NVARCHAR(128);
-DECLARE @sql NVARCHAR(MAX);
-
--- データベースカーソルを使用して、すべてのユーザーデータベースに対して操作を実行
-DECLARE db_cursor CURSOR FOR
-SELECT name 
-FROM sys.databases
-WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースを除外
-
-OPEN db_cursor;
-FETCH NEXT FROM db_cursor INTO @dbName;
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    -- 各データベースに対してEmployeesテーブルを作成
-    SET @sql = '
-    USE [' + @dbName + '];
-    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees'')
-    BEGIN
-        CREATE TABLE [dbo].[Employees] (
-            EmployeeID INT PRIMARY KEY,
-            FirstName NVARCHAR(50),
-            LastName NVARCHAR(50),
-            HireDate DATE,
-            Salary DECIMAL(10, 2)
-        );
-    END;
-    ';
-    
-    -- 動的SQLを実行
-    EXEC sp_executesql @sql;
-
-    FETCH NEXT FROM db_cursor INTO @dbName;
-END;
-
-CLOSE db_cursor;
-DEALLOCATE db_cursor;
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
---7.複数のDBに監査設定を付与
---sys.databasesシステムビューを使用して、現在のSQL Serverインスタンス内のすべてのデータベースを取得します。システムデータベース（master、model、msdb、tempdb）は除外します。
-
-DECLARE @dbName NVARCHAR(128);
-DECLARE @sql NVARCHAR(MAX);
-
--- データベースカーソルを使用して、すべてのユーザーデータベースに対して操作を実行
-DECLARE db_cursor CURSOR FOR
-SELECT name 
-FROM sys.databases
-WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb');  -- システムデータベースを除外
-
-OPEN db_cursor;
-FETCH NEXT FROM db_cursor INTO @dbName;
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    -- 各データベースに対して監査設定を動的に実行
-    SET @sql = '
-    USE [' + @dbName + '];
-    IF NOT EXISTS (SELECT * FROM sys.database_audit_specifications WHERE name = ''DatabaseAuditSpec'')
-    BEGIN
-        CREATE DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec]
-        FOR SERVER AUDIT [ServerAudit]
-            ADD (DATABASE_CHANGE_GROUP),                
-            ADD (DATABASE_OBJECT_ACCESS_GROUP),         
-            ADD (DATABASE_OBJECT_CHANGE_GROUP),         
-            ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),      
-            ADD (FAILED_DATABASE_AUTHENTICATION_GROUP), 
-            ADD (BACKUP_RESTORE_GROUP)                  -- バックアップやリストア操作の監視
-        WITH (STATE = ON);
-    END
-    ';
-
-    -- 動的SQLを実行
-    EXEC sp_executesql @sql;
-
-    FETCH NEXT FROM db_cursor INTO @dbName;
-END;
-
-CLOSE db_cursor;
-DEALLOCATE db_cursor;
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-8.管理権限を付与する
-USE [TestDB5];
-ALTER ROLE db_owner ADD MEMBER [user5DB];
-
--- TestDB5 データベースを使用する
-USE TestDB5;
-GO
-
-
--- TestDB5 にテーブルを作成
-CREATE TABLE Employees (
-    EmployeeID INT PRIMARY KEY,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    HireDate DATE,
-    Salary DECIMAL(10, 2)
-);
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-9.INSERT、DELETE、UPDATEトリガーを作成
-
-USE [TestDB14];  -- 特定のデータベース名を入力
--- カーソルを使用せず、特定のデータベースに対して手動でトリガーを作成する
-
-DECLARE @tableName NVARCHAR(128);
-DECLARE @innerSql NVARCHAR(MAX);
-
-DECLARE table_cursor CURSOR FOR
-SELECT TABLE_NAME 
-FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_TYPE = 'BASE TABLE' 
-AND TABLE_SCHEMA = 'dbo'
-AND TABLE_NAME NOT LIKE '%_Audit%';  -- _Auditテーブルを除外
-
-OPEN table_cursor;
-FETCH NEXT FROM table_cursor INTO @tableName;
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    -- INSERT トリガーの作成
-    SET @innerSql = 'CREATE TRIGGER trg_AfterInsert_' + @tableName + '
-    ON dbo.' + @tableName + '
-    AFTER INSERT
-    AS
-    BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @tableName + ''', ''INSERT'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-        FROM inserted;
-    END;';
-    PRINT @innerSql;
-    EXEC sp_executesql @innerSql;
-
-    -- DELETE トリガーの作成
-    SET @innerSql = 'CREATE TRIGGER trg_AfterDelete_' + @tableName + '
-    ON dbo.' + @tableName + '
-    AFTER DELETE
-    AS
-    BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @tableName + ''', ''DELETE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-        FROM deleted;
-    END;';
-    PRINT @innerSql;
-    EXEC sp_executesql @innerSql;
-
-    -- UPDATE トリガーの作成
-    SET @innerSql = 'CREATE TRIGGER trg_AfterUpdate_' + @tableName + '
-    ON dbo.' + @tableName + '
-    AFTER UPDATE
-    AS
-    BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @tableName + ''', ''UPDATE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-        FROM inserted;
-    END;';
-    PRINT @innerSql;
-    EXEC sp_executesql @innerSql;
-
-    FETCH NEXT FROM table_cursor INTO @tableName;
-END;
-
-CLOSE table_cursor;
-DEALLOCATE table_cursor;
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
---テーブルのログを監査に追加する
-
--- 監査を設定するデータベースに接続
-USE [TestDB14];  -- データベース名を指定
-GO
-
--- 監査仕様を無効化
-ALTER DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec] WITH (STATE = OFF);
-GO
-
--- 既存の監査仕様に対する変更（Employees_Audit テーブルの監視を追加）
-ALTER DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec]
-FOR SERVER AUDIT [ServerAudit]
-    ADD (SELECT ON OBJECT::dbo.Employees_Audit BY dbo),   -- Employees_AuditテーブルへのSELECT操作の監視
-    ADD (INSERT ON OBJECT::dbo.Employees_Audit BY dbo),   -- Employees_AuditテーブルへのINSERT操作の監視
-    ADD (DELETE ON OBJECT::dbo.Employees_Audit BY dbo),   -- Employees_AuditテーブルへのDELETE操作の監視
-    ADD (UPDATE ON OBJECT::dbo.Employees_Audit BY dbo);   -- Employees_AuditテーブルへのUPDATE操作の監視
-GO
-
--- 監査仕様を再度有効化
-ALTER DATABASE AUDIT SPECIFICATION [DatabaseAuditSpec] WITH (STATE = ON);
-GO
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-10.user5でSQLログイン
-
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-11.user5でINSERT、DELETE、UPDATEコマンドを実施。
-
--- TestDB5 データベースを使用する
-USE TestDB5;
-GO
-
-
--- TestDB5 にテーブルを作成
-CREATE TABLE Employees (
-    EmployeeID INT PRIMARY KEY,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    HireDate DATE,
-    Salary DECIMAL(10, 2)
-);
-
--- INSERT文：Employeesテーブルに5件のデータを挿入
-INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, Salary)
-VALUES 
-(1, 'John', 'Doe', '2020-01-15', 55000.00),
-(2, 'Jane', 'Smith', '2019-03-23', 60000.00),
-(3, 'Michael', 'Johnson', '2021-07-10', 52000.00),
-(4, 'Emily', 'Davis', '2018-09-15', 67000.00),
-(5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
-GO
-
--- UPDATE文：Salaryを更新
-UPDATE Employees
-SET Salary = Salary + 5000  -- すべての従業員の給与を5000増加
-WHERE HireDate < '2020-01-01';  -- 2020年以前に雇用された従業員が対象
-GO
-
--- DELETE文：特定の従業員を削除
-DELETE FROM Employees
-WHERE EmployeeID = 5;  -- EmployeeIDが5の従業員を削除
-GO
+SSMSInstallRoot=<SSMS の場所へのパス>。既定では、{0} です。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupHelpText' to value 'セットアップのヘルプ'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupInstalledText' to value '指定されたすべてのコンポーネントが正常にインストールされました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupLayoutText' to value 'レイアウト操作が完了しました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupLogText' to value 'ログ ファイルについては、ここをクリックします。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupProgressText' to value 'セットアップの進行状況'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupRepairedText' to value '指定されたすべてのコンポーネントが正常に修復されました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupRestartDescriptionText' to value 'セットアップを続けるには、コンピューターを再起動する必要があります。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupRestartText' to value 'セットアップを完了するには、再起動が必要です。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupUninstalledText' to value '指定されたすべてのコンポーネントが正常にアンインストールされました。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupWarningDescriptionText' to value '次のイシューは、インストール済みのアプリケーションに影響を与える可能性があります。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SetupWarningText' to value 'セットアップ警告'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'TermsAndConditionText' to value '[インストール] ボタンをクリックすることにより、{Privacy Statement} および {SQL Server Management Studio} のライセンス条項に同意したことと認めます。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'UninstallText' to value 'アンインストール'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'WelcomeInstallText' to value 'ようこそ。開始するには、「インストール」 をクリックしてください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'YesText' to value 'はい'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'RestartAlreadyPending' to value '再起動が保留中のため、セットアップの完了がブロックされています。コンピューターを再起動し、もう一度セットアップを実行してください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'AnotherInstallRunning' to value '現在別のインストールが実行中のため、セットアップがブロックされました。他のインストールを完了してから、必要に応じてコンピューターを再起動してください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'SSMSCurrentlyRunning' to value 'SSMS が現在実行中です。SSMS の開いているインスタンスをすべて閉じてから、再度このインストーラーを実行してください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'MinimizeButtonAccessibleName' to value '最小化'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LogoAccessibleName' to value 'SSMS ロゴ'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'Win10OrWS2016NotSupported' to value 'Windows 10 または Windows Server 2016 のこのバージョンはサポートされていません。1607 以降のバージョンにアップグレードしてください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'IsUpgradeScenario' to value 'false'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'ChangeText' to value '変更(_H)'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LocationText' to value '場所(_L):'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'LocationAccessibleName' to value '場所'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'InvalidLocationText' to value '場所が無効です。続行するには有効な場所を入力してください。'
+[635C:40BC][2024-09-02T16:28:52]i000: Initializing string variable 'UnableToACLInstallFolderText' to value '選択したフォルダーにアクセス許可を設定できません。別のフォルダーを選択してください。'
+[635C:40BC][2024-09-02T16:28:52]i009: Command Line: '-burn.clean.room=C:\Users\t-shi\Downloads\SSMS-Setup-JPN.exe -burn.filehandle.attached=604 -burn.filehandle.self=752'
+[635C:40BC][2024-09-02T16:28:52]i000: Setting string variable 'WixBundleOriginalSource' to value 'C:\Users\t-shi\Downloads\SSMS-Setup-JPN.exe'
+[635C:40BC][2024-09-02T16:28:52]i000: Setting string variable 'WixBundleOriginalSourceFolder' to value 'C:\Users\t-shi\Downloads\'
+[635C:40BC][2024-09-02T16:28:52]i000: Setting string variable 'WixBundleLog' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852.log'
+[635C:40BC][2024-09-02T16:28:52]i000: Setting string variable 'WixBundleName' to value 'Microsoft SQL Server Management Studio - 20.2'
+[635C:40BC][2024-09-02T16:28:52]i000: Setting string variable 'WixBundleManufacturer' to value 'Microsoft Corporation'
+[635C:40BC][2024-09-02T16:28:52]i000: Loading managed bootstrapper application.
+[635C:40BC][2024-09-02T16:28:52]i000: Creating BA thread to run asynchronously.
+[635C:5E24][2024-09-02T16:28:53]i000: [Run, ManagedBootstrapperApp.cs::49] Launching the managed bootstrapper application.
+[635C:5E24][2024-09-02T16:28:53]i000: [Initialize, BootstrapperMetadataModel.cs::74] Start loading the bootstrapper app data xml file
+[635C:5E24][2024-09-02T16:28:53]i000: [Initialize, BootstrapperMetadataModel.cs::79] Completed loading the bootstrapper app data xml file content: <BootstrapperApplicationData xmlns="http://schemas.microsoft.com/wix/2010/BootstrapperApplicationData">
+  <WixBalCondition Condition="NETFRAMEWORK45 &gt;= &quot;461808&quot;" Message=".NET Framework 4.7.2 (またはそれ以降) がこのコンピューターで検出されません。インストールしてから、このインストーラーをもう一度実行してください。" />
+  <WixBalCondition Condition="(SSMSInstallExists = 0) OR (SSMSInstalledLanguageKeyExists = 0) OR SSMSInstalledLanguageMatch" Message="SSMS は対応する言語のパッケージをインストールしないとアップグレードできません。対応するバージョンのインストーラーを使用するか、現行のバージョンの SSMS をアンインストールしてから SSMS セットアップをもう一度実行してください。" />
+  <WixBalCondition Condition="NOT Msix64" Message="SSMS は、64 ビット バージョンの Windows にのみダウンロードできます。" />
+  <WixBalCondition Condition="RebootPending = 0" Message="コンピューターの再起動が保留中であることが検出されました。コンピューターを再起動し、再度セットアップを実行してください" />
+  <WixBalCondition Condition="(VersionNT = v6.1 AND ServicePackLevel = 1) OR VersionNT &gt; v6.1" Message="現在のオペレーティング システムはサポートされていません。このアプリケーションを実行するには、少なくとも Windows 7 SP1 または Windows Server 2008 R2 SP1 が必要です。" />
+  <WixBalCondition Condition="Installed OR (VersionNT &lt;&gt; v6.2) OR (InstallationType &lt;&gt; &quot;Client&quot;)" Message="Windows 8 はサポートされていません。続行するには、オペレーティング システムをアップグレードしてください。" />
+  <WixBundleProperties DisplayName="Microsoft SQL Server Management Studio - 20.2" LogPathVariable="WixBundleLog" Compressed="no" Id="{e691bc66-89cc-41a9-ad1f-0080b27d0a93}" UpgradeCode="{156D784F-C8A2-4932-AF30-3678467F6BC6}" PerMachine="yes" />
+  <WixMbaPrereqInformation PackageId="NetFx472Web" LicenseUrl="https://referencesource.microsoft.com/license.html" />
+  <WixPackageProperties Package="VCRedistD14x86" Vital="no" DisplayName="Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.38.33135" Description="Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.38.33135" DownloadSize="13853648" PackageSize="13853648" InstalledSize="13853648" PackageType="Exe" Permanent="yes" LogPathVariable="WixBundleLog_VCRedistD14x86" RollbackLogPathVariable="WixBundleRollbackLog_VCRedistD14x86" Compressed="yes" DisplayInternalUI="no" Version="14.38.33135.0" Cache="yes" />
+  <WixPackageProperties Package="VCRedistD14x64" Vital="no" DisplayName="Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.38.33135" Description="Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.38.33135" DownloadSize="25416016" PackageSize="25416016" InstalledSize="25416016" PackageType="Exe" Permanent="yes" LogPathVariable="WixBundleLog_VCRedistD14x64" RollbackLogPathVariable="WixBundleRollbackLog_VCRedistD14x64" Compressed="yes" DisplayInternalUI="no" Version="14.38.33135.0" Cache="yes" />
+  <WixPackageProperties Package="HelpViewer2_3" Vital="yes" DisplayName="Microsoft Help Viewer 2.3" DownloadSize="3128304" PackageSize="3128304" InstalledSize="13572316" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_HelpViewer2_3" RollbackLogPathVariable="WixBundleRollbackLog_HelpViewer2_3" Compressed="yes" DisplayInternalUI="no" ProductCode="{99DC6816-30B2-32EB-9E12-AF8944C4FA4E}" UpgradeCode="{E2432240-A799-3542-915D-9BA62512EE5D}" Version="2.3.28307" Cache="yes" />
+  <WixPackageProperties Package="HelpViewer2_3_LP" Vital="yes" DisplayName="Microsoft ヘルプ ビューアー 2.3 Language Pack - 日本語" DownloadSize="554559" PackageSize="554559" InstalledSize="837951" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_HelpViewer2_3_LP" RollbackLogPathVariable="WixBundleRollbackLog_HelpViewer2_3_LP" Compressed="yes" DisplayInternalUI="no" ProductCode="{857EF73C-C89C-3434-B5BB-6F43801B286A}" UpgradeCode="{3F9F44DA-6DE1-3CE6-B9F2-BE4DF2985721}" Version="2.3.28107" Cache="yes" />
+  <WixPackageProperties Package="NetFx472Web" Vital="yes" DisplayName="Microsoft .NET Framework 4.7.2" Description="Microsoft .NET Framework 4.7.2 Setup" DownloadSize="1405792" PackageSize="1405792" InstalledSize="1405792" PackageType="Exe" Permanent="yes" LogPathVariable="NetFx472WebLog" RollbackLogPathVariable="WixBundleRollbackLog_NetFx472Web" Compressed="no" DisplayInternalUI="no" Version="4.7.3081.0" Cache="yes" />
+  <WixPackageProperties Package="msodbcsql.msi" Vital="yes" DisplayName="Microsoft ODBC Driver 17 for SQL Server" DownloadSize="4759552" PackageSize="4759552" InstalledSize="14228090" PackageType="Msi" Permanent="yes" LogPathVariable="WixBundleLog_msodbcsql.msi" RollbackLogPathVariable="WixBundleRollbackLog_msodbcsql.msi" Compressed="yes" DisplayInternalUI="no" ProductCode="{109DFA51-5268-4FC9-848C-E9B4F6DAD16F}" UpgradeCode="{0123A210-9B73-46E7-B5CE-7F33630300E7}" Version="17.10.6.1" Cache="yes" />
+  <WixPackageProperties Package="msoledbsql.msi" Vital="yes" DisplayName="Microsoft OLE DB Driver for SQL Server" DownloadSize="7290880" PackageSize="7290880" InstalledSize="15905762" PackageType="Msi" Permanent="yes" LogPathVariable="WixBundleLog_msoledbsql.msi" RollbackLogPathVariable="WixBundleRollbackLog_msoledbsql.msi" Compressed="yes" DisplayInternalUI="no" ProductCode="{D2077315-EBE2-4A98-A41F-55A183F775FE}" UpgradeCode="{DEBB0805-202C-471D-A182-675FF32F65C2}" Version="18.7.4.0" Cache="yes" />
+  <WixPackageProperties Package="sql_as_oledb_x64" Vital="yes" DisplayName="Microsoft Analysis Services OLE DB プロバイダー" DownloadSize="83574784" PackageSize="83574784" InstalledSize="550471620" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_sql_as_oledb_x64" RollbackLogPathVariable="WixBundleRollbackLog_sql_as_oledb_x64" Compressed="yes" DisplayInternalUI="no" ProductCode="{160C316B-31D2-4983-B377-A5E58078C133}" UpgradeCode="{CB9660E7-C211-4730-ACEC-945CE7A4C578}" Version="16.0.5143.0" InstallCondition="VersionNT64" Cache="yes" />
+  <WixPackageProperties Package="sql_as_oledb_x86" Vital="yes" DisplayName="Microsoft Analysis Services OLE DB プロバイダー" DownloadSize="41074688" PackageSize="41074688" InstalledSize="267915642" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_sql_as_oledb_x86" RollbackLogPathVariable="WixBundleRollbackLog_sql_as_oledb_x86" Compressed="yes" DisplayInternalUI="no" ProductCode="{9589D0E0-B05E-4CCA-B319-3C197104F9E0}" UpgradeCode="{479A9150-146E-45C4-AE2A-23FDEC7CDD9A}" Version="16.0.5143.0" Cache="yes" />
+  <WixPackageProperties Package="VS2017IsoShellForSSMS" Vital="yes" DisplayName="Visual Studio 2017 Isolated Shell for SSMS" DownloadSize="145522688" PackageSize="145522688" InstalledSize="419266591" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_VS2017IsoShellForSSMS" RollbackLogPathVariable="WixBundleRollbackLog_VS2017IsoShellForSSMS" Compressed="yes" DisplayInternalUI="no" ProductCode="{29BA18D9-00DF-4A08-BBBE-A0211A31D452}" UpgradeCode="{336D389A-7982-4536-8620-D7F8B9404A78}" Version="15.0.28307.421" Cache="yes" />
+  <WixPackageProperties Package="VS2017IsoShellForSSMS_LP" Vital="yes" DisplayName="Visual Studio 2017 Isolated Shell for SSMS LangPack - 日本語" DownloadSize="7077888" PackageSize="7077888" InstalledSize="33186224" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_VS2017IsoShellForSSMS_LP" RollbackLogPathVariable="WixBundleRollbackLog_VS2017IsoShellForSSMS_LP" Compressed="yes" DisplayInternalUI="no" ProductCode="{31A138D1-5593-47DE-BACF-1F8DE06D34FE}" UpgradeCode="{0B3F14B3-19EB-4307-A17F-D8C9C7B65022}" Version="15.0.28307.421" Cache="yes" />
+  <WixPackageProperties Package="VSTA2019" Vital="yes" DisplayName="Microsoft Visual Studio Tools for Applications 2019" Description="Microsoft Visual Studio Tools for Applications 2019" DownloadSize="10678456" PackageSize="10678456" InstalledSize="10678456" PackageType="Exe" Permanent="yes" LogPathVariable="WixBundleLog_VSTA2019" RollbackLogPathVariable="WixBundleRollbackLog_VSTA2019" Compressed="yes" DisplayInternalUI="no" Version="16.0.31110.0" Cache="yes" />
+  <WixPackageProperties Package="sql_ssms" Vital="yes" DisplayName="SQL Server Management Studio" DownloadSize="137216000" PackageSize="137216000" InstalledSize="566234470" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_sql_ssms" RollbackLogPathVariable="WixBundleRollbackLog_sql_ssms" Compressed="yes" DisplayInternalUI="no" ProductCode="{98FA3A6A-2028-4F6B-993E-D1851F0D5EC6}" UpgradeCode="{A0C26236-D844-490C-BDBF-A117669AB822}" Version="20.2.30.0" InstallCondition="VersionNT64" Cache="yes" />
+  <WixPackageProperties Package="sql_ssms_1041" Vital="yes" DisplayName="SQL Server Management Studio 言語パック - 日本語" DownloadSize="9220096" PackageSize="9220096" InstalledSize="55266169" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_sql_ssms_1041" RollbackLogPathVariable="WixBundleRollbackLog_sql_ssms_1041" Compressed="yes" DisplayInternalUI="no" ProductCode="{F00A14C9-95DE-4228-B805-F9BC337A8376}" UpgradeCode="{FA9C19DA-D30D-448F-BFAA-84AA2D43AE17}" Version="20.2.30.0" InstallCondition="VersionNT64" Cache="yes" />
+  <WixPackageProperties Package="ssms_is" Vital="yes" DisplayName="Integration Services" DownloadSize="35209216" PackageSize="35209216" InstalledSize="176705256" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_ssms_is" RollbackLogPathVariable="WixBundleRollbackLog_ssms_is" Compressed="yes" DisplayInternalUI="no" ProductCode="{B0EAC1AB-D27F-4FC3-B4D9-D139BD5BE242}" UpgradeCode="{7877CDA5-65A5-4054-A93B-1D91004280A0}" Version="16.0.5491.7" Cache="yes" />
+  <WixPackageProperties Package="SsmsPostInstall_x86" Vital="yes" DisplayName="SSMS Post Install Tasks" DownloadSize="335872" PackageSize="335872" InstalledSize="0" PackageType="Msi" Permanent="no" LogPathVariable="WixBundleLog_SsmsPostInstall_x86" RollbackLogPathVariable="WixBundleRollbackLog_SsmsPostInstall_x86" Compressed="yes" DisplayInternalUI="no" ProductCode="{33F0F46E-51D3-46B5-9EAA-9415E9BA3A7A}" UpgradeCode="{6770227F-868E-491F-91E9-8D0A7BBDE393}" Version="20.2.30.0" Cache="yes" />
+  <WixPayloadProperties Payload="VCRedistD14x86" Package="VCRedistD14x86" Container="WixAttachedContainer" Name="2017\VC_redist.x86.exe" Size="13853648" LayoutOnly="no" />
+  <WixPayloadProperties Payload="VCRedistD14x64" Package="VCRedistD14x64" Container="WixAttachedContainer" Name="2017\VC_redist.x64.exe" Size="25416016" LayoutOnly="no" />
+  <WixPayloadProperties Payload="HelpViewer2_3" Package="HelpViewer2_3" Container="WixAttachedContainer" Name="redist\help3_vs_net.msi" Size="315392" LayoutOnly="no" />
+  <WixPayloadProperties Payload="cabE503715EC9048140D7380B4A179097EF" Package="HelpViewer2_3" Container="WixAttachedContainer" Name="redist\cab1.cab" Size="2812912" LayoutOnly="no" />
+  <WixPayloadProperties Payload="HelpViewer2_3_LP" Package="HelpViewer2_3_LP" Container="WixAttachedContainer" Name="redist\help3_LP_net.msi" Size="299008" LayoutOnly="no" />
+  <WixPayloadProperties Payload="cab96EEBCEEC415A2FC7E4C6265548D48E5" Package="HelpViewer2_3_LP" Container="WixAttachedContainer" Name="redist\cab1.cab" Size="255551" LayoutOnly="no" />
+  <WixPayloadProperties Payload="NetFx472Web" Package="NetFx472Web" Name="redist\NDP472-KB4054531-Web.exe" Size="1405792" DownloadUrl="https://go.microsoft.com/fwlink/?LinkId=863262" LayoutOnly="no" />
+  <WixPayloadProperties Payload="msodbcsql.msi" Package="msodbcsql.msi" Container="WixAttachedContainer" Name="x64\msodbcsql.msi" Size="4759552" LayoutOnly="no" />
+  <WixPayloadProperties Payload="msoledbsql.msi" Package="msoledbsql.msi" Container="WixAttachedContainer" Name="x64\msoledbsql.msi" Size="7290880" LayoutOnly="no" />
+  <WixPayloadProperties Payload="sql_as_oledb_x64" Package="sql_as_oledb_x64" Container="WixAttachedContainer" Name="x64\sql_as_oledb.msi" Size="83574784" LayoutOnly="no" />
+  <WixPayloadProperties Payload="sql_as_oledb_x86" Package="sql_as_oledb_x86" Container="WixAttachedContainer" Name="x86\sql_as_oledb.msi" Size="41074688" LayoutOnly="no" />
+  <WixPayloadProperties Payload="VS2017IsoShellForSSMS" Package="VS2017IsoShellForSSMS" Container="WixAttachedContainer" Name="redist\vs2017_isoshell_for_ssms.msi" Size="145522688" LayoutOnly="no" />
+  <WixPayloadProperties Payload="VS2017IsoShellForSSMS_LP" Package="VS2017IsoShellForSSMS_LP" Container="WixAttachedContainer" Name="redist\vs2017_isoshell_for_ssms_lp.msi" Size="7077888" LayoutOnly="no" />
+  <WixPayloadProperties Payload="VSTA2019" Package="VSTA2019" Container="WixAttachedContainer" Name="redist\vsta_setup_2019.exe" Size="10678456" LayoutOnly="no" />
+  <WixPayloadProperties Payload="sql_ssms" Package="sql_ssms" Container="WixAttachedContainer" Name="SSMS.msi" Size="137216000" LayoutOnly="no" />
+  <WixPayloadProperties Payload="sql_ssms_1041" Package="sql_ssms_1041" Container="WixAttachedContainer" Name="SSMS_1041" Size="9220096" LayoutOnly="no" />
+  <WixPayloadProperties Payload="ssms_is" Package="ssms_is" Container="WixAttachedContainer" Name="x86\ssms_is.msi" Size="35209216" LayoutOnly="no" />
+  <WixPayloadProperties Payload="SsmsPostInstall_x86" Package="SsmsPostInstall_x86" Container="WixAttachedContainer" Name="x86\PostInstallCustomActions.msi" Size="335872" LayoutOnly="no" />
+  <WixStdbaOverridableVariable Name="SSMSINSTALLROOT" />
+</BootstrapperApplicationData>
+[635C:6124][2024-09-02T16:28:53]i000: [LogUserEnvironmentInfoInBackground, ManagedBootstrapperApp.cs::169] OS Caption: Microsoft Windows 11 Pro
+[635C:6124][2024-09-02T16:28:53]i000: [LogUserEnvironmentInfoInBackground, ManagedBootstrapperApp.cs::170] OS Version: 10.0.22621
+[635C:5E24][2024-09-02T16:28:53]i000: [CheckFailedConditions, MainViewModel.cs::106] Check whether OS is Windows 10 / Windows Server 2016 pre-RS1 (build <= 10586). OSVersion = 10.0.22621
+[635C:6124][2024-09-02T16:28:53]i000: [LogUserEnvironmentInfoInBackground, ManagedBootstrapperApp.cs::171] NetFx4 Version: 4.8.09032
+[635C:6124][2024-09-02T16:28:53]i000: [LogUserEnvironmentInfoInBackground, ManagedBootstrapperApp.cs::172] OS UI Culture: Japanese (Japan) (1041)
+[635C:5E24][2024-09-02T16:28:53]i000: [SetCommandLineProperties, ManagedBootstrapperApp.cs::136] Begin
+[635C:5E24][2024-09-02T16:28:53]i000: [SetCommandLineProperties, ManagedBootstrapperApp.cs::157] End
+[635C:40BC][2024-09-02T16:28:53]i100: Detect begin, 16 packages
+[635C:40BC][2024-09-02T16:28:53]i000: Setting string variable 'NETFRAMEWORK45' to value '533320'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\Microsoft SQL Server Management Studio\20'
+[635C:40BC][2024-09-02T16:28:53]i000: Setting numeric variable 'SSMSInstallRootKeyExists' to value 0
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstallRootKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstallRootKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstallExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\Microsoft SQL Server Management Studio\20\Language'
+[635C:40BC][2024-09-02T16:28:53]i000: Setting numeric variable 'SSMSInstalledLanguageKeyExists' to value 0
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'SSMSInstalledLanguageKeyExists' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition '(SSMSInstalledLanguage1028 = 1) OR (SSMSInstalledLanguage1031 = 1) OR (SSMSInstalledLanguage1033 = 1) OR (SSMSInstalledLanguage1036 = 1) OR (SSMSInstalledLanguage1040 = 1) OR (SSMSInstalledLanguage1041 = 1) OR (SSMSInstalledLanguage1042 = 1) OR (SSMSInstalledLanguage1046 = 1) OR (SSMSInstalledLanguage1049 = 1) OR (SSMSInstalledLanguage2052 = 1) OR (SSMSInstalledLanguage3082 = 1)' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64'
+[635C:40BC][2024-09-02T16:28:53]i000: Setting numeric variable 'VCRedist_D14x64_KeyExists' to value 0
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\X64'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86'
+[635C:40BC][2024-09-02T16:28:53]i000: Setting numeric variable 'VCRedist_D14x86_KeyExists' to value 0
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x86'
+[635C:40BC][2024-09-02T16:28:53]i000: Registry key not found. Key = 'Software\Microsoft\DevDiv\vsta\Servicing\16.0\hosting'
+[635C:40BC][2024-09-02T16:28:53]i000: Setting string variable 'InstallationType' to value 'Client'
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'VCRedist_D14x86_KeyExists AND (VCRedist_D14x86_Major >= 14) AND (VCRedist_D14x86_Minor >= 10) AND (VCRedist_D14x86_Bld >= 25008)' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'VCRedist_D14x64_KeyExists AND (VCRedist_D14x64_Major >= 14) AND (VCRedist_D14x64_Minor >= 10) AND (VCRedist_D14x64_Bld >= 25008)' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'NETFRAMEWORK45 >= 461808' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'VSTA2019Installed' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: VCRedistD14x86, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: VCRedistD14x64, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: HelpViewer2_3, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: HelpViewer2_3_LP, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: NetFx472Web, state: Present, cached: None
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: msodbcsql.msi, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: msoledbsql.msi, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: sql_as_oledb_x64, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: sql_as_oledb_x86, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: VS2017IsoShellForSSMS, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: VS2017IsoShellForSSMS_LP, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: VSTA2019, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: sql_ssms, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: sql_ssms_1041, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: ssms_is, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i101: Detected package: SsmsPostInstall_x86, state: Absent, cached: Complete
+[635C:40BC][2024-09-02T16:28:53]i000: [OnDetectComplete, BootstrapperEngineModel.cs::282] Entering...
+[635C:40BC][2024-09-02T16:28:53]i000: [GetBooleanFromBootstrapper, MainViewModel.cs::1379] Trying to parse value '0' for property 'SSMSInstallExists'...
+[635C:40BC][2024-09-02T16:28:53]i000: [CheckInstallPathIsValid, MainViewModel.cs::1612] Install path 'C:\Program Files (x86)\Microsoft SQL Server Management Studio 20' is reasonable
+[635C:40BC][2024-09-02T16:28:53]i000: [OnBootstrapperReady, MainViewModel.cs::790] IsUpgradeScenario=False
+[635C:40BC][2024-09-02T16:28:53]i000: [OnBootstrapperReady, MainViewModel.cs::791] SSMSInstallRoot=C:\Program Files (x86)\Microsoft SQL Server Management Studio 20
+[635C:40BC][2024-09-02T16:28:53]i000: [OnBootstrapperReady, MainViewModel.cs::792] SSMSInstallVersion=none
+[635C:40BC][2024-09-02T16:28:53]i000: [OnBootstrapperReady, MainViewModel.cs::795] IsBundleInstalled=False
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'RebootPending = 1' evaluates to false.
+[635C:40BC][2024-09-02T16:28:53]i000: [OnBootstrapperReady, MainViewModel.cs::798] IsRebootPending=False
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'NETFRAMEWORK45 >= "461808"' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition '(SSMSInstallExists = 0) OR (SSMSInstalledLanguageKeyExists = 0) OR SSMSInstalledLanguageMatch' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'NOT Msix64' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'RebootPending = 0' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition '(VersionNT = v6.1 AND ServicePackLevel = 1) OR VersionNT > v6.1' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i052: Condition 'Installed OR (VersionNT <> v6.2) OR (InstallationType <> "Client")' evaluates to true.
+[635C:40BC][2024-09-02T16:28:53]i000: [OnDetectComplete, BootstrapperEngineModel.cs::293] Exiting.
+[635C:40BC][2024-09-02T16:28:53]i199: Detect complete, result: 0x0
+[635C:5E24][2024-09-02T16:28:54]i000: Setting string variable 'SSMSINSTALLROOT' to value 'C:\Program Files (x86)\Microsoft SQL Server Management Studio 20'
+[635C:5E24][2024-09-02T16:28:54]i000: [CheckInstallPathIsValid, MainViewModel.cs::1612] Install path 'C:\Program Files (x86)\Microsoft SQL Server Management Studio 20' is reasonable
+[635C:5E24][2024-09-02T16:28:54]i000: [Install, MainViewModel.cs::1499] Setting ACL on SSMS install folder succeeded
+[635C:5E24][2024-09-02T16:28:54]i000: [Install, MainViewModel.cs::1526] Install action clicked!
+[635C:40BC][2024-09-02T16:28:54]i200: Plan begin, 16 packages, action: Install
+[635C:40BC][2024-09-02T16:28:54]w321: Skipping dependency registration on package with no dependency providers: VCRedistD14x86
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_VCRedistD14x86' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_000_VCRedistD14x86.log'
+[635C:40BC][2024-09-02T16:28:54]w321: Skipping dependency registration on package with no dependency providers: VCRedistD14x64
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_VCRedistD14x64' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_001_VCRedistD14x64.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_HelpViewer2_3' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_002_HelpViewer2_3_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_HelpViewer2_3' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_002_HelpViewer2_3.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_HelpViewer2_3_LP' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_003_HelpViewer2_3_LP_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_HelpViewer2_3_LP' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_003_HelpViewer2_3_LP.log'
+[635C:40BC][2024-09-02T16:28:54]w321: Skipping dependency registration on package with no dependency providers: NetFx472Web
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_msodbcsql.msi' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_004_msodbcsql.msi.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_msoledbsql.msi' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_005_msoledbsql.msi.log'
+[635C:40BC][2024-09-02T16:28:54]i052: Condition 'VersionNT64' evaluates to true.
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_sql_as_oledb_x64' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_006_sql_as_oledb_x64_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_sql_as_oledb_x64' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_006_sql_as_oledb_x64.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_sql_as_oledb_x86' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_007_sql_as_oledb_x86_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_sql_as_oledb_x86' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_007_sql_as_oledb_x86.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_VS2017IsoShellForSSMS' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_008_VS2017IsoShellForSSMS_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_VS2017IsoShellForSSMS' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_008_VS2017IsoShellForSSMS.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_VS2017IsoShellForSSMS_LP' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_009_VS2017IsoShellForSSMS_LP_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_VS2017IsoShellForSSMS_LP' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_009_VS2017IsoShellForSSMS_LP.log'
+[635C:40BC][2024-09-02T16:28:54]w321: Skipping dependency registration on package with no dependency providers: VSTA2019
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_VSTA2019' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_010_VSTA2019.log'
+[635C:40BC][2024-09-02T16:28:54]i052: Condition 'VersionNT64' evaluates to true.
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_sql_ssms' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_011_sql_ssms_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_sql_ssms' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_011_sql_ssms.log'
+[635C:40BC][2024-09-02T16:28:54]i052: Condition 'VersionNT64' evaluates to true.
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_sql_ssms_1041' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_012_sql_ssms_1041_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_sql_ssms_1041' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_012_sql_ssms_1041.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_ssms_is' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_013_ssms_is_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_ssms_is' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_013_ssms_is.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleRollbackLog_SsmsPostInstall_x86' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_014_SsmsPostInstall_x86_rollback.log'
+[635C:40BC][2024-09-02T16:28:54]i000: Setting string variable 'WixBundleLog_SsmsPostInstall_x86' to value 'C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_014_SsmsPostInstall_x86.log'
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: VCRedistD14x86, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: None, cache: No, uncache: No, dependency: None
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: VCRedistD14x64, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: None, cache: No, uncache: No, dependency: None
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: HelpViewer2_3, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: HelpViewer2_3_LP, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: NetFx472Web, state: Present, default requested: Present, ba requested: Present, execute: None, rollback: None, cache: No, uncache: No, dependency: None
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: msodbcsql.msi, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: None, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: msoledbsql.msi, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: None, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: sql_as_oledb_x64, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: sql_as_oledb_x86, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: VS2017IsoShellForSSMS, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: VS2017IsoShellForSSMS_LP, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: VSTA2019, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: None, cache: No, uncache: No, dependency: None
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: sql_ssms, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: sql_ssms_1041, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: ssms_is, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i201: Planned package: SsmsPostInstall_x86, state: Absent, default requested: Present, ba requested: Present, execute: Install, rollback: Uninstall, cache: No, uncache: No, dependency: Register
+[635C:40BC][2024-09-02T16:28:54]i299: Plan complete, result: 0x0
+[635C:40BC][2024-09-02T16:28:54]i300: Apply begin
+[635C:40BC][2024-09-02T16:28:54]i000: [OnBundleAction, MainViewModel.cs::914] Bundle action: Started
+[635C:40BC][2024-09-02T16:28:54]i010: Launching elevated engine process.
+[635C:40BC][2024-09-02T16:28:54]i011: Launched elevated engine process.
+[635C:40BC][2024-09-02T16:28:54]i012: Connected to elevated engine.
+[484C:550C][2024-09-02T16:28:54]i358: Pausing automatic updates.
+[484C:550C][2024-09-02T16:28:54]i359: Paused automatic updates.
+[484C:550C][2024-09-02T16:28:54]i360: Creating a system restore point.
+[484C:550C][2024-09-02T16:28:54]w363: Could not create system restore point, error: 0x80070422. Continuing...
+[484C:550C][2024-09-02T16:28:54]i370: Session begin, registration key: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}, options: 0x7, disable resume: No
+[484C:550C][2024-09-02T16:28:54]i000: Caching bundle from: 'C:\WINDOWS\Temp\{8F217B16-7645-40D1-9015-2219F55656C2}\.be\SSMS-Setup-JPN.exe' to: 'C:\ProgramData\Package Cache\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}\SSMS-Setup-JPN.exe'
+[484C:550C][2024-09-02T16:28:54]i320: Registering bundle dependency provider: {e691bc66-89cc-41a9-ad1f-0080b27d0a93}, version: 20.2.30.0
+[484C:550C][2024-09-02T16:28:54]i371: Updating session, registration key: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}, resume: Active, restart initiated: No, disable resume: No
+[484C:55F0][2024-09-02T16:28:54]i304: Verified existing payload: VCRedistD14x86 at path: C:\ProgramData\Package Cache\AB4A97610B127D68C45311DEABFBCD8AA7066F4B\2017\VC_redist.x86.exe.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: VCRedistD14x64 at path: C:\ProgramData\Package Cache\046F00C519900FCBF2E6E955FC155B11156A733B\2017\VC_redist.x64.exe.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: HelpViewer2_3 at path: C:\ProgramData\Package Cache\{99DC6816-30B2-32EB-9E12-AF8944C4FA4E}v2.3.28307\redist\help3_vs_net.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: cabE503715EC9048140D7380B4A179097EF at path: C:\ProgramData\Package Cache\{99DC6816-30B2-32EB-9E12-AF8944C4FA4E}v2.3.28307\redist\cab1.cab.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: HelpViewer2_3_LP at path: C:\ProgramData\Package Cache\{857EF73C-C89C-3434-B5BB-6F43801B286A}v2.3.28107\redist\help3_LP_net.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: cab96EEBCEEC415A2FC7E4C6265548D48E5 at path: C:\ProgramData\Package Cache\{857EF73C-C89C-3434-B5BB-6F43801B286A}v2.3.28107\redist\cab1.cab.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: msodbcsql.msi at path: C:\ProgramData\Package Cache\{109DFA51-5268-4FC9-848C-E9B4F6DAD16F}v17.10.6.1\x64\msodbcsql.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: msoledbsql.msi at path: C:\ProgramData\Package Cache\{D2077315-EBE2-4A98-A41F-55A183F775FE}v18.7.4.0\x64\msoledbsql.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: sql_as_oledb_x64 at path: C:\ProgramData\Package Cache\{160C316B-31D2-4983-B377-A5E58078C133}v16.0.5143.0\x64\sql_as_oledb.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: sql_as_oledb_x86 at path: C:\ProgramData\Package Cache\{9589D0E0-B05E-4CCA-B319-3C197104F9E0}v16.0.5143.0\x86\sql_as_oledb.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: VS2017IsoShellForSSMS at path: C:\ProgramData\Package Cache\{29BA18D9-00DF-4A08-BBBE-A0211A31D452}v15.0.28307.421\redist\vs2017_isoshell_for_ssms.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: VS2017IsoShellForSSMS_LP at path: C:\ProgramData\Package Cache\{31A138D1-5593-47DE-BACF-1F8DE06D34FE}v15.0.28307.421\redist\vs2017_isoshell_for_ssms_lp.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: VSTA2019 at path: C:\ProgramData\Package Cache\49D0F2156CFF76DFDCA97FD5C3CD7CEB1CEDABFC\redist\vsta_setup_2019.exe.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: sql_ssms at path: C:\ProgramData\Package Cache\{98FA3A6A-2028-4F6B-993E-D1851F0D5EC6}v20.2.30.0\SSMS.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: sql_ssms_1041 at path: C:\ProgramData\Package Cache\{F00A14C9-95DE-4228-B805-F9BC337A8376}v20.2.30.0\SSMS_1041.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: ssms_is at path: C:\ProgramData\Package Cache\{B0EAC1AB-D27F-4FC3-B4D9-D139BD5BE242}v16.0.5491.7\x86\ssms_is.msi.
+[484C:55F0][2024-09-02T16:28:55]i304: Verified existing payload: SsmsPostInstall_x86 at path: C:\ProgramData\Package Cache\{33F0F46E-51D3-46B5-9EAA-9415E9BA3A7A}v20.2.30.0\x86\PostInstallCustomActions.msi.
+[635C:40BC][2024-09-02T16:28:55]i000: [TryWriteEntry, EventLogHelper.cs::46] Writing event log entry. EntryType=Information EventId=15000 Message=Starting; 0
+[635C:40BC][2024-09-02T16:28:55]i000: [OnPackageAction, MainViewModel.cs::992] Install Started for package 'Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.38.33135'
+[635C:40BC][2024-09-02T16:28:55]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 0%/0%
+[484C:550C][2024-09-02T16:28:55]i301: Applying execute package: VCRedistD14x86, action: Install, path: C:\ProgramData\Package Cache\AB4A97610B127D68C45311DEABFBCD8AA7066F4B\2017\VC_redist.x86.exe, arguments: '"C:\ProgramData\Package Cache\AB4A97610B127D68C45311DEABFBCD8AA7066F4B\2017\VC_redist.x86.exe" /q /norestart /log "C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_000_VCRedistD14x86.log"'
+[635C:40BC][2024-09-02T16:28:55]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:56]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:56]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:57]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:57]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:58]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:58]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:59]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:28:59]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:00]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:00]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:01]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:01]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:02]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:02]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:03]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:03]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:04]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:04]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:05]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:05]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:06]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:06]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:07]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:07]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:08]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:08]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:09]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:09]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:10]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:10]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:11]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:12]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:12]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:13]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:13]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:14]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:14]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:15]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:15]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:16]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:16]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[484C:550C][2024-09-02T16:29:17]e000: Error 0x80070652: Process returned error: 0x652
+[484C:550C][2024-09-02T16:29:17]e000: Error 0x80070652: Failed to execute EXE package.
+[635C:40BC][2024-09-02T16:29:17]e000: Error 0x80070652: Failed to configure per-machine EXE package.
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageAction, MainViewModel.cs::992] Install Completed for package 'Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.38.33135'
+[635C:40BC][2024-09-02T16:29:17]w350: Applied non-vital package: VCRedistD14x86, encountered error: 0x80070652. Continuing...
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageAction, MainViewModel.cs::992] Install Started for package 'Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.38.33135'
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 0%/0%
+[484C:550C][2024-09-02T16:29:17]i301: Applying execute package: VCRedistD14x64, action: Install, path: C:\ProgramData\Package Cache\046F00C519900FCBF2E6E955FC155B11156A733B\2017\VC_redist.x64.exe, arguments: '"C:\ProgramData\Package Cache\046F00C519900FCBF2E6E955FC155B11156A733B\2017\VC_redist.x64.exe" /q /norestart /log "C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852_001_VCRedistD14x64.log"'
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:17]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:18]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:18]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:19]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:19]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:20]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:20]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:21]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:21]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:22]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:22]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:23]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:24]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:24]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:25]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:25]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:26]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:26]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:27]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:27]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:28]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:28]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:29]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:29]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:30]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:30]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:31]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:31]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:32]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:32]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:33]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:33]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:34]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:34]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:35]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:35]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:36]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:36]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:37]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:37]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:38]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[635C:40BC][2024-09-02T16:29:38]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 50%/3%
+[484C:550C][2024-09-02T16:29:39]e000: Error 0x80070652: Process returned error: 0x652
+[484C:550C][2024-09-02T16:29:39]e000: Error 0x80070652: Failed to execute EXE package.
+[635C:40BC][2024-09-02T16:29:39]e000: Error 0x80070652: Failed to configure per-machine EXE package.
+[635C:40BC][2024-09-02T16:29:39]i000: [OnPackageAction, MainViewModel.cs::992] Install Completed for package 'Microsoft Visual C++ 2015-2022 Redistributable (x64) - 14.38.33135'
+[635C:40BC][2024-09-02T16:29:39]w350: Applied non-vital package: VCRedistD14x64, encountered error: 0x80070652. Continuing...
+[635C:40BC][2024-09-02T16:29:39]i000: [OnPackageAction, MainViewModel.cs::992] Install Started for package 'Microsoft Help Viewer 2.3'
+[484C:550C][2024-09-02T16:29:39]i301: Applying execute package: HelpViewer2_3, action: Install, path: C:\ProgramData\Package Cache\{99DC6816-30B2-32EB-9E12-AF8944C4FA4E}v2.3.28307\redist\help3_vs_net.msi, arguments: ' MSIFASTINSTALL="7"'
+[484C:550C][2024-09-02T16:29:42]e000: Error 0x80070652: Failed to install MSI package.
+[484C:550C][2024-09-02T16:29:42]e000: Error 0x80070652: Failed to execute MSI package.
+[635C:40BC][2024-09-02T16:29:42]e000: Error 0x80070652: Failed to configure per-machine MSI package.
+[635C:40BC][2024-09-02T16:29:42]i000: [OnPackageAction, MainViewModel.cs::992] Install Completed for package 'Microsoft Help Viewer 2.3'
+[635C:40BC][2024-09-02T16:29:42]i319: Applied execute package: HelpViewer2_3, result: 0x80070652, restart: None
+[635C:40BC][2024-09-02T16:29:42]e000: Error 0x80070652: Failed to execute MSI package.
+[635C:40BC][2024-09-02T16:29:42]i000: [OnPackageAction, MainViewModel.cs::992] Install Started for package 'Microsoft Help Viewer 2.3'
+[484C:550C][2024-09-02T16:29:42]i318: Skipped rollback of package: HelpViewer2_3, action: Uninstall, already: Absent
+[635C:40BC][2024-09-02T16:29:42]i000: [OnPackageAction, MainViewModel.cs::992] Install Completed for package 'Microsoft Help Viewer 2.3'
+[635C:40BC][2024-09-02T16:29:42]i319: Applied rollback package: HelpViewer2_3, result: 0x0, restart: None
+[635C:40BC][2024-09-02T16:29:42]i000: [OnPackageActionProgress, MainViewModel.cs::1006] 100%/100%
+[484C:550C][2024-09-02T16:29:42]i372: Session end, registration key: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}, resume: None, restart: None, disable resume: No
+[484C:550C][2024-09-02T16:29:42]i330: Removed bundle dependency provider: {e691bc66-89cc-41a9-ad1f-0080b27d0a93}
+[484C:550C][2024-09-02T16:29:42]i352: Removing cached bundle: {e691bc66-89cc-41a9-ad1f-0080b27d0a93}, from path: C:\ProgramData\Package Cache\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}\
+[484C:550C][2024-09-02T16:29:42]i371: Updating session, registration key: SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{e691bc66-89cc-41a9-ad1f-0080b27d0a93}, resume: None, restart initiated: No, disable resume: No
+[635C:40BC][2024-09-02T16:29:42]i000: [OnBundleAction, MainViewModel.cs::956] Bundle action: Failed. 現在別のインストールが実行中のため、セットアップがブロックされました。他のインストールを完了してから、必要に応じてコンピューターを再起動してください。
+[635C:40BC][2024-09-02T16:29:42]i399: Apply complete, result: 0x80070652, restart: None, ba requested restart:  No
+[635C:5E24][2024-09-02T16:29:46]i000: [OpenUrl, MainViewModel.cs::1671] Opening url: C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852.log
+[635C:5E24][2024-09-02T16:30:01]i000: [OpenUrl, MainViewModel.cs::1671] Opening url: C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852.log
+[635C:5E24][2024-09-02T16:31:13]i000: [OpenUrl, MainViewModel.cs::1671] Opening url: C:\Users\t-shi\AppData\Local\Temp\SsmsSetup\SSMS-Setup-JPN_20240902162852.log
