@@ -1,264 +1,148 @@
-1.開発環境を構築する
-Linuxが必要です。ディストリビューションはUbuntu20.04を前提とします。シェルはBashを前提とします。
-WSL2でも可です。WSL2をつかうとWindowsのGUIアプリケーションとの連携が行えて便利です。
-Linux環境の用意は各自のやり方で行ってください。
- リポジトリのclone
-下記のリポジトリをcloneしてください。
-※	gitやsshなどの設定は各自行う事。
-git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-dev
-テスト用と本番用もそれぞれ別のディレクトリにcloneしてください。
-git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-test
-git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-prod
-開発環境用と分ける理由は、開発中の環境を誤ってテスト環境は本番環境に適用しないためです（開発環境はmaster以外のブランチになっていることが普通です）。
-history-ws-testとhistory-ws-prodは常に「master」ブランチを指すようにしておいてください。
-以降では「history-ws」ディレクトリを
-•	開発環境は「history-ws-dev」
-•	テスト環境は「history-ws-test」
-•	本番環境は「history-ws-prod」
-に読み替えてください。
- ツール類のインストール
-※	いずれかの環境で1度実施するだけで良い。
-history-ws/dev_environment/setup.sh
-を実行してください。
- credentialsの設定
-次にIAMの「アクセスキーID」と「シークレットキー」を下記のパスに保存してください。以降に説明する「master」グループに属しているユーザーのものである必要があります。
-※	アクセスキーIDとシークレットキーの取り扱いは慎重に取り扱いするように。アクセス権限を付与する人を厳選してください。
-漏洩すると何でもできてしまいます。
-※	アクセスキーIDとシークレットキーをGitのリポジトリにコミットしないように注意してください。誰とも共有してはいけません。
-複数の開発者が作業する場合は、各自に固有のアクセスキーIDとシークレットキーを発行してください。
-$HOME/.aws/credentials
-[dev]
-aws_access_key_id=XXXXXXXXXXXXXXXXXX
-aws_secret_access_key=XXXXXXXXXXXXXXXX
-
-[test]
-aws_access_key_id=XXXXXXXXXXXXXXXXXX
-aws_secret_access_key=XXXXXXXXXXXXXXXX
-
-[prod]
-aws_access_key_id=XXXXXXXXXXXXXXXXXX
-aws_secret_access_key=XXXXXXXXXXXXXXXX
-•	開発環境のキーを[dev]
-•	テスト環境のキーを[test]
-•	本番環境のキーを[prod]
-として保存してください。
-各スクリプトが「dev、test、prod」という文字に依存しているため必ずこの通りに設定してください。
- AWS CLIのconfig
-下記ファイルのパスにファイルを作成し、
-$HOME/.aws/config
-ファイルの中身を下記にしてください。
-AWSのデフォルトRegionの指定、aws cliのデフォルト出力フォーマット、S3の並行度(アップロード/ダウンロードが速くなります)を指定しています。
-[profile dev]
-region = ap-northeast-1
-output = json
-cli_pager =
-s3 =
-    max_concurrent_requests = 100
-    max_queue_size = 10000
-
-[profile test]
-region = ap-northeast-1
-output = json
-cli_pager =
-s3 =
-    max_concurrent_requests = 100
-    max_queue_size = 10000
-
-[profile prod]
-region = ap-northeast-1
-output = json
-cli_pager =
-s3 =
-    max_concurrent_requests = 100
-    max_queue_size = 10000
- Shellのexit
-現在ログインしているシェルを終了し、起動しなおしてください。~/.bashrcを再読み込みするためです。
- 各環境のスイッチ
-開発環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
-make switch-dev-env
-テスト環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
-make switch-test-env
-開発環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
-make switch-prod-env
-
- 接続先の公開鍵を登録する
-各環境のディレクトリに入り下記を実行してください。
-dev_tools/add-know_hosts.sh
-
-2.開発を行う
-2.1.コードリポジトリ概要
-├── Makefile
-├── README.md
-├── confirm_make.sh*
-├── dev_environment/
-├── dev_tools/
-├── env.template
-├── envrc.dev
-├── envrc.prod
-├── envrc.test
-├── packer.log
-├── src/
-├── update/
-└── user_environment/
-history-wsのトップレベルは上記のような構造になっています。
-• dev_environment
-開発環境構築用のスクリプトが入っています。
-• dev_tools
-ローカル環境からHi-Story Cの管理サーバーにSSHで入るスクリプトやポートフォワードするスクリプト等、開発時に便利なツールが入っています。
-• src
-Hi-Story Cに配置するプログラムのソースコードが入っています。
-• update
-Hi-Story Cの環境をアップデートするときのスクリプトが入っています。一度使えば不要なので見る過去のものは見る必要はありません。
-• user_environment
-Hi-Story C環境を構築するための設定やスクリプトが入っています。多くは「HashiCorp Terraform」のスクリプトです。
-これがHi-Story Cの本体になり、ここを更新することが最も多いです。
-• envrc.*
-開発、テスト、本番環境の環境毎に異なる設定が書かれています。
-• .terraform-version
-Hi-Story C環境の構築に使用するTerraformのバージョンが記載されています。開発環境にはTerraformのバージョンを簡単に切り替えられる「tfenv」がインストールされており、このファイルに記載されたTerraformのバージョンでHi-Story C環境の構築ができるようになっています。
-2.2.Makefile
-環境構築はすべてmakeで行えるようになっています。
-history-wsのルートディレクトリで
-make <ターゲット>
-形式で実行できます。
- 環境を切り替える
-make switch-dev-env
-make switch-test-env
-make switch-prod-env
-history-wsの環境を開発、テスト、本番で切り替えます。
- 新しい環境を作成する
-※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。
-make terraform-init
-terraformは現在のAWSの状態(state)を保存しておき、terraformのスクリプトと差分をチェックします。
-stateはデフォルトではローカルに保存されるのですが、複数ユーザーで共有するためにS3とDynamoDBに保存することもできます。
-これは、それの初期化コマンドです。環境毎に最初に一度だけ行えば良いです。もし「開発・テスト・本番」以外の環境を作る事があれば実行してください。
- シークレット情報を作成する
-※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。二度実行するとキーが再生され環境が壊れます。
-make key
-暗号化キーやパスワードを生成し、AWS Key Management Service (KMS)や、AWS System Managerに保存しています。
-環境毎に異なるものを生成し保存しています。
-これはその生成コマンドです。環境毎に最初に一度だけ行えば良いです。もし「開発・テスト・本番」以外の環境を作る事があれば実行してください。
- VPC環境を更新する
-make vpc
-VPCとありますが、Hi-Story Cの環境全てを更新します。
-「user_environment/vpc」以下のものを更新したときは、このコマンドを実行すると適切な更新が行われます。
-「make vpc-plan」を先に実行し、何が更新されるのかをよく確認してください。
-※各サーバーのAMIに依存するファイルを変更しサーバーへ適用する場合、「make vpc」コマンドでは変更は適用されない（後述）。これらの変更を適用する場合は、必ず「VPC環境で認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーの作り直しを行う」に記載されている「make vpc-{サーバー名}」のコマンドを使って変更を適用すること。例えば「user_environment/vpc/terraform_files/init_app_server.sh」と「user_api/install.sh」の両方を変更した場合は、「make vpc」コマンドのあとに「make vpc-app-server」コマンドを実行する。
- VPC環境を更新する前に何が更新されるのかを確認する
-make vpc-plan
-make vpcで実際に何が更新されるのかdry runします。
- VPC環境をプログラムのビルドなしに更新する
-make vpc-without-bin
-「make vpc」は「make bin」を行ってから、環境を更新しますが、このコマンドは「make bin」を行いません。
-開発中に明らかにプログラムを更新していない場合に使います。時間短縮のためだけにあるコマンドで、開発中にしか使いません。
- VPC環境で認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーの作り直しを行う
-make vpc-auth-server
-make vpc-public-app-server
-make vpc-app-server
-make vpc-manage-server
-認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーを一度削除し、作り直すときに使用するコマンドです。
-認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーのAMIを作り直し、再適用したいときに使います。AMIが更新されたことをterraformが検知できないので、明示的に認証サーバーを再生成したいときに使うコマンドです。
-ユーザーAPIサーバー、管理サーバーで頻繁に使用します。
- S3バケットを作成する
-※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。
-make master-data
-必要なS3バケットを各環境に作成します。環境毎に一度だけ行えば良いです。
- AMIを更新する
-make ami-auth-server
-make ami-app-server
-make ami-manage-server
-認証サーバー/ユーザーAPIサーバー/管理サーバーのAMIを更新します。
-AMIとは、EC2インスタンスの元になるOSイメージです。
-Hi-Story CではAmazon Linux2をベースに、少しカスタマイズしたAMIを作ってそれをベースにEC2インスタンスを作っています。
-AMIは「HashiCorp Packer」のスクリプト（user_environment/master_data/packer_files）で定義しています。
-公開APIサーバーは何もカスタマイズしていないので、Amazon Linux2のAMIをそのまま使用しています。
- プログラムをビルドしてS3にアップロードする
-make bin
-「src」にあるプログラムをビルドし、S3にアップロードします。
-S3にアップロードした後、「make vpc-manage-server」などを行うと、最新のプログラムが取り込まれた状態でサーバー構築が行えます。
- VPCを削除する
-※	本番環境では使用しないように！
-make clean-vpc
-DBやサーバーなどすべて削除します。
-開発環境で環境をいじりすぎて収拾がつかなくなった場合などに使用してください。
-開発環境を当分使わないときなどに、vpc-cleanをしておくとAWSへの費用が抑えられますが、再構築に時間がかかるので頻繁にやる必要はないです。
- VPCとマスターデータ、AMI、Route53のレコードを削除する
-※	本番環境では使用しないように！
-make clean-all
-VPCとS3バケット、AMI、Route53のレコードを削除します。
-使うことはまずありません。開発環境を完全に作り直したいときに使用してください。
- 完全に環境を削除する
-※	本番環境では使用しないように！
-make clean-ALLALL
-make clean-allに加え、鍵なども削除します。使うことはありません。
-2.3.src
-src
-├── build.sh
-├── manage_tools
-├── migration_db
-├── public_api
-├── terraform_files
-└── user_api
-「make bin」を実行すると、src/build.shが実行されます。
- manage_tools
-manage_tools
-├── backup_restore_rds_db
-├── build.sh
-├── euid_add_authkey
-├── gen_authorized_keys
-├── restore_user_db
-├── scripts
-├── third_party
-└── update_end_user_info
-管理サーバーに配置するプログラムが入っています。
-•	backup_restore_rds_db
-RDS for SQL ServerのDBバックアップ/リストアを実行します。他のスクリプトから呼び出すためのプログラムです。
-バックアップとリストアが成功したかどうかをチェックして待つプログラムです。
-•	euid_add_authkey
-標準入力の内容を「$HOME/.ssh/authorized_keys」に書き込むプログラムです。
-SUIDを「hi-user」(薬局がSSHするときのLinuxユーザー)になっており、このプログラム自体はec2-user(Linuxユーザー)で実行されますが、SUIDが設定されていることで、/home/hi-user/.ssh/authorized_keysに書き込めます。
-SUIDを設定したいという理由だけで実行ファイルになっています。
-•	gen_authorized_keys
-管理DBから公開鍵情報を取得し、「$HOME/.ssh/authorized_keys」に書き込む内容を生成します。このプログラムが出力した内容をeuid_add_authに渡します。
-•	restore_user_db
-•	third_partiy
-自分で作ったのではないサードパーティのコマンド
-•	update_end_user_info
-薬局DB初期化後に管理DBの情報を更新するプログラム。
- migration_db
-「クラウド移行フローver2」で使用する、HistoryDBの画像コンバートプログラムです。
-画像コンバート時にWindowsのEC2インスタンスを起動し、そのインスタンスは本プログラムをS3からダウンロードして画像コンバートを行います。
- public_api
-端末登録やクラウド移行など、「まだ端末登録していないクラウドに接続できないとき」に使用するAPIです。Basic認証でAPIの利用を制限しています。
-1つの実行ファイルになってデプロイが簡単なためGoで実装しています。次のシェルスクリプトを呼び出すことで、簡単にAPIのプログラムをローカル実行できるようになっています。
-public_api/test_scripts/test_run.sh
- user_api
-Hi-Story端末から呼び出す、処方せん画像や添付文書PDFファイルなどのアクセスAPIなど、「端末登録したクラウドに接続できるときに」に使用するAPIです。Basic認証でAPIの利用を制限しています。
-1つの実行ファイルになってデプロイが簡単なためGoで実装しています。次のシェルスクリプトを呼び出すことで、簡単にAPIのプログラムをローカル実行できるようになっています。
-user_api/test_scripts/test_run.sh
-
-2.4.user_environment
-user_environment
-├── README.md
-├── key/
-├── master_data/
-├── terraform_state/
-└── vpc/
-• key
-SSHの鍵ペアやパスワードを生成してAWSに保存するためのスクリプトが入っています。もう触る事は基本的にありません。
-触ると再適用する必要がありますが、再適用すると鍵が入れ替わってしまうためです。
-• master_data
-S3のバケットやAMIを生成するためのスクリプトが入っています。
-• terraform_state
-keyやvpcなどのterraformのstateをS3に保存するためのterraformが入っています。
-• vpc
-Hi-Story Cの環境を構築するためのスクリプトが入っています。これがHi-Story Cのメインになります。
-頻繁に更新することになります。
-2.5.パラメーターストア
- 関連
-• history_ws
-user_environment/key/parameter.tf
-• AWS Management Console
-https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table
-パスワードや鍵などを保存しています。
-パスワードが必要な時は、AWS Management Console から開いてください。
+4.	コマンド一覧
+4.1.	薬局スペースの作成
+hi-create-user -n <ユーザー名>
+薬局スペースを作成するときに実行します。
+実行すると、薬局スペースを作成するRDSインスタンスを指定する選択肢が表示され、薬局スペースを作るための処理が実行されます。途中で中断しないでください。
+ユーザー名は「’」(シングルクォーテーション)で囲って下さい。入力したユーザー名はメール通知に記載されます。
+実行が成功すれば薬局IDなどの情報を記載したメールが送信されます。
+1つのRDSインスタンスに作成できる薬局数には上限（4.2参照）があり、上限を超えて薬局スペースを作成しようとすると中断されます。上限に達していないRDSインスタンスを指定するか、新しいRDSインスタンスを用意する必要がある場合は、クラウドの運用管理者に依頼してください。
+e.g.
+hi-create-user -n ‘1234_ハイブリッジ薬局’
+4.2.	RDSインスタンスあたりの薬局数を取得
+hi-get-userdb-count [-d <RDSインスタンスID>]
+指定のRDSインスタンスに存在する薬局数を取得します。薬局スペースを作成した時点でカウントに数えられます。
+1つのRDSインスタンスに作成できる薬局数には上限があります。「開発・テスト環境で27」「本番環境で97」です。
+<RDSインスタンス>を省略したときは、選択肢が表示されます。
+e.g.
+hi-get-userdb-count -d user-0003
+4.3.	データA適用（ver1移行フロー用）
+hi-init-user -u <薬局ID>
+ver1移行フローでデータAがアップロードされたあと、クラウド上にデータAを適用するときに実行します。
+画像数が多いと非常に時間がかかる事があります。
+e.g.
+hi-init-user -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7
+4.4.	データB適用（ver1移行フロー用）
+hi-init-userimages -u <薬局ID>
+ver1移行フローでデータBがアップロードされたあと、クラウド上にデータBを適用するときに実行します。
+e.g.
+hi-init-userimages -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7
+4.5.	移行完了コマンド(ver1移行フロー用)
+hi-complete-user -u <薬局ID>
+ver1移行フローで移行か完了したら実行します。
+このコマンドを実行するまで、薬局のDBは「アップデート対象外」になります。
+e.g.
+hi-complete-user -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7
+4.6.	端末登録
+hi-add-device -u <薬局ID> -r <リクエストID>
+端末登録を行うときに実行します。
+e.g.
+hi-add-device -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7 -r 1234567
+4.7.	端末削除
+hi-delete-device -d <端末ID>
+指定したIDの端末をクラウドへ接続できないようにします。
+e.g.
+hi-delete-device -d d-dc8ffaed-f609-4679-8b58-1967745f868a
+4.8.	リクエストIDから薬局IDと端末IDを調べる
+hi-get-deviceid -r <リクエストID>
+端末登録時に使用したリクエストIDから薬局IDと端末IDを取得します。
+リクエストIDは長期間で重複する可能性があるため、複数の結果が表示される可能性があります。
+e.g.
+hi-get-deviceid -r 1234567
+4.9.	端末リクエスト情報取得
+hi-get-device-requestinfo -r <リクエストID>
+クライアント端末から送られた端末リクエスト情報を調べるときに実行します。
+あまり使うことはありませんが、実際にクラウド上に登録リクエストが送られたのかどうか調べることができます。
+端末リクエスト情報は一週間で削除されます。
+e.g.
+hi-get-device-requestinfo -r 1234567
+4.10.	指定薬局DBのバックアップ
+hi-backup-userdb -u <薬局ID> -k <キーワード>
+指定の薬局のDBをS3にバックアップします。キーワードは後で復元するときに利用します。
+e.g.
+hi-backup-userdb -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7 -k 21.12
+4.11.	指定薬局DBの復元
+hi-restore-userdb -u <薬局ID> -k <キーワード>
+事前にS3にバックアップしていたDBを復元します。先にDBを削除しておく必要があります。
+本番環境で使用することはまずありません。
+e.g.
+hi-restore-userdb -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7 -k 21.12
+4.12.	共通DBと添付文書のアップデート
+hi-update-usercommondb -v <バージョン番号>
+Dix、Contents、HisFilesのDBを指定バージョンのものに復元し、指定バージョンの添付文書PDFをユーザーが閲覧できるように公開します。
+復元中にユーザーがこれらのDBにアクセスすると落ちるため、運用時間外に行う必要があります。
+古いバージョンを指定する事もできますので、バージョン番号の指定には注意してください。
+e.g.
+hi-update-usercommondb -v 22.1
+4.13.	RDSインスタンスの共通DBのアップデート
+hi-update-instance-usercommondb [-I <RDSインスタンスID>]-v <バージョン番号>
+指定したRDSインスタンスにあるDix、Contents、HisFilesのDBを指定バージョンのものに復元します。
+「hi-update-usercommondb」コマンドを使って本番環境の全共通DBを順次アップデートすると時間がかかるため、RDSインスタンス別に並列実行でDBをアップデートし、アップデートにかかる時間を短縮する目的で利用します。
+復元中にユーザーがこれらのDBにアクセスすると落ちるため、運用時間外に行う必要があります。
+古いバージョンを指定する事もできますので、バージョン番号の指定には注意してください。
+<RDSインスタンス>を省略したときは、選択肢が表示されます。
+e.g.
+hi-update-instance-usercommondb -i user-0003 -v 22.1
+4.14.	添付文書のアップデート
+hi-update-medicinepdf -v <バージョン番号>
+指定バージョンの添付文書PDFをユーザーが閲覧できるように公開します。
+「hi-update-instance-usercommondb」でRDSインスタンス個別に共通DBをアップデートしたあと、添付文書だけアップデートする目的で利用します。
+e.g.
+hi-update-medicinepdf -v 22.1
+4.15.	全ユーザーDBのアップデート
+hi-update-all-userdb --from <現バージョン番号> --to <新バージョン番号>
+全ユーザーのDBを指定の「旧バージョン」から「新バージョン」にアップデートします。
+開発、もしくは品管が事前にアップロードしている新バージョン用のSQLが順に適用されます。
+旧移行フローで「データAアップロード、データB未アップロード」の状態のDBはアップデートされません。
+バージョン飛ばしはできませんので注意してください。現バージョン番号を指定する必要があるのは間違い防止チェックのためです。
+e.g.
+hi-update-all-userdb --from 21.12 --to 22.1
+4.16.	RDSインスタンスに所属しているユーザーDBのアップデート
+hi-update-instance-userdb [-i <RDSインスタンスID>] --from <現バージョン番号> --to <新バージョン番号>
+指定したRDSインスタンスに所属しているユーザーDBを全てアップデートします。
+「hi-update-all-userdb」コマンドを使って本番環境の全ユーザーを順次アップデートすると時間がかかるため、RDSインスタンス別に並列実行でユーザーDBをアップデートし、アップデートにかかる時間を短縮する目的で利用します。
+※	このコマンドを使って全ユーザーのDBをアップデートした場合、最後に必ず「hi-update-all-userdb」コマンドを実行してください。
+「hi-update-all-userdb」コマンドで管理DBに定義しているユーザーDBの現在最新バージョンが更新されるのと、特定のRDSインスタンスのユーザーDBだけが更新されていない状態を防止するためです。既にアップデートされているユーザーDBはスキップされます。
+<RDSインスタンス>を省略したときは、選択肢が表示されます。
+e.g.
+hi-update-instance-userdb -i user-0003 --from 21.12 --to 22.1
+4.17.	個別ユーザーDBのアップデート
+hi-update-userdb -u <薬局ID> --from <現バージョン番号> --to <新バージョン番号>
+特定のユーザーDBだけアップデートします。
+旧フローでの移行中に利用することが大半です。
+バージョン飛ばしはできませんので注意してください。現バージョン番号を指定する必要があるのは間違い防止チェックのためです。
+e.g.
+hi-update-userdb --from 21.12 --to 22.1
+4.18.	クライアントプログラムの配信日設定
+hi-add-new-client-version –-date <配信日> --version <バージョン番号>
+クライアントプログラムの配信日を設定します。
+「--version」には、開発、もしくは品管が事前にアップロードしている新バージョン用のプログラムのバージョン番号を指定してください。
+「--date」は「YYYYMMdd」形式です。UTCですので、たとえば「20210101」を指定すると、日本時間で2021/1/1 9:00にプログラムが配信されます。
+過去日を設定すると即配信されます。
+例えば、アップデート作業を「2021/2/1の22時」に行っていた場合、次の日に配信したければ「20210201」を指定すれば即配信され、動作確認が行えます。
+e.g.
+hi-add-new-client-version –-date 20220215 --version 22.1
+4.19.	薬局スペースの削除
+hi-delete-user -u <薬局ID> [-f]
+※	指定の薬局のデータが完全に削除されます。本番環境で使うことはまずありません。
+指定の薬局のDB、画像、アカウント、DNSの設定などを完全に削除します。指定の薬局に端末が紐づいていると削除できません。
+「-f」を指定すると端末が紐づいていても強制的に削除します。
+4.20.	サンクスネットデータ回収
+hi-thanks-collect –-type <データ名>
+ユーザーDBに保存されているサンクスネット関連のデータを収集します。詳細は「サンクスネットデータ回収・クラウド版.docx」を参照してください。
+4.21.	端末情報の収集
+hi-collect-user-deviceinfo
+ユーザーDBに保存されている端末の情報（OS情報など）を収集して、S3バケット：s3://users-common-${HI_CLOUD_S3_SUFFIX}/user_device_infocollect/user_device_info.csvに出力します。
+4.22.	ユーザーDBのRDSインスタンスを移動する
+hi-move-userdb -u <薬局ID> [-i <移動先のRDSインスタンスID>]
+稼働しているユーザーDBを別のRDSインスタンスへ移動します。
+負荷の高いDBを別のRDSインスタンスへ移動することで、RDSインスタンスにかかる負荷を分散させることができます。
+クラウドのみで完結するので、クライアントの作業は発生しません。
+移動させる薬局のDBが一時的に使用できなくなるため、薬局の業務中に実施しないようにしてください。
+e.g.
+hi-move-userdb -u u-2fc10ee9-851f-4429-89cf-0c050f435fe7
+4.23.	薬局のコピー
+hi-copy-user -n <新しいユーザー（薬局）名> [-i <コピー先のRDSインスタンスID>]
+新しい薬局スペースを作成し、コピー元の薬局スペースにあるユーザーDBと画像を新しい薬局スペースにコピーします。画像のコピーは非同期で行われ、時間がかかる場合があります。
+4.24.	全RDSインスタンスのスナップショット作成
+hi-create-rds-snapshot -k <キーワード> [--wait]
+管理DB、及びユーザーDBを配置している全てのRDSインスタンスのスナップショットを{DBインスタンス名}
