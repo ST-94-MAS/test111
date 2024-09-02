@@ -1,71 +1,264 @@
-aws_lb_listener							
-	DataSource						
-		load_balancer_arn					
-			load_balancer_name				
-		certificate_arn					
-			domain				
-			types				
-			most_recent				
-			key_types				
-			statuses				
-	protocol						
-	port						
-	ssl_policy						
-	default_action#1						
-		type					
-		DataSource					
-			target_group_arn#1				
-				target_group_name			
-		forward					
-			target_group#1				
-				arn			
-				weight			
-			stickiness				
-				enabled			
-				duration			
-		redirect					
-			status_code				
-			host				
-			path				
-			port				
-			protocol				
-			query				
-		fixed_response					
-			content_type				
-			message_body				
-			status_code				
-		authenticate_cognito					
-			user_pool_arn				
-			user_pool_client_id				
-			user_pool_domain				
-			on_unauthenticated_request				
-			scope				
-			session_cookie_name				
-			session_timeout				
-			authentication_request_extra_params				
-				any_key1			
-				any_key2			
-		authenticate_oidc					
-			authorization_endpoint				
-			client_id				
-			client_secret				
-			issuer				
-			token_endpoint				
-			user_info_endpoint				
-			on_unauthenticated_request				
-			scope				
-			session_cookie_name				
-			session_timeout				
-			authentication_request_extra_params				
-				any_key1			
-				any_key2			
+1.開発環境を構築する
+Linuxが必要です。ディストリビューションはUbuntu20.04を前提とします。シェルはBashを前提とします。
+WSL2でも可です。WSL2をつかうとWindowsのGUIアプリケーションとの連携が行えて便利です。
+Linux環境の用意は各自のやり方で行ってください。
+ リポジトリのclone
+下記のリポジトリをcloneしてください。
+※	gitやsshなどの設定は各自行う事。
+git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-dev
+テスト用と本番用もそれぞれ別のディレクトリにcloneしてください。
+git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-test
+git clone git@gitlab.com:hi-bridge/history-ws.git  history-ws-prod
+開発環境用と分ける理由は、開発中の環境を誤ってテスト環境は本番環境に適用しないためです（開発環境はmaster以外のブランチになっていることが普通です）。
+history-ws-testとhistory-ws-prodは常に「master」ブランチを指すようにしておいてください。
+以降では「history-ws」ディレクトリを
+•	開発環境は「history-ws-dev」
+•	テスト環境は「history-ws-test」
+•	本番環境は「history-ws-prod」
+に読み替えてください。
+ ツール類のインストール
+※	いずれかの環境で1度実施するだけで良い。
+history-ws/dev_environment/setup.sh
+を実行してください。
+ credentialsの設定
+次にIAMの「アクセスキーID」と「シークレットキー」を下記のパスに保存してください。以降に説明する「master」グループに属しているユーザーのものである必要があります。
+※	アクセスキーIDとシークレットキーの取り扱いは慎重に取り扱いするように。アクセス権限を付与する人を厳選してください。
+漏洩すると何でもできてしまいます。
+※	アクセスキーIDとシークレットキーをGitのリポジトリにコミットしないように注意してください。誰とも共有してはいけません。
+複数の開発者が作業する場合は、各自に固有のアクセスキーIDとシークレットキーを発行してください。
+$HOME/.aws/credentials
+[dev]
+aws_access_key_id=XXXXXXXXXXXXXXXXXX
+aws_secret_access_key=XXXXXXXXXXXXXXXX
 
-この中にaws-cdk-lib » aws-cdk-lib.aws_elasticloadbalancingv2 » ApplicationListenerRule					
-	listener				
-	ルール1				
-		priority			
-		action?			
-		conditions?			
-		targetGroups?			
-のconditionsと同等のものはある？
-    
+[test]
+aws_access_key_id=XXXXXXXXXXXXXXXXXX
+aws_secret_access_key=XXXXXXXXXXXXXXXX
+
+[prod]
+aws_access_key_id=XXXXXXXXXXXXXXXXXX
+aws_secret_access_key=XXXXXXXXXXXXXXXX
+•	開発環境のキーを[dev]
+•	テスト環境のキーを[test]
+•	本番環境のキーを[prod]
+として保存してください。
+各スクリプトが「dev、test、prod」という文字に依存しているため必ずこの通りに設定してください。
+ AWS CLIのconfig
+下記ファイルのパスにファイルを作成し、
+$HOME/.aws/config
+ファイルの中身を下記にしてください。
+AWSのデフォルトRegionの指定、aws cliのデフォルト出力フォーマット、S3の並行度(アップロード/ダウンロードが速くなります)を指定しています。
+[profile dev]
+region = ap-northeast-1
+output = json
+cli_pager =
+s3 =
+    max_concurrent_requests = 100
+    max_queue_size = 10000
+
+[profile test]
+region = ap-northeast-1
+output = json
+cli_pager =
+s3 =
+    max_concurrent_requests = 100
+    max_queue_size = 10000
+
+[profile prod]
+region = ap-northeast-1
+output = json
+cli_pager =
+s3 =
+    max_concurrent_requests = 100
+    max_queue_size = 10000
+ Shellのexit
+現在ログインしているシェルを終了し、起動しなおしてください。~/.bashrcを再読み込みするためです。
+ 各環境のスイッチ
+開発環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
+make switch-dev-env
+テスト環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
+make switch-test-env
+開発環境ディレクトリ(history-ws-dev)に入り下記を実行してください。
+make switch-prod-env
+
+ 接続先の公開鍵を登録する
+各環境のディレクトリに入り下記を実行してください。
+dev_tools/add-know_hosts.sh
+
+2.開発を行う
+2.1.コードリポジトリ概要
+├── Makefile
+├── README.md
+├── confirm_make.sh*
+├── dev_environment/
+├── dev_tools/
+├── env.template
+├── envrc.dev
+├── envrc.prod
+├── envrc.test
+├── packer.log
+├── src/
+├── update/
+└── user_environment/
+history-wsのトップレベルは上記のような構造になっています。
+• dev_environment
+開発環境構築用のスクリプトが入っています。
+• dev_tools
+ローカル環境からHi-Story Cの管理サーバーにSSHで入るスクリプトやポートフォワードするスクリプト等、開発時に便利なツールが入っています。
+• src
+Hi-Story Cに配置するプログラムのソースコードが入っています。
+• update
+Hi-Story Cの環境をアップデートするときのスクリプトが入っています。一度使えば不要なので見る過去のものは見る必要はありません。
+• user_environment
+Hi-Story C環境を構築するための設定やスクリプトが入っています。多くは「HashiCorp Terraform」のスクリプトです。
+これがHi-Story Cの本体になり、ここを更新することが最も多いです。
+• envrc.*
+開発、テスト、本番環境の環境毎に異なる設定が書かれています。
+• .terraform-version
+Hi-Story C環境の構築に使用するTerraformのバージョンが記載されています。開発環境にはTerraformのバージョンを簡単に切り替えられる「tfenv」がインストールされており、このファイルに記載されたTerraformのバージョンでHi-Story C環境の構築ができるようになっています。
+2.2.Makefile
+環境構築はすべてmakeで行えるようになっています。
+history-wsのルートディレクトリで
+make <ターゲット>
+形式で実行できます。
+ 環境を切り替える
+make switch-dev-env
+make switch-test-env
+make switch-prod-env
+history-wsの環境を開発、テスト、本番で切り替えます。
+ 新しい環境を作成する
+※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。
+make terraform-init
+terraformは現在のAWSの状態(state)を保存しておき、terraformのスクリプトと差分をチェックします。
+stateはデフォルトではローカルに保存されるのですが、複数ユーザーで共有するためにS3とDynamoDBに保存することもできます。
+これは、それの初期化コマンドです。環境毎に最初に一度だけ行えば良いです。もし「開発・テスト・本番」以外の環境を作る事があれば実行してください。
+ シークレット情報を作成する
+※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。二度実行するとキーが再生され環境が壊れます。
+make key
+暗号化キーやパスワードを生成し、AWS Key Management Service (KMS)や、AWS System Managerに保存しています。
+環境毎に異なるものを生成し保存しています。
+これはその生成コマンドです。環境毎に最初に一度だけ行えば良いです。もし「開発・テスト・本番」以外の環境を作る事があれば実行してください。
+ VPC環境を更新する
+make vpc
+VPCとありますが、Hi-Story Cの環境全てを更新します。
+「user_environment/vpc」以下のものを更新したときは、このコマンドを実行すると適切な更新が行われます。
+「make vpc-plan」を先に実行し、何が更新されるのかをよく確認してください。
+※各サーバーのAMIに依存するファイルを変更しサーバーへ適用する場合、「make vpc」コマンドでは変更は適用されない（後述）。これらの変更を適用する場合は、必ず「VPC環境で認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーの作り直しを行う」に記載されている「make vpc-{サーバー名}」のコマンドを使って変更を適用すること。例えば「user_environment/vpc/terraform_files/init_app_server.sh」と「user_api/install.sh」の両方を変更した場合は、「make vpc」コマンドのあとに「make vpc-app-server」コマンドを実行する。
+ VPC環境を更新する前に何が更新されるのかを確認する
+make vpc-plan
+make vpcで実際に何が更新されるのかdry runします。
+ VPC環境をプログラムのビルドなしに更新する
+make vpc-without-bin
+「make vpc」は「make bin」を行ってから、環境を更新しますが、このコマンドは「make bin」を行いません。
+開発中に明らかにプログラムを更新していない場合に使います。時間短縮のためだけにあるコマンドで、開発中にしか使いません。
+ VPC環境で認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーの作り直しを行う
+make vpc-auth-server
+make vpc-public-app-server
+make vpc-app-server
+make vpc-manage-server
+認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーを一度削除し、作り直すときに使用するコマンドです。
+認証サーバー/公開APIサーバー/ユーザーAPIサーバー/管理サーバーのAMIを作り直し、再適用したいときに使います。AMIが更新されたことをterraformが検知できないので、明示的に認証サーバーを再生成したいときに使うコマンドです。
+ユーザーAPIサーバー、管理サーバーで頻繁に使用します。
+ S3バケットを作成する
+※	既存の環境に実行しないように！最初に一度だけ実行すれば良いです。
+make master-data
+必要なS3バケットを各環境に作成します。環境毎に一度だけ行えば良いです。
+ AMIを更新する
+make ami-auth-server
+make ami-app-server
+make ami-manage-server
+認証サーバー/ユーザーAPIサーバー/管理サーバーのAMIを更新します。
+AMIとは、EC2インスタンスの元になるOSイメージです。
+Hi-Story CではAmazon Linux2をベースに、少しカスタマイズしたAMIを作ってそれをベースにEC2インスタンスを作っています。
+AMIは「HashiCorp Packer」のスクリプト（user_environment/master_data/packer_files）で定義しています。
+公開APIサーバーは何もカスタマイズしていないので、Amazon Linux2のAMIをそのまま使用しています。
+ プログラムをビルドしてS3にアップロードする
+make bin
+「src」にあるプログラムをビルドし、S3にアップロードします。
+S3にアップロードした後、「make vpc-manage-server」などを行うと、最新のプログラムが取り込まれた状態でサーバー構築が行えます。
+ VPCを削除する
+※	本番環境では使用しないように！
+make clean-vpc
+DBやサーバーなどすべて削除します。
+開発環境で環境をいじりすぎて収拾がつかなくなった場合などに使用してください。
+開発環境を当分使わないときなどに、vpc-cleanをしておくとAWSへの費用が抑えられますが、再構築に時間がかかるので頻繁にやる必要はないです。
+ VPCとマスターデータ、AMI、Route53のレコードを削除する
+※	本番環境では使用しないように！
+make clean-all
+VPCとS3バケット、AMI、Route53のレコードを削除します。
+使うことはまずありません。開発環境を完全に作り直したいときに使用してください。
+ 完全に環境を削除する
+※	本番環境では使用しないように！
+make clean-ALLALL
+make clean-allに加え、鍵なども削除します。使うことはありません。
+2.3.src
+src
+├── build.sh
+├── manage_tools
+├── migration_db
+├── public_api
+├── terraform_files
+└── user_api
+「make bin」を実行すると、src/build.shが実行されます。
+ manage_tools
+manage_tools
+├── backup_restore_rds_db
+├── build.sh
+├── euid_add_authkey
+├── gen_authorized_keys
+├── restore_user_db
+├── scripts
+├── third_party
+└── update_end_user_info
+管理サーバーに配置するプログラムが入っています。
+•	backup_restore_rds_db
+RDS for SQL ServerのDBバックアップ/リストアを実行します。他のスクリプトから呼び出すためのプログラムです。
+バックアップとリストアが成功したかどうかをチェックして待つプログラムです。
+•	euid_add_authkey
+標準入力の内容を「$HOME/.ssh/authorized_keys」に書き込むプログラムです。
+SUIDを「hi-user」(薬局がSSHするときのLinuxユーザー)になっており、このプログラム自体はec2-user(Linuxユーザー)で実行されますが、SUIDが設定されていることで、/home/hi-user/.ssh/authorized_keysに書き込めます。
+SUIDを設定したいという理由だけで実行ファイルになっています。
+•	gen_authorized_keys
+管理DBから公開鍵情報を取得し、「$HOME/.ssh/authorized_keys」に書き込む内容を生成します。このプログラムが出力した内容をeuid_add_authに渡します。
+•	restore_user_db
+•	third_partiy
+自分で作ったのではないサードパーティのコマンド
+•	update_end_user_info
+薬局DB初期化後に管理DBの情報を更新するプログラム。
+ migration_db
+「クラウド移行フローver2」で使用する、HistoryDBの画像コンバートプログラムです。
+画像コンバート時にWindowsのEC2インスタンスを起動し、そのインスタンスは本プログラムをS3からダウンロードして画像コンバートを行います。
+ public_api
+端末登録やクラウド移行など、「まだ端末登録していないクラウドに接続できないとき」に使用するAPIです。Basic認証でAPIの利用を制限しています。
+1つの実行ファイルになってデプロイが簡単なためGoで実装しています。次のシェルスクリプトを呼び出すことで、簡単にAPIのプログラムをローカル実行できるようになっています。
+public_api/test_scripts/test_run.sh
+ user_api
+Hi-Story端末から呼び出す、処方せん画像や添付文書PDFファイルなどのアクセスAPIなど、「端末登録したクラウドに接続できるときに」に使用するAPIです。Basic認証でAPIの利用を制限しています。
+1つの実行ファイルになってデプロイが簡単なためGoで実装しています。次のシェルスクリプトを呼び出すことで、簡単にAPIのプログラムをローカル実行できるようになっています。
+user_api/test_scripts/test_run.sh
+
+2.4.user_environment
+user_environment
+├── README.md
+├── key/
+├── master_data/
+├── terraform_state/
+└── vpc/
+• key
+SSHの鍵ペアやパスワードを生成してAWSに保存するためのスクリプトが入っています。もう触る事は基本的にありません。
+触ると再適用する必要がありますが、再適用すると鍵が入れ替わってしまうためです。
+• master_data
+S3のバケットやAMIを生成するためのスクリプトが入っています。
+• terraform_state
+keyやvpcなどのterraformのstateをS3に保存するためのterraformが入っています。
+• vpc
+Hi-Story Cの環境を構築するためのスクリプトが入っています。これがHi-Story Cのメインになります。
+頻繁に更新することになります。
+2.5.パラメーターストア
+ 関連
+• history_ws
+user_environment/key/parameter.tf
+• AWS Management Console
+https://ap-northeast-1.console.aws.amazon.com/systems-manager/parameters/?region=ap-northeast-1&tab=Table
+パスワードや鍵などを保存しています。
+パスワードが必要な時は、AWS Management Console から開いてください。
