@@ -1,0 +1,220 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Template to create RDS SQL Server Express instance with CloudWatch Logs and S3 for auditing"
+
+Resources:
+  # VPC
+  ShimaVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: ShimaVPC
+
+  # Internet Gateway
+  ShimaInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: ShimaInternetGateway
+
+  # Attach Internet Gateway to VPC
+  ShimaVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref ShimaVPC
+      InternetGatewayId: !Ref ShimaInternetGateway
+
+  # Route Table
+  ShimaRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ShimaVPC
+      Tags:
+        - Key: Name
+          Value: ShimaRouteTable
+
+  # Public Route
+  ShimaPublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref ShimaRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref ShimaInternetGateway
+
+  # Subnets
+  ShimaPublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ShimaVPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: ap-northeast-3a
+      Tags:
+        - Key: Name
+          Value: ShimaPublicSubnet1
+
+  ShimaPublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ShimaVPC
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: ap-northeast-3b
+      Tags:
+        - Key: Name
+          Value: ShimaPublicSubnet2
+
+  # Associate Subnets with Route Table
+  ShimaSubnetRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ShimaPublicSubnet1
+      RouteTableId: !Ref ShimaRouteTable
+
+  ShimaSubnetRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref ShimaPublicSubnet2
+      RouteTableId: !Ref ShimaRouteTable
+
+  # Security Group for RDS
+  ShimaRDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow SQL Server access
+      VpcId: !Ref ShimaVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 1433
+          ToPort: 1433
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: ShimaRDSSecurityGroup
+
+  # Custom Parameter Group
+  ShimaDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: "Custom parameter group for SQL Server Express"
+      Family: sqlserver-ex-16.0  # Express Edition 用に変更
+      # Parameters: 必要に応じて他のパラメーターを指定することができます
+
+  # S3 Bucket for Audit Logs
+  AuditLogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "shima-sql-server-audit-logs"
+      AccessControl: Private
+
+  # IAM Role for RDS to Access S3
+  RDSAuditRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: rds.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: "S3AccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: "s3:ListAllMyBuckets"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetBucketACL"
+                  - "s3:GetBucketLocation"
+                Resource: "arn:aws:s3:::shima-sql-server-audit-logs"
+              - Effect: Allow
+                Action:
+                  - "s3:PutObject"
+                  - "s3:ListMultipartUploadParts"
+                  - "s3:AbortMultipartUpload"
+                Resource: "arn:aws:s3:::shima-sql-server-audit-logs/*"
+
+  # RDS Option Group with SQL Server Audit Option
+  ShimaOptionGroup:
+    Type: AWS::RDS::OptionGroup
+    Properties:
+      EngineName: sqlserver-ex  # Express Edition 用に変更
+      MajorEngineVersion: "16.00"
+      OptionGroupDescription: "Option group for SQL Server Audit"
+      OptionConfigurations:
+        - OptionName: SQLSERVER_AUDIT
+          OptionSettings:
+            - Name: IAM_ROLE_ARN  # IAMロールのARN
+              Value: !GetAtt RDSAuditRole.Arn
+            - Name: S3_BUCKET_ARN  # S3バケットのARN
+              Value: !Sub "arn:aws:s3:::shima-sql-server-audit-logs"
+            - Name: ENABLE_COMPRESSION  # 監査ログの圧縮を有効化
+              Value: "true"
+            - Name: RETENTION_TIME  # 監査ログの保持期間（時間単位）
+              Value: "168"  # 例: 168時間 (7日間)
+
+  # RDS Instance with Custom Parameter Group and Option Group
+  ShimaRDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t3.micro  # Express Edition でサポートされるインスタンスクラス
+      Engine: sqlserver-ex  # Express Edition
+      EngineVersion: "16.00"  # エンジンバージョンを15.00に変更
+      MasterUsername: admin
+      MasterUserPassword: Password1234
+      AllocatedStorage: 20
+      LicenseModel: license-included
+      DBSubnetGroupName: !Ref ShimaDBSubnetGroup
+      VPCSecurityGroups:
+        - !Ref ShimaRDSSecurityGroup
+      MultiAZ: false  # Multi-AZ 設定を true に変更
+      PubliclyAccessible: true
+      EnableCloudwatchLogsExports:
+        - error  # 'agent' を削除し、サポートされているログタイプのみに変更
+      DBParameterGroupName: !Ref ShimaDBParameterGroup
+      OptionGroupName: !Ref ShimaOptionGroup
+      BackupRetentionPeriod: 7
+      Tags:
+        - Key: Name
+          Value: ShimaRDSInstance
+
+  # DB Subnet Group
+  ShimaDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: "Subnet group for Shima RDS"
+      SubnetIds:
+        - !Ref ShimaPublicSubnet1
+        - !Ref ShimaPublicSubnet2
+      Tags:
+        - Key: Name
+          Value: ShimaDBSubnetGroup
+
+  # Secret to Store Master User Credentials
+  RDSSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: ShimaRDSMasterSecret
+      SecretString: !Sub |
+        {
+          "username": "admin",
+          "password": "Password1234"
+        }
+
+Outputs:
+  ShimaRDSEndpoint:
+    Description: "RDS Instance Endpoint"
+    Value: !GetAtt ShimaRDSInstance.Endpoint.Address
+
+  ShimaRDSPort:
+    Description: "RDS Instance Port"
+    Value: !GetAtt ShimaRDSInstance.Endpoint.Port
