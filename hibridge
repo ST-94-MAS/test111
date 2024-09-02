@@ -1,261 +1,55 @@
-Employees_Audit テーブルの監査トリガーを作成し、特定のテーブル（Employees）に対する INSERT、DELETE、UPDATE 操作を監視する
+■目的
+SQL Serverのアクセスログと各テーブルのログ(CREATE,INSERT,UPDATE,DELETE)の取得。
 
--- 監査テーブルの作成
-USE [TestDB5];
-CREATE TABLE Employees_Audit (
-    AuditID INT IDENTITY(1,1) PRIMARY KEY,
-    AuditAction NVARCHAR(50),
-    EmployeeID INT,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    HireDate DATE,
-    Salary DECIMAL(10, 2),
-    AuditDate DATETIME DEFAULT GETDATE()
-);
-GO  -- バッチを区切る
+■前提
+ログは２つあり、取得方法がそれぞれ異なる。
+サーバーレベルの監査設定：SQL Serverインスタンスに対するログインイベントなどを監査。
+データベースレベルの監査設定：特定のデータベース内での操作（クエリ、データの変更、テーブル作成など）を監査。
 
--- INSERTトリガーの作成
-CREATE TRIGGER trg_AfterInsert_Employees
-ON dbo.Employees_Audit
-AFTER INSERT
-AS
-BEGIN
-    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-    SELECT 'INSERT', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-    FROM inserted;
-END;
-GO  -- バッチを区切る
+サーバーレベルのログとデータベースレベルのログを統合することが難しい。
+そのため別々の方法で取得している。
 
--- DELETEトリガーの作成
-CREATE TRIGGER trg_AfterDelete_Employees
-ON dbo.Employees
-AFTER DELETE
-AS
-BEGIN
-    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-    SELECT 'DELETE', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-    FROM deleted;
-END;
-GO  -- バッチを区切る
-
--- UPDATEトリガーの作成
-CREATE TRIGGER trg_AfterUpdate_Employees
-ON dbo.Employees
-AFTER UPDATE
-AS
-BEGIN
-    INSERT INTO Employees_Audit (AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-    SELECT 'UPDATE', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-    FROM inserted;
-END;
-GO  -- バッチを区切る
+■取得方法
+・サーバーレベルのログの取得方法
+特定のファイルパス（例：D:\rdsdbdata\SQLAudit）に保存されていき、設定されたファイルサイズになると保存場所にファイル(.sqlauditファイル)として吐き出される。
+オンプレの場合はファイルが蓄積されていくため、容量を圧迫していく。
+クラウドではS3にたまっていく。
+sa権限を持ったSQL Serverにログインして
 
 
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-テーブルのカラム構造に依存せず、共通の監査情報（TableName、AuditAction、AuditDate など）だけを記録するように変更
-→まだ試せていない
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-IF CURSOR_STATUS('global', 'db_cursor') >= -1
-BEGIN
-    CLOSE db_cursor;
-    DEALLOCATE db_cursor;
-END;
+・データベースのログの取得方法
+トランザクションログは、データベース内のすべてのトランザクション（INSERT、UPDATE、DELETE、およびトランザクション自体の開始やコミットなど）を記録します。このログは、データベースの復旧やリカバリに使用されます。
+トランザクションログファイル (.ldf) は、データファイル (.mdf) と同じディレクトリ内にAWSが管理するストレージに保存されています。
+AWS RDSのSQL Serverインスタンスでは、これらのファイルに直接アクセスすることはできません。
+トランザクションログの内容をCloudWatchで監視することはできません。
 
-DECLARE @dbName NVARCHAR(128);
-DECLARE @tableName NVARCHAR(128);
-DECLARE @sql NVARCHAR(MAX);
-
--- ユーザーデータベースのみを対象にする
-DECLARE db_cursor CURSOR FOR
-SELECT name 
-FROM sys.databases
-WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースと rdsadmin を除外
-
-OPEN db_cursor;
-FETCH NEXT FROM db_cursor INTO @dbName;
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    -- 監査テーブルを作成
-    SET @sql = '
-    USE [' + @dbName + '];
-    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees_Audit'')
-    BEGIN
-        CREATE TABLE dbo.Employees_Audit (
-            AuditID INT IDENTITY(1,1) PRIMARY KEY,
-            TableName NVARCHAR(128),
-            AuditAction NVARCHAR(50),
-            AuditDate DATETIME DEFAULT GETDATE()
-        );
-    END;
-    ';
-    EXEC sp_executesql @sql;
-
-    -- テーブルカーソルを使用して、各テーブルにトリガーを作成
-    SET @sql = '
-    DECLARE table_cursor CURSOR FOR
-    SELECT TABLE_NAME 
-    FROM [' + @dbName + '].INFORMATION_SCHEMA.TABLES 
-    WHERE TABLE_TYPE = ''BASE TABLE'' AND TABLE_SCHEMA = ''dbo'';
-
-    OPEN table_cursor;
-    FETCH NEXT FROM table_cursor INTO @tableName;
-
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        -- INSERT トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterInsert_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER INSERT
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''INSERT'''', GETDATE();
-        END;'';
-        EXEC sp_executesql @sql;
-
-        -- DELETE トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterDelete_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER DELETE
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''DELETE'''', GETDATE();
-        END;'';
-        EXEC sp_executesql @sql;
-
-        -- UPDATE トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterUpdate_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER UPDATE
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''UPDATE'''', GETDATE();
-        END;'';
-        EXEC sp_executesql @sql;
-
-        FETCH NEXT FROM table_cursor INTO @tableName;
-    END;
-
-    CLOSE table_cursor;
-    DEALLOCATE table_cursor;
-    ';
-
-    EXEC sp_executesql @sql;
-
-    FETCH NEXT FROM db_cursor INTO @dbName;
-END;
-
-CLOSE db_cursor;
-DEALLOCATE db_cursor;
-
-ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+つまり現状ではトランザクションログを確認することができない。
+そのため監視するためのDB内に監視するテーブルを作成し、各テーブルにトリガーを設定し、CREATEコマンドやINSERTコマンドが実行されたら、監視テーブルにログをまとめる。
 
 
 
-
-
-
-
-お疲れ様です。
-作業報告書なのですが、hibridge社としてのフォーマットなどありますでしょうか？
-もしなければギークスのフォーマットを使用しても問題ないでしょうか？
-
-
-.sqlauditファイルを読み取るためには、通常、sys.fn_get_audit_fileやsys.fn_xe_file_target_read_file関数を使用しますが、これらの関数を実行するためには「sysadminロール」が必要です。
-RDS for SQL Serverでは、adminアカウントにはsysadmin権限が付与されず、代わりにrdsadminロールが割り当てられるため、これらの関数を使用して直接監査ファイルを読み取ることができません。
-
-
-db_owner: データベースに対する完全な制御ができます。
-rdsadmin: 一部の管理操作を行うために使用されるRDS特有のロールです。ただし、完全なsysadmin権限を持つわけではありません。
-
-→.sqlauditファイルを読み取るためにはEC2内にSQL Serverをインストールし、sysadmin権限を付与できるアカウントを作成する必要があり、
-  作成したEC2内に.sqlauditファイルを置いてコマンド実行することで.sqlauditファイルを読み取ることができる。
-
-
-rds.log_output
-
-------------------------------------------------
-■要件
-アクセスログを残したい(アクセスログは管理者やサポートや作業者のアカウントログを取得)
-誰がアクセスしたかが明確にしたい。
-
-■アクセス方法
-RDS(SQL Server)にSSMSで接続する。
-
-■結論(仮)
-SQL Server監査機能 + CloudWatch Logs 
-SQL Server監査機能を使ってデータベース内の詳細な操作（ログイン、クエリ実行、テーブル変更など）を記録し、その監査ログをCloudWatch Logsに送信して管理する
-
-【メリット】
-  ・ストレージの節約: RDSインスタンスのディスクを圧迫することなく、監査ログを長期間保存できるため、RDSのパフォーマンスに影響を与えません。
-  ・スケーラビリティ: CloudWatch Logsは非常にスケーラブルであり、大量のログを効率的に管理・保存できます。さらに、ログの検索やフィルタリングが簡単にできるため、必要な情報に迅速にアクセスできます。
-  ・アラート機能: CloudWatchのアラート機能を活用することで、特定のアクション（例えば、不正アクセスの試みや失敗したログイン）に対してリアルタイムで通知を受け取ることが可能です。
-【デメリット】
-  ・コスト: CloudWatch Logsは保存量と保存期間に基づいて課金されます。大量の監査ログを長期間保存する場合は、コストが増加する可能性があります。
-  ・設定の手間: SQL Server監査機能とCloudWatch Logsの統合には初期設定の手間がかかります。監査項目の選定も慎重に行わないと、不要なログが大量に生成されるリスクがあります。
-
-  ※コストの話
-  RDS汎用SSD（gp3）ストレージの場合:
-  1GBあたり月額約0.115 USD。
-  1年間のコストは、0.115 USD x 12ヶ月 = 1.38 USD/GB。
-  ログの保存コスト: 1GBあたり月額0.03 USD。
-
-  CloudWatch Logsのコストは、データの取り込みコストとログ保存コストを計算する必要があります。
-  データの取り込みコスト: 1GBあたり0.50 USD（これは1回限りのコスト）。
-  ログの保存コスト: 1GBあたり月額0.03 USD。
-------------------------------------------------
-DBへの直接アクセス
-SSMSからのアクセス
-CloudShellアクセス
-●網羅するためには
-・SQL Serverのログイベント(成功・失敗)を監査するポリシーを設定
-  →これによりどのツールからアクセスされてもログが残る。
-    SUCCESSFUL_LOGIN_GROUP 、FAULED_LOGIN_GROUP
-・データベース操作の調査
-　→DELETE、INSERTなどを監査する
-・監査ログをS3やcloudwatch logsに保存する
-・RDSインスタンスのオプショングループでSQLSERVER_AUDITオプションを有効にする
-
-
-
-
-
-
-
-
-----------------------------------
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-SQL Severのログ監視の設定
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-目的各アカウントで実施したクエリにログが出力されることを確認する
-■手順の流れ
-1.SQL に管理者でログイン。
-2.監査の作成
+■実施手順
+1.SQL に管理者でログイン
+2.サーバー監査ログの作成
 3.サーバー監査仕様の作成
-4.SQLユーザー登録(20人分)
-5.DBの作成(20個)
-6.複数のDBに監査設定を付与
-7.SQLユーザーとDBユーザーを紐づけ(user5とuserDB5)
-8.テーブルを作成する(例としてuser5)
-9.INSERT、DELETE、UPDATEトリガーをテーブルに作成
-10.user5でSQLログイン
-11.user5でINSERT、DELETE、UPDATEコマンドを実施。
+4.SQLユーザー登録(20人分)                          ※本来は不要
+5.DBの作成(20個)                                   ※本来は不要
+6.すべてのDBにEmployeesテーブルを作成する          ※本来は不要
+7.すべてのDBにEmployees_Auditテーブルを作成する
+8.複数のDBに監査設定を付与
+9.INSERT、DELETE、UPDATEトリガーを作成
+10.user5でSQLログイン                              ※本来は不要
+11.user5でSQLログイン                              ※本来は不要
+12.user5でINSERT、DELETE、UPDATEコマンドを実施。   ※本来は不要
 
-SQL Server ログイン (SQL Login)
-データベース ユーザー (Database User)
-データベース内のユーザーを作成する手順がない？
-
+■実際のスクリプト
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-1.管理者でログイン
+1.SQL に管理者でログイン
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-2.監査の作成
+2.サーバー監査ログの作成
 -- masterデータベースに接続
 USE [master];
 GO
@@ -290,8 +84,9 @@ ALTER SERVER AUDIT [ServerAudit]
 WITH (STATE = ON);
 GO
 
+
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-4.ユーザー登録
+4.SQLユーザー登録(20人分)
 DECLARE @i INT = 1;
 WHILE @i <= 20
 BEGIN
@@ -302,12 +97,10 @@ BEGIN
 END
 GO
 
-
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-DBの作成
+5.DBの作成(20個) 
 
-5.新しいデータベースを作成するSQLコマンド
 DECLARE @i INT = 1;
 WHILE @i <= 20
 BEGIN
@@ -329,10 +122,92 @@ BEGIN
 END
 GO
 
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+6.すべてのDBにEmployeesテーブルを作成する
+DECLARE @dbName NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
+
+-- データベースカーソルを使用して、すべてのユーザーデータベースに対して操作を実行
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースを除外
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @dbName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- 各データベースに対してEmployeesテーブルを作成
+    SET @sql = '
+    USE [' + @dbName + '];
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees'')
+    BEGIN
+        CREATE TABLE [dbo].[Employees] (
+            EmployeeID INT PRIMARY KEY,
+            FirstName NVARCHAR(50),
+            LastName NVARCHAR(50),
+            HireDate DATE,
+            Salary DECIMAL(10, 2)
+        );
+    END;
+    ';
+    
+    -- 動的SQLを実行
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM db_cursor INTO @dbName;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+7.すべてのDBにEmployees_Auditテーブルを作成する
+DECLARE @dbName NVARCHAR(128);
+DECLARE @sql NVARCHAR(MAX);
+
+-- データベースカーソルを使用して、すべてのユーザーデータベースに対して操作を実行
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースを除外
+
+OPEN db_cursor;
+FETCH NEXT FROM db_cursor INTO @dbName;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- 各データベースに対してEmployees_Auditテーブルを作成
+    SET @sql = '
+    USE [' + @dbName + '];
+    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees_Audit'')
+    BEGIN
+        CREATE TABLE [dbo].[Employees_Audit] (
+            AuditID INT IDENTITY(1,1) PRIMARY KEY,  -- 自動増分のプライマリキー
+            AuditDate DATETIME DEFAULT GETDATE(),  -- 自動的に現在の日付を挿入
+            UserName NVARCHAR(128) DEFAULT SUSER_NAME(),  -- 操作したユーザー名を自動挿入
+            UserID UNIQUEIDENTIFIER DEFAULT SUSER_SID(),  -- 操作したユーザーIDを自動挿入
+            TableName NVARCHAR(128),  -- 操作したテーブル名
+            AuditAction NVARCHAR(50),  -- 操作の種類
+            EmployeeID INT  -- 操作対象の従業員ID
+        );
+    END;
+    ';
+    
+    -- 動的SQLを実行
+    EXEC sp_executesql @sql;
+
+    FETCH NEXT FROM db_cursor INTO @dbName;
+END;
+
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
+
+
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-6.複数のDBに監査設定を付与
-sys.databasesシステムビューを使用して、現在のSQL Serverインスタンス内のすべてのデータベースを取得します。システムデータベース（master、model、msdb、tempdb）は除外します。
+--8.複数のDBに監査設定を付与
+--sys.databasesシステムビューを使用して、現在のSQL Serverインスタンス内のすべてのデータベースを取得します。システムデータベース（master、model、msdb、tempdb）は除外します。
 
 DECLARE @dbName NVARCHAR(128);
 DECLARE @sql NVARCHAR(MAX);
@@ -373,117 +248,94 @@ END;
 
 CLOSE db_cursor;
 DEALLOCATE db_cursor;
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-7.SQL Server ログイン user5 を TestDB5 データベースのユーザーとして設定する
 
-USE [TestDB5];  -- データベースを指定
-CREATE USER [user5] FOR LOGIN [user5];  -- SQL Server ログイン user5 をデータベースユーザーとして作成
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-8. Employees テーブルを作成する
-
-CREATE TABLE [dbo].[Employees] (
-    EmployeeID INT PRIMARY KEY,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    HireDate DATE,
-    Salary DECIMAL(10, 2)
-);
-
-■Employees テーブルへの権限を user5 に付与する
-GRANT INSERT, DELETE, UPDATE ON [dbo].[Employees] TO [user5];
-
-■必要に応じてデータベース全体の管理権限を付与する
-USE [TestDB5];
-ALTER ROLE db_owner ADD MEMBER [user5];
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 9.INSERT、DELETE、UPDATEトリガーを作成
 
--- 監査テーブルの作成
-USE [TestDB5];
-CREATE TABLE Employees_Audit (
-    AuditID INT IDENTITY(1,1) PRIMARY KEY,
-    TableName NVARCHAR(128),
-    AuditAction NVARCHAR(50),
-    EmployeeID INT,
-    FirstName NVARCHAR(50),
-    LastName NVARCHAR(50),
-    HireDate DATE,
-    Salary DECIMAL(10, 2),
-    AuditDate DATETIME DEFAULT GETDATE()
-);
-
-DECLARE @table_name NVARCHAR(128);
+-- rdsadmin データベースを除いてすべてのユーザーデータベースにトリガーを作成
+DECLARE @dbName NVARCHAR(128);
 DECLARE @sql NVARCHAR(MAX);
 
-DECLARE table_cursor CURSOR FOR
-SELECT TABLE_NAME 
-FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA = 'dbo';
+-- システムデータベースと rdsadmin を除外してループ
+DECLARE db_cursor CURSOR FOR
+SELECT name 
+FROM sys.databases 
+WHERE name NOT IN ('master', 'tempdb', 'model', 'msdb', 'rdsadmin');
 
-OPEN table_cursor;
-FETCH NEXT FROM table_cursor INTO @table_name;
+OPEN db_cursor
+FETCH NEXT FROM db_cursor INTO @dbName
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
-    -- INSERT トリガーを作成
+    -- INSERT トリガー作成
     SET @sql = '
-    CREATE TRIGGER trg_AfterInsert_' + @table_name + '
-    ON dbo.' + @table_name + '
+    USE [' + @dbName + '];
+    EXEC(''CREATE TRIGGER trg_AfterInsert_Employees
+    ON dbo.Employees
     AFTER INSERT
     AS
     BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @table_name + ''', ''INSERT'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, AuditDate)
+        SELECT ''''Employees'''', ''''INSERT'''', EmployeeID, GETDATE()
         FROM inserted;
-    END;
+    END;'');
     ';
+
     EXEC sp_executesql @sql;
 
-    -- DELETE トリガーを作成
+    -- DELETE トリガー作成
     SET @sql = '
-    CREATE TRIGGER trg_AfterDelete_' + @table_name + '
-    ON dbo.' + @table_name + '
+    USE [' + @dbName + '];
+    EXEC(''CREATE TRIGGER trg_AfterDelete_Employees
+    ON dbo.Employees
     AFTER DELETE
     AS
     BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @table_name + ''', ''DELETE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, AuditDate)
+        SELECT ''''Employees'''', ''''DELETE'''', EmployeeID, GETDATE()
         FROM deleted;
-    END;
+    END;'');
     ';
+
     EXEC sp_executesql @sql;
 
-    -- UPDATE トリガーを作成
+    -- UPDATE トリガー作成
     SET @sql = '
-    CREATE TRIGGER trg_AfterUpdate_' + @table_name + '
-    ON dbo.' + @table_name + '
+    USE [' + @dbName + '];
+    EXEC(''CREATE TRIGGER trg_AfterUpdate_Employees
+    ON dbo.Employees
     AFTER UPDATE
     AS
     BEGIN
-        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-        SELECT ''' + @table_name + ''', ''UPDATE'', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
+        INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, AuditDate)
+        SELECT ''''Employees'''', ''''UPDATE'''', EmployeeID, GETDATE()
         FROM inserted;
-    END;
+    END;'');
     ';
+
     EXEC sp_executesql @sql;
 
-    FETCH NEXT FROM table_cursor INTO @table_name;
-END;
+    FETCH NEXT FROM db_cursor INTO @dbName
+END
 
-CLOSE table_cursor;
-DEALLOCATE table_cursor;
-
-
+CLOSE db_cursor;
+DEALLOCATE db_cursor;
 
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
 10.user5でSQLログイン
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+11.SQLユーザーとDBユーザーを紐づけ(user5とuserDB5) 
+USE [TestDB5];
+ALTER ROLE db_owner ADD MEMBER [user5DB];
+
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-11.user5でINSERT、DELETE、UPDATEコマンドを実施。
+12.user5でINSERT、DELETE、UPDATEコマンドを実施。
 
 -- TestDB5 データベースを使用する
 USE TestDB5;
@@ -520,147 +372,15 @@ DELETE FROM Employees
 WHERE EmployeeID = 5;  -- EmployeeIDが5の従業員を削除
 GO
 
-▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-■TestDB データベースに対して user3 にアクセス権を付与
--- TestDB データベースに対して user3 にアクセス権を付与
-USE [TestDB19];
-GO
--- user3DB に権限を付与
-ALTER ROLE [db_datareader] ADD MEMBER [user3DB];
-ALTER ROLE [db_datawriter] ADD MEMBER [user3DB];
-GO
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-■user3でログイン
-
-■テーブルを作成するSQLコマンド
-USE TestDB19;  -- TestDBを使用する
-GO
-
-CREATE TABLE Empltest (
-    EmployeeID INT PRIMARY KEY,           -- 従業員ID (主キー)
-    FirstName NVARCHAR(50),               -- 名
-    LastName NVARCHAR(50),                -- 姓
-    HireDate DATE,                        -- 採用日
-    Salary DECIMAL(10, 2)                 -- 給与
-);
-
-■データを挿入するSQLコマンド
-USE TestDB;  -- TestDBを使用する
-GO
-
-INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, Salary)
-VALUES 
-(1, 'John', 'Doe', '2020-01-15', 55000.00),
-(2, 'Jane', 'Smith', '2019-03-23', 60000.00),
-(3, 'Michael', 'Johnson', '2021-07-10', 52000.00),
-(4, 'Emily', 'Davis', '2018-09-15', 67000.00),
-(5, 'Daniel', 'Brown', '2017-05-25', 72000.00);
-
+改善
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
---すべてのユーザーデータベースに「Employees_Audit」監査テーブルを作成し、各テーブルに対してINSERT、DELETE、UPDATE操作を監査するトリガーを自動生成する
--- カーソルがすでに存在している場合は閉じて解放する
-IF CURSOR_STATUS('global', 'db_cursor') >= -1
-BEGIN
-    CLOSE db_cursor;
-    DEALLOCATE db_cursor;
-END;
+■INSERT、DELETE、UPDATEトリガーを作成がDBごとにしか手で実行するしかない
 
-DECLARE @dbName NVARCHAR(128);
-DECLARE @tableName NVARCHAR(128);
-DECLARE @sql NVARCHAR(MAX);
+■新規で作成したDBやテーブルにも同様のことをしないいけない。
 
--- ユーザーデータベースのみを対象にする
-DECLARE db_cursor CURSOR FOR
-SELECT name 
-FROM sys.databases
-WHERE name NOT IN ('master', 'model', 'msdb', 'tempdb', 'rdsadmin');  -- システムデータベースと rdsadmin を除外
 
-OPEN db_cursor;
-FETCH NEXT FROM db_cursor INTO @dbName;
-
-WHILE @@FETCH_STATUS = 0
-BEGIN
-    -- 監査テーブルを作成
-    SET @sql = '
-    USE [' + @dbName + '];
-    IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = ''Employees_Audit'')
-    BEGIN
-        CREATE TABLE dbo.Employees_Audit (
-            AuditID INT IDENTITY(1,1) PRIMARY KEY,
-            TableName NVARCHAR(128),
-            AuditAction NVARCHAR(50),
-            EmployeeID INT,
-            FirstName NVARCHAR(50),
-            LastName NVARCHAR(50),
-            HireDate DATE,
-            Salary DECIMAL(10, 2),
-            AuditDate DATETIME DEFAULT GETDATE()
-        );
-    END;
-    ';
-    EXEC sp_executesql @sql;
-
-    -- テーブルカーソルを使用して、各テーブルにトリガーを作成
-    SET @sql = '
-    DECLARE table_cursor CURSOR FOR
-    SELECT TABLE_NAME 
-    FROM [' + @dbName + '].INFORMATION_SCHEMA.TABLES 
-    WHERE TABLE_TYPE = ''BASE TABLE'' AND TABLE_SCHEMA = ''dbo'';
-
-    OPEN table_cursor;
-    FETCH NEXT FROM table_cursor INTO @tableName;
-
-    WHILE @@FETCH_STATUS = 0
-    BEGIN
-        -- INSERT トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterInsert_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER INSERT
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''INSERT'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-            FROM inserted;
-        END;'';
-        EXEC sp_executesql @sql;
-
-        -- DELETE トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterDelete_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER DELETE
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''DELETE'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-            FROM deleted;
-        END;'';
-        EXEC sp_executesql @sql;
-
-        -- UPDATE トリガーの作成
-        SET @sql = ''CREATE TRIGGER trg_AfterUpdate_'' + @tableName + ''
-        ON dbo.'' + @tableName + ''
-        AFTER UPDATE
-        AS
-        BEGIN
-            INSERT INTO dbo.Employees_Audit (TableName, AuditAction, EmployeeID, FirstName, LastName, HireDate, Salary, AuditDate)
-            SELECT ''''' + @tableName + ''''', ''''UPDATE'''', EmployeeID, FirstName, LastName, HireDate, Salary, GETDATE()
-            FROM inserted;
-        END;'';
-        EXEC sp_executesql @sql;
-
-        FETCH NEXT FROM table_cursor INTO @tableName;
-    END;
-
-    CLOSE table_cursor;
-    DEALLOCATE table_cursor;
-    ';
-
-    EXEC sp_executesql @sql;
-
-    FETCH NEXT FROM db_cursor INTO @dbName;
-END;
-
-CLOSE db_cursor;
-DEALLOCATE db_cursor;
+■Lambda関数を使用して自動化
+ AWS Lambda関数を作成し、定期的にRDSから監視用テーブルのデータを取得し、それをCSV形式でS3にアップロードするように設定。
