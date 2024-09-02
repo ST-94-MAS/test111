@@ -1,3 +1,8 @@
+ShimaPublicSubnet1
+CREATE_FAILED
+-
+Resource handler returned message: "Value (ap-northeast-3a) for parameter availabilityZone is invalid. Subnets can currently only be created in the following availability zones: ap-northeast-1a, ap-northeast-1c, ap-northeast-1d. (Service: Ec2, Status Code: 400, Request ID: 767eb971-6a57-4013-b6f6-807575d411a9)" (RequestToken: 3d90bac3-d125-b215-c129-2c0fa144bc93, HandlerErrorCode: InvalidRequest)
+
 ■目的
 SQL Serverのアクセスログと各テーブルのログ(CREATE,INSERT,UPDATE,DELETE)の取得。
 
