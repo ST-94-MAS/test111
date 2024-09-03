@@ -6,3 +6,6 @@ EdgeとChromeとは別のブラウザなので、Edgeが送信するリクエス
 
 ALBのスティッキーセッションについて:https://docs.aws.amazon.com/ja_jp/elasticloadbalancing/latest/application/sticky-sessions.html
 ブラウザのセッション管理：
+
+
+WEBサーバはGIPを持っていないので、IPアドレスに対して外部から別々にアクセスすることは出来ない。しかしALBの振り分け設定で同様のことが可能と思われ、例えばこのURLにアクセスした場合はWEBサーバ1に、このURLにアクセスした場合はWEBサーバ2に、ということは出来ると思われる
