@@ -389,3 +389,44 @@ GO
 
 ■Lambda関数を使用して自動化
  AWS Lambda関数を作成し、定期的にRDSから監視用テーブルのデータを取得し、それをCSV形式でS3にアップロードするように設定。
+
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+確認
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+■トリガーの作成が正しく行われたか
+SELECT name, type_desc 
+FROM sys.triggers 
+WHERE parent_id = OBJECT_ID('dbo.Employees');
+
+
+■トリガーの定義を確認する
+EXEC sp_helptext 'trg_AfterInsert_Employees';
+EXEC sp_helptext 'trg_AfterDelete_Employees';
+EXEC sp_helptext 'trg_AfterUpdate_Employees';
+
+
+
+SELECT * FROM Employees_Audit;
+
+
+■INSERT操作のみを確認する場合
+SELECT *
+FROM dbo.Employees_Audit
+WHERE AuditAction = 'DELETE';
+
+■DELETE操作のみを確認する場合
+
+SELECT *
+FROM dbo.Employees_Audit
+WHERE AuditAction = 'DELETE';
+
+■UPDATE操作のみを確認する場合
+
+SELECT *
+FROM dbo.Employees_Audit
+WHERE AuditAction = 'UPDATE';
+
+■監査ログの確認
+
+SELECT * 
+FROM msdb.dbo.rds_fn_get_audit_file('D:\rdsdbdata\SQLAudit\*.sqlaudit', default, default);
