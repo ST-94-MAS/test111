@@ -1,25 +1,25 @@
-Terraformを使用して下記のコマンドを使用してAWSに環境を構築します。
-必要なものは何ですか？
-
-
-1.Hi-Story Cクラウド環境に新しいリソースをデプロイする
-「user_environment/vpc」を編集した後、
-make vpc-plan
-を実行し、何が変わるか確認してください。Terraform形式の差分が表示されます。問題なければ
-make vpc
-を実行し、編集した内容を適用してください。
-2.管理サーバーのプログラムを開発/デプロイする
-「src/manage_tools」を編集した後、
-make bin
-を実行すると、プログラムがビルドされ、S3にプログラムがアップロードされます。
-そのあと管理サーバーに入り
-update-bin.sh
-を実行すると、S3からプログラムがダウンロードされ展開されます。一度ログアウトして入りなおせば新しいプログラムが利用できます。
-開発中はこのサイクルを繰り返すと、サーバーの再生成を行わずに時間短縮できます。
-テスト環境、本番環境では下記コマンドを実行し、サーバーの再生成を行ってください。
-make vpc-manage-server
-3.アプリケーションサーバー(画像APIサーバー)のプログラムを開発/デプロイする
-「src/user_api」を編集した後、
-make vpc-app-server
-を実行し、プログラムのアップロードとAPIサーバーの生成を行ってください。
-管理サーバーのように「update-bin.sh」でプログラムを更新することはできません。
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+~/history-ws-sandbox/src/management_console ~/history-ws-sandbox/src
+make[1]: Entering directory '/home/t-shimamura/history-ws-sandbox/src/management_console'
+docker build \
+        --build-arg NEXT_PUBLIC_API_URL=https://management-console.sandbox.historyws.net/api \
+        --build-arg NEXT_PUBLIC_LOGOUT_URL=https://management-console.sandbox.historyws.net \
+        -t management-console -f Dockerfile .
+[+] Building 1.7s (3/3) FINISHED                                                                                                                                                                                      docker:default
+ => [internal] load build definition from Dockerfile                                                                                                                                                                            0.0s
+ => => transferring dockerfile: 1.16kB                                                                                                                                                                                          0.0s
+ => ERROR [internal] load metadata for docker.io/refinedev/node:18                                                                                                                                                              1.6s
+ => [auth] refinedev/node:pull token for registry-1.docker.io                                                                                                                                                                   0.0s
+------
+ > [internal] load metadata for docker.io/refinedev/node:18:
+------
+Dockerfile:1
+--------------------
+   1 | >>> FROM refinedev/node:18 AS base
+   2 |     
+   3 |     FROM base AS deps
+--------------------
+ERROR: failed to solve: refinedev/node:18: failed to resolve source metadata for docker.io/refinedev/node:18: failed to authorize: failed to fetch oauth token: unexpected status from GET request to https://auth.docker.io/token?scope=repository%3Arefinedev%2Fnode%3Apull&service=registry.docker.io: 401 Unauthorized
+make[1]: *** [Makefile:12: build.target] Error 1
+make[1]: Leaving directory '/home/t-shimamura/history-ws-sandbox/src/management_console'
+make: *** [Makefile:142: bin] Error 2
