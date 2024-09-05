@@ -1,3 +1,6 @@
+先日作成したgitのブランチdev_shimamura
+環境変数のファイル等がまだリモートにpushされてないと思うので、pushしてもらえますか。
+
 resource "aws_db_subnet_group" "user_rds_subnet_group" {
   name       = "user_rds_subnet_group"
   subnet_ids = values(aws_subnet.private)[*].id
