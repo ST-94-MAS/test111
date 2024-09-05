@@ -1,0 +1,170 @@
+resource "aws_db_subnet_group" "user_rds_subnet_group" {
+  name       = "user_rds_subnet_group"
+  subnet_ids = values(aws_subnet.private)[*].id
+}
+
+resource "aws_db_parameter_group" "user_ex" {
+  name   = "user-rds-parameter-group-sqlserver-ex"
+  family = "sqlserver-ex-14.0"
+}
+
+resource "aws_db_parameter_group" "user_web" {
+  name   = "user-rds-parameter-group-sqlserver-web"
+  family = "sqlserver-web-14.0"
+}
+
+resource "aws_db_parameter_group" "user_se" {
+  name   = "user-rds-parameter-group-sqlserver-se"
+  family = "sqlserver-se-14.0"
+}
+
+resource "aws_db_option_group" "user_ex" {
+  name                     = "user-rds-option-group-sqlserver-ex"
+  option_group_description = "rds_option_group_sqlserver_ex"
+  engine_name              = "sqlserver-ex"
+  major_engine_version     = "14.00"
+
+  option {
+    option_name = "SQLSERVER_BACKUP_RESTORE"
+
+    option_settings {
+      name  = "IAM_ROLE_ARN"
+      value = aws_iam_role.user_rds_sqlserver_role.arn
+    }
+  }
+}
+
+resource "aws_db_option_group" "user_web" {
+  name                     = "user-rds-option-group-sqlserver-web"
+  option_group_description = "rds_option_group_sqlserver_web"
+  engine_name              = "sqlserver-web"
+  major_engine_version     = "14.00"
+
+  option {
+    option_name = "SQLSERVER_BACKUP_RESTORE"
+
+    option_settings {
+      name  = "IAM_ROLE_ARN"
+      value = aws_iam_role.user_rds_sqlserver_role.arn
+    }
+  }
+}
+
+resource "aws_db_option_group" "user_se" {
+  name                     = "user-rds-option-group-sqlserver-se"
+  option_group_description = "rds_option_group_sqlserver_se"
+  engine_name              = "sqlserver-se"
+  major_engine_version     = "14.00"
+
+  option {
+    option_name = "SQLSERVER_BACKUP_RESTORE"
+
+    option_settings {
+      name  = "IAM_ROLE_ARN"
+      value = aws_iam_role.user_rds_sqlserver_role.arn
+    }
+  }
+}
+
+data "aws_ssm_parameter" "rds_admin_password" {
+  name = "/master/rds/admin_password"
+}
+
+resource "aws_ssm_parameter" "rds_max_user_db_count_by_instance" {
+  name  = "/master/rds/max_user_db_count_by_instance"
+  type  = "String"
+  value = var.max_user_db_count_by_rds_instance
+}
+
+resource "aws_db_instance" "user_rds" {
+  for_each       = var.user_rds
+  identifier     = each.key
+  instance_class = each.value.instance_class
+  engine         = "sqlserver-${each.value.engine}"
+  engine_version = "14.00"
+  license_model  = "license-included"
+
+  // gp2:汎用SSD
+  // io1:プロビジョンドIOPS
+  // standard:HDD(遅い)
+  // io1が速くて価格が高い。
+  // io1の場合、iopsの値も指定する。
+  storage_type      = "gp2"
+  allocated_storage = each.value.allocated_storage
+
+  // 最大ストレージ閾値。この値まで自動スケーリングする。
+  max_allocated_storage = 10000
+
+  // io1にした場合のiops
+  //iops = 1000
+
+  // バックアップの保持日数
+  backup_retention_period = 7
+
+  // 自動バックアップウィンドウ。UTC
+  // 自動バックアップは日本時間の0:00-3:00に。
+  backup_window = "15:00-18:00"
+
+  // メンテナンスウィンドウ。UTC
+  // メンテナンスは日曜日の3:00-6:00
+  maintenance_window = "Sat:18:00-Sat:21:00"
+
+  copy_tags_to_snapshot     = true
+  skip_final_snapshot       = false
+  snapshot_identifier       = each.value.snapshot_identifier
+  final_snapshot_identifier = "${each.key}-final"
+
+  db_subnet_group_name   = aws_db_subnet_group.user_rds_subnet_group.name
+  parameter_group_name   = "user-rds-parameter-group-sqlserver-${each.value.engine}"
+  option_group_name      = "user-rds-option-group-sqlserver-${each.value.engine}"
+  vpc_security_group_ids = [aws_security_group.user_rds.id]
+
+  username            = "admin"
+  password            = data.aws_ssm_parameter.rds_admin_password.value
+  publicly_accessible = false
+  port                = 1433
+  timezone            = "Tokyo Standard Time"
+  character_set_name  = "Japanese_CI_AS"
+
+  availability_zone = var.active_availability_zone
+  multi_az          = each.value.multi_az
+
+  // Performance Insights
+  performance_insights_enabled          = true
+  performance_insights_retention_period = each.value.performance_insights_retention_period
+
+  // 拡張モニタリング(秒)
+  monitoring_interval = 60
+  monitoring_role_arn = aws_iam_role.rds_monitoring_role.arn
+
+  // ログをCloudWatch Logsにエクスポート(SQL Serverはerrorのみ？)
+  enabled_cloudwatch_logs_exports = ["error"]
+
+  // マイナーバージョンの自動アップグレード
+  auto_minor_version_upgrade = true
+
+  // 削除保護
+  // trueになってるとterraform destroyで削除できないので、管理コンソールで削除保護を外してからdestroyする。
+  deletion_protection = true
+
+  apply_immediately = each.value.apply_immediately
+
+  tags = {
+    name     = format("%s", each.key)
+    type     = "user-rds"
+    snapshot = format("%s", each.value.snapshot_identifier)
+  }
+
+  ca_cert_identifier = "rds-ca-rsa2048-g1"
+
+  // 特定のスナップショットから復元したい場合は下記のignoreの指定から外してから
+  // .envrcにスナップショット名を指定する。
+  lifecycle {
+    ignore_changes = [
+      //final_snapshot_identifier,
+      snapshot_identifier,
+      engine_version
+    ]
+  }
+}
+
