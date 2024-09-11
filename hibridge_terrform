@@ -1,3 +1,8 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Template to create RDS SQL Server instance with SQL Server Audit, S3 for logging, and necessary IAM roles."
+
+Resources:
   # S3 Bucket for Audit Logs
   AuditLogBucket:
     Type: AWS::S3::Bucket
@@ -36,3 +41,22 @@
                   - "s3:ListMultipartUploadParts"
                   - "s3:AbortMultipartUpload"
                 Resource: "arn:aws:s3:::shima-test-sql-server-audit-logs/*"
+
+  # RDS Option Group with SQL Server Audit Option
+  ShimaOptionGroup:
+    Type: AWS::RDS::OptionGroup
+    Properties:
+      EngineName: sqlserver-ex
+      MajorEngineVersion: "14.00"
+      OptionGroupDescription: "Option group for SQL Server Audit"
+      OptionConfigurations:
+        - OptionName: SQLSERVER_AUDIT
+          OptionSettings:
+            - Name: IAM_ROLE_ARN
+              Value: !GetAtt RDSAuditRole.Arn
+            - Name: S3_BUCKET_ARN
+              Value: !Sub "arn:aws:s3:::shima-test-sql-server-audit-logs"
+            - Name: ENABLE_COMPRESSION
+              Value: "true"
+            - Name: RETENTION_TIME
+              Value: "168"  # 168 hours (7 days)
