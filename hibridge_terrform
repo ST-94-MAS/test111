@@ -60,3 +60,9 @@ Resources:
               Value: "true"
             - Name: RETENTION_TIME
               Value: "168"  # 168 hours (7 days)
+
+
+AuditLogBucket
+CREATE_FAILED
+-
+A conflicting conditional operation is currently in progress against this resource. Please try again. (Service: S3, Status Code: 409, Request ID: WHQA6DZSZK80KHDC, Extended Request ID: J96okjou/lj4ZyisLjXPbMyT2HHwdLFjQ9taBKgckCNTTjCsxmFwufWXzg33znkQQmfi29axuGk=)
