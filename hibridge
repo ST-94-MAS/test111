@@ -1,3 +1,8 @@
+-- .sqlauditファイルの内容を読み込むクエリ
+SELECT * 
+FROM sys.fn_get_audit_file('"C:\work\ServerAudit_3F461C1A.sqlaudit"', NULL, NULL);
+""
+
 ShimaPublicSubnet1
 CREATE_FAILED
 -
