@@ -93,7 +93,23 @@ GO
 ALTER SERVER AUDIT [ServerAudit]
 WITH (STATE = ON);
 GO
-
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+CREATE SERVER AUDIT SPECIFICATION [ServerAuditSpec]
+FOR SERVER AUDIT [ServerAudit]
+    ADD (LOGIN_CHANGE_PASSWORD_GROUP),
+    ADD (FAILED_LOGIN_GROUP),
+    ADD (SUCCESSFUL_LOGIN_GROUP),
+    ADD (AUDIT_LOGIN_GROUP),                     -- すべてのログイン試行を監視
+    ADD (DATABASE_OBJECT_ACCESS_GROUP),
+    ADD (DATABASE_OBJECT_CHANGE_GROUP),
+    ADD (DATABASE_PRINCIPAL_CHANGE_GROUP),
+    ADD (SCHEMA_OBJECT_CHANGE_GROUP),
+    ADD (SERVER_STATE_CHANGE_GROUP),
+    ADD (DATABASE_PERMISSION_CHANGE_GROUP),     -- データベースの権限変更を監視
+    ADD (SERVER_PERMISSION_CHANGE_GROUP),       -- サーバーの権限変更を監視
+    ADD (SERVER_ROLE_MEMBER_CHANGE_GROUP)       -- サーバーロールメンバーシップの変更を監視
+WITH (STATE = ON);
+GO
 
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 4.SQLユーザー登録(20人分)
