@@ -1,3 +1,9 @@
+aws s3 cp s3://sql-server/sandbox-0001/ ~/sandbox-0001/ --recursive
+zip -r sandbox-0001.zip ~/sandbox-0001/
+
+
+
+
 IPjpJAeK6PO#w6uYuCL4XDYgi8Dx0C2UTXt$ZsS5rEID!PjuiaWFrwU1RMhQ7vVhXiiKNOrY3RAndpHcRU654PYbW5QilF1DhF9P6R2yn$5E1ruVnlhL0Gdf
 
 U#oQ!7bZU$dJm66Mt%dcHU8XDJy4Dtvbf2pdrQ7F
