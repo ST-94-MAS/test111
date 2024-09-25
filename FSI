@@ -1,12 +1,15 @@
-sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-sudo dnf repolist
-sudo dnf install epel-release
-sudo dnf install stress
-
-
-$memoryHog = @(); for ($i = 0; $i -lt 10; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)); Start-Sleep -Seconds 1 }; [GC]::KeepAlive($memoryHog)
-
-New-Item -Path "C:\temp" -ItemType Directory -Force; $buffer = New-Object byte[] (1MB); for ($i = 0; $i -lt 10240; $i++) { [System.IO.File]::WriteAllBytes("C:\temp\largefile_$i.dat", $buffer) }
-
-
- $memoryHog = @(); for ($i = 0; $i -lt 1000; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)) }
+Last login: Wed Sep 25 16:23:44 2024 from 10.157.35.200
+[a_admin01@kmhp2sr02srv003 ~]$ systemctl status httpd.service
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor prese>
+   Active: failed (Result: exit-code) since Wed 2024-09-25 17:33:55 JST; 4h 37m>
+     Docs: man:httpd.service(8)
+ Main PID: 1354589 (code=exited, status=1/FAILURE)
+   Status: "Reading configuration..."
+lines 1-6/6 (END)
+[a_admin01@kmhp2sr02srv003 ~]$ journalctl -xe
+Hint: You are currently not seeing messages from other users and the system.
+      Users in the 'systemd-journal' group can see all messages. Pass -q to
+      turn off this notice.
+No journal files were opened due to insufficient permissions.
+[a_admin01@kmhp2sr02srv003 ~]$
