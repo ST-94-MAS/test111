@@ -7,9 +7,28 @@ Last login: Wed Sep 25 16:23:44 2024 from 10.157.35.200
  Main PID: 1354589 (code=exited, status=1/FAILURE)
    Status: "Reading configuration..."
 lines 1-6/6 (END)
-[a_admin01@kmhp2sr02srv003 ~]$ journalctl -xe
-Hint: You are currently not seeing messages from other users and the system.
-      Users in the 'systemd-journal' group can see all messages. Pass -q to
-      turn off this notice.
-No journal files were opened due to insufficient permissions.
-[a_admin01@kmhp2sr02srv003 ~]$
+[a_admin01@kmhp2sr02srv003 ~]$ sudo journalctl -xe
+--
+-- Unit UNIT has finished starting up.
+--
+-- The start-up result is done.
+ 9月 25 22:16:06 kmhp2sr02srv003 systemd[1694332]: Startup finished in 51ms.
+-- Subject: User manager start-up is now complete
+-- Defined-By: systemd
+-- Support: https://access.redhat.com/support
+--
+-- The user manager instance for user 65534 has been started. All services queu>
+-- for starting have been started. Note that other services might still be star>
+-- up or be started at any later time.
+--
+-- Startup of the manager took 51464 microseconds.
+ 9月 25 22:16:06 kmhp2sr02srv003 su[1694321]: pam_unix(su:session): session ope>
+ 9月 25 22:16:07 kmhp2sr02srv003 su[1694321]: pam_unix(su:session): session clo>
+ 9月 25 22:16:07 kmhp2sr02srv003 su[1694401]: pam_succeed_if(su:auth): requirem>
+ 9月 25 22:16:07 kmhp2sr02srv003 su[1694401]: pam_succeed_if(su:auth): requirem>
+ 9月 25 22:16:07 kmhp2sr02srv003 su[1694401]: (to nobody) root on none
+ 9月 25 22:16:07 kmhp2sr02srv003 su[1694401]: pam_unix(su:session): session ope>
+ 9月 25 22:16:08 kmhp2sr02srv003 su[1694401]: pam_unix(su:session): session clo>
+ 9月 25 22:16:16 kmhp2sr02srv003 sudo[1694776]: a_admin01 : TTY=pts/0 ; PWD=/ho>
+ 9月 25 22:16:16 kmhp2sr02srv003 sudo[1694776]: pam_unix(sudo:session): session>
+lines 4588-4610/4610 (END)
