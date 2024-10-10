@@ -1,18 +1,2 @@
-PS C:\Users\a_admin01> $memoryHog = @(); for ($i = 0; $i -lt 10; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)); Start-Sleep -Seconds 1 }; [GC]::KeepAlive($memoryHog)
-New-Object : "1" 個の引数を指定して ".ctor" を呼び出し中に例外が発生しました: "種類 'System.OutOfMemoryException' の例
-外がスローされました。"
-発生場所 行:1 文字:67
-+ ... 0; $i -lt 10; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)); Start ...
-+                                           ~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (:) [New-Object]、MethodInvocationException
-    + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
-
-New-Object : "1" 個の引数を指定して ".ctor" を呼び出し中に例外が発生しました: "種類 'System.OutOfMemoryException' の例
-外がスローされました。"
-発生場所 行:1 文字:67
-+ ... 0; $i -lt 10; $i++) { $memoryHog += ,(New-Object Byte[] (1GB)); Start ...
-+                                           ~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (:) [New-Object]、MethodInvocationException
-    + FullyQualifiedErrorId : ConstructorInvokedThrowException,Microsoft.PowerShell.Commands.NewObjectCommand
-
-PS C:\Users\a_admin01>
+wmic logicaldisk get size,freespace,caption
+fsutil file createnew C:\dummyfile1.txt 21474836480
