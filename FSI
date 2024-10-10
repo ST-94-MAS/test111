@@ -1,8 +1,1 @@
-# 使用したいメモリ量を指定（例: 8GB)
-$sizeInGB = 8
-[byte[]]$array = New-Object byte[] ($sizeInGB * 1GB)
-
-# メモリを90％以上消費するループ
-while ($true) {
-    Start-Sleep -Seconds 1
-}
+$mem = New-Object byte[] (8GB); while ($true) { Start-Sleep 1 }
