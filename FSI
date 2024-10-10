@@ -1,1 +1,1 @@
-$mem = New-Object byte[] (8GB); while ($true) { Start-Sleep 1 }
+$memList = @(); for ($i=0; $i -lt 200; $i++) { $memList += [byte[]]::new(1024*1024*50); Start-Sleep 1 }
