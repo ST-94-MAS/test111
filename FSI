@@ -1,23 +1,23 @@
-$memList = @(); for ($i=0; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*50); Start-Sleep 1 }
-
+PS C:\Users\a_admin01> $memList = @(); for ($i=0; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*25); Start-Sleep 1 }
 種類 'System.OutOfMemoryException' の例外がスローされました。
 発生場所 行:1 文字:48
-+ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*50); Start- ...
++ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*25); Start- ...
 +                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : OperationStopped: (:) [], OutOfMemoryException
     + FullyQualifiedErrorId : System.OutOfMemoryException
 
 種類 'System.OutOfMemoryException' の例外がスローされました。
 発生場所 行:1 文字:48
-+ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*50); Start- ...
++ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*25); Start- ...
 +                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : OperationStopped: (:) [], OutOfMemoryException
     + FullyQualifiedErrorId : System.OutOfMemoryException
 
 種類 'System.OutOfMemoryException' の例外がスローされました。
 発生場所 行:1 文字:48
-+ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*50); Start- ...
++ ... ; $i -lt 204; $i++) { $memList += [byte[]]::new(1024*1024*25); Start- ...
 +                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : OperationStopped: (:) [], OutOfMemoryException
     + FullyQualifiedErrorId : System.OutOfMemoryException
 
+PS C:\Users\a_admin01>
