@@ -1,2 +1,42 @@
-wmic logicaldisk get size,freespace,caption
-fsutil file createnew C:\dummyfile1.txt 21474836480
+. PowerShellを管理者権限で起動する
+スタートメニューで「PowerShell」と入力します。
+「Windows PowerShell」を右クリックして、「管理者として実行」を選択します。
+ユーザーアカウント制御の確認が出る場合、「はい」を選択します。
+2. 実行ポリシーの確認・変更
+デフォルトでは、PowerShellでスクリプトの実行が制限されています。この制限を変更します。
+
+以下のコマンドを実行して、スクリプトの実行を許可します：
+powershell
+コードをコピーする
+Set-ExecutionPolicy RemoteSigned
+
+
+
+memory_test.ps1
+
+# 使用するメモリのサイズ（GB単位で指定）
+$memorySize = 80 # 必要なサイズに応じて変更します
+
+# メモリ確保開始メッセージ
+Write-Output "Memory allocation started..."
+
+# 指定されたサイズの文字列を作成してメモリを消費します
+$largeString = "A" * 1024 * 1024 # 1MBの文字列
+$stringsArray = @()
+
+for ($i = 0; $i -lt ($memorySize * 1024); $i++) {
+    $stringsArray += $largeString
+    Write-Output "Allocated $($i + 1) MB of memory"
+}
+
+# メモリ確保後のメッセージ
+Write-Output "Memory allocated successfully."
+
+# メモリを保持するためのメッセージ
+Write-Output "Memory is being held for 1 hour..."
+
+# メモリを保持するために停止せずに保持する
+Start-Sleep -Seconds 3600
+
+# スクリプト終了メッセージ
+Write-Output "Memory allocation test completed."
