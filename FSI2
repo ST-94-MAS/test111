@@ -4,14 +4,14 @@ $memorySize = 80 # 必要なサイズに応じて変更します
 # メモリ確保開始メッセージ
 Write-Output "Memory allocation started..."
 
-# ネイティブメモリを直接確保するための方法
-$allocatedMemory = @()
+# 大量の整数を格納する配列を作成してメモリを消費します
+$integersArray = @()
 
-for ($i = 0; $i -lt $memorySize * 1024; $i++) {
-    $ptr = [System.Runtime.InteropServices.Marshal]::AllocHGlobal(1MB) # 1MBずつ確保
-    [System.Runtime.InteropServices.Marshal]::WriteByte($ptr, 0, 0)  # 確保したメモリを初期化
-    $allocatedMemory += $ptr
-    Write-Output "Allocated $($i + 1) MB of native memory"
+for ($i = 0; $i -lt ($memorySize * 256 * 1024); $i++) {
+    $integersArray += (Get-Random -Maximum [int]::MaxValue)
+    if ($i % 1000 -eq 0) {
+        Write-Output "Allocated approximately $([math]::Round($i / 256)) MB of memory"
+    }
 }
 
 # メモリ確保後のメッセージ
@@ -22,9 +22,3 @@ Start-Sleep -Seconds 3600
 
 # スクリプト終了メッセージ
 Write-Output "Memory allocation test completed."
-
-# メモリ解放処理
-foreach ($ptr in $allocatedMemory) {
-    [System.Runtime.InteropServices.Marshal]::FreeHGlobal($ptr)
-}
-Write-Output "Memory freed."
