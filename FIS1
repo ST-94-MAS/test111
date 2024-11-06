@@ -1,29 +1,12 @@
-前提）httpd インストール済みであること
-
-PHP8.2 のインストール
-sudo dnf module enable php:8.2
-sudo dnf install php
-sudo dnf -y install php-cli php-fpm
-
-PHP拡張ライブラリのインストール
-sudo dnf -y install php-devel
-sudo dnf -y install php-pdo
-sudo dnf -y install php-mbstring
-sudo dnf -y install php-pgsql
-sudo dnf -y install php-mbstring
-sudo dnf -y install php-gd
-sudo dnf -y install php-pear
-sudo dnf -y install php-pecl-apc-devel
-sudo dnf -y install php-zip
-
-/etc/php.iniの修正
-max_execution_time = 900
-memory_limit = 1G
-upload_max_filesize = 300M
-date.timezone = "Asia/Tokyo"
-post_max_size = 600M
-
-起動
-sudo systemctl start php-fpm
-sudo systemctl enable php-fpm
-sudo systemctl restart httpd
+@ambient-lab.co.jpこちらのアクセス方法をご教授いただけませんでしょうか。
+githubへの登録を行いたいのですが、@ambient-lab.co.jpへ送られてくる確認コードを確認したいです
+↑今西さんへ質問とばしてますが
+僕の方から回答します
+まず、今iretのメールアドレスを発行して使える状態になってる状況ですよね
+今回、Ambient Lab社と連携した案件となるため、Ambient Lab社側で用意してるSlack、OneLogin、GitHubなど手配してる状況です(ここはGoodman経由で依頼中)
+で、Ambientのアシスタントが手続きするので
+iretのメールアドレス宛に【Ambient Lab】のようなタイトル文などで届くと思うので随時チェックしておいてください
+そのメール内容にマニュアル手順書が添付されてるので、その内容にて則って、Onelogin経由でgithub、@ambient-lab.co.jpの認証など進めることになると思います
+iretのメールアドレス宛へ届くのがいつかこちらも不明なので随時チェックしてください
+今週金曜になってもメールが届かないようでしたら、連絡ください
+こっちで催促いれます
