@@ -1,12 +1,148 @@
-@ambient-lab.co.jpこちらのアクセス方法をご教授いただけませんでしょうか。
-githubへの登録を行いたいのですが、@ambient-lab.co.jpへ送られてくる確認コードを確認したいです
-↑今西さんへ質問とばしてますが
-僕の方から回答します
-まず、今iretのメールアドレスを発行して使える状態になってる状況ですよね
-今回、Ambient Lab社と連携した案件となるため、Ambient Lab社側で用意してるSlack、OneLogin、GitHubなど手配してる状況です(ここはGoodman経由で依頼中)
-で、Ambientのアシスタントが手続きするので
-iretのメールアドレス宛に【Ambient Lab】のようなタイトル文などで届くと思うので随時チェックしておいてください
-そのメール内容にマニュアル手順書が添付されてるので、その内容にて則って、Onelogin経由でgithub、@ambient-lab.co.jpの認証など進めることになると思います
-iretのメールアドレス宛へ届くのがいつかこちらも不明なので随時チェックしてください
-今週金曜になってもメールが届かないようでしたら、連絡ください
-こっちで催促いれます
+リポジトリ新規作成手順について¶
+開発プロジェクトチームから依頼を受け、新規リポジトリを作成する際の流れについて整理したドキュメントとなります。
+
+0. リポジトリ作成事前準備¶
+事前に開発プロジェクトチームから連携を頂く情報¶
+開発プロジェクトチームからプロジェクト作成依頼時に下記の情報を連携頂く必要があります。
+
+GitHub 組織名（GitHub Organization の名称）
+プロジェクト名
+作成する環境（dev／stg／prod）とその AWS アカウント ID
+AWS の SSO ログイン URL
+ex.） https://d-*****.awsapps.com/start/#
+private、public の Team にそれぞれ追加したいユーザー一覧（リポジトリの Maintain 権限、Write 権限を付与したいユーザー一覧）
+Team の Maintain 権限を付与したいユーザー名
+下記については作成するリポジトリの数分、連携頂く必要があります。
+
+リポジトリ名
+リポジトリの説明
+使用するテンプレートリポジトリ
+事前に PE チームで実施する作業¶
+リポジトリに対する管理、読み取り、書き込み権限を制御するために GitHub Team を作成し、Team にユーザーを追加することで制御する運用としています。そのためリポジトリ作成時に Team 作成、Team へのメンバー追加、Team 管理ユーザーの設定を行う必要があります。
+
+作成する Team について¶
+作成する Team はプロジェクトごとに下記の２種類作成しています。
+
+<project>-private
+
+テックリーダー（TL）向けの権限
+レビューやプルリクのマージを行うことができる権限を持つ
+リポジトリの操作権限として Maintain 権限を付与する
+<project>-public
+開発者（Dev）向けの権限
+Feature ブランチでの開発を想定した権限を持つ
+プルリクの作成後、テックリーダー（TL）にレビュー依頼を行うことで開発内容を反映する
+自身で develop や main のブランチへのマージをすることはできない
+リポジトリの操作権限として Write 権限を付与する
+Team の運用例¶
+作成された Team は実際の開発作業で下記イメージで使い分けて運用されることとなります。
+
+<project>-publicユーザーにて開発作業を実施
+
+Issue、feature ブランチの作成
+
+・Issue のカスタムフィールドにてレビュアーとなる<project>-privateユーザーを指定する
+
+feature ブランチでの開発
+
+プルリクエストの作成
+「Enable auto-merge」ボタンを押下する
+<project>-privateユーザーへレビュー依頼
+<project>-privateユーザーがレビューを実施
+
+依頼されたプルリクエストのレビュー
+プルリクエストを Approve する
+「Enable auto-merge」を押されたプルリクエストは Approve されると自動マージされる
+Team 作成¶
+Team の作成
+
+作成対象の組織（Organization）を選択している状態で上部タブから[Teams]をクリックします。
+Teamの作成
+ページ上部にある[New team]ボタンをクリックします。
+[Create new team]で必要事項を入力して[Create team]ボタンをクリックするとチームが作成されます。
+・[Team visibility]（チームの表示設定）は[Visible]を設定
+
+・[Team notifications]（チーム通知）は[Enabled]を設定
+Teamの作成
+
+詳細については、「公式 GitHub Docs（Team の作成）」を参照してください。
+Team へのメンバー追加
+
+作成対象の組織（Organization）を選択している状態で上部タブから[Teams]をクリックします。
+Team作成
+メンバー追加対象 Team を選択し、上部タブから[Members]をクリックします。
+Team作成
+[Add a member]ボタンをクリックし、追加したいメンバーを選択した上で[Invite]ボタンをクリックしメンバーを追加します。
+詳細については、「公式 GitHub Docs（Team への Organization メンバーの追加）」を参照してください。
+Team 管理ユーザーの設定（Maintain 権限の設定）
+
+作成対象の組織（Organization）を選択している状態で上部タブから[Teams]をクリックします。
+Team作成
+メンバー追加対象 Team を選択し、上部タブから[Members]をクリックします。
+Team作成
+Maintain 権限を設定する人を選択し、ドロップダウンメニューから[Change role]をクリックします。
+Team作成
+[Maintainer]のロールを選択し、 [Change role]ボタンをクリックします。
+Team作成
+詳細については、「公式 GitHub Docs（Team メンバーへのチームメンテナロールの割り当て）」を参照してください。
+1. リポジトリ作成作業¶
+開発プロジェクトチームから連携頂いた情報をもとに下記 API を使用し、リポジトリ作成を行う。
+
+リポジトリ作成 API
+
+API 実行に必要なトークンについて¶
+API 実行時にリクエストヘッダーに指定するトークンは下記に登録されているものを使用してください。
+
+
+AWS Systems Manager > パラメータストア > /${環境名}/PlatformEngineering/backstage-external-access-token
+API 実行のパラメータについて¶
+API 実行時に指定するリクエストパラメータについて設定する値については下記の通りです。
+
+パラメータ名	説明　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+owner	開発プロジェクトチームから連携された組織名（GitHub Organization）を設定　　　　　　　　　　　　　　　　　　　　　　　
+description	開発プロジェクトチームから連携された作成するリポジトリの説明を設定　　　　　　　　　　　　　　　　　　　　　　　　　　　
+repository_template	開発プロジェクトチームから連携された使用するリポジトリテンプレートを設定　　　　　　　　　　　　　　　　　　　　　　　　
+repository_name	開発プロジェクトチームから連携された作成するリポジトリ名を設定　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+catalog_name	リポジトリ名と同じものを設定　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+team_maintain	PE チームで作成した Maintain 権限としてアタッチするチーム名（<project>-private）　　　　　　　　　　　　　　　　　　
+team_write	PE チームで作成した Write 権限としてアタッチするチーム名（<project>-public）　　　　　　　　　　　　　　　　　　　　
+is_create_ghp	GitHub Projects の作成有無を true／false 指定、リポジトリ初回作成の場合は true を指定、以降に作成する場合は false を指定
+branches	開発プロジェクトチームから連携された作成する環境に応じたブランチ名をリストで設定　　　　　　　　　　　　　　　　　　　　
+codespaces_secrets	AWS_SSO_START_URL：開発プロジェクトチームから連携された AWS の SSO ログイン URL
+AWS_SSO_REGION：ap-northeast-1 で固定
+AWS_SSO_ROLE_NAME：DeveloperAccessExt で固定
+AWS_SSO_ACCOUNT_ID_DEV：開発プロジェクトチームから連携された dev 環境の AWS アカウント ID
+actions_secrets	OIDC_AWS_REGION：ap-northeast-1 で固定
+※ repository_template にアーキ G 雛形（tmpl-root、tmpl-infra、tmpl-amplify）のテンプレートが指定された時、OIDC_AWS_REGION 以外のパラメータは不要
+environment_secrets	branches で設定したブランチごとにパラメータ設定が必要
+AWS_ACCOUNT_ID：各環境の AWS アカウント ID
+OIDC_ROLE_ARN：各環境の OpenID Connect フェデレーションロール ARN を指定
+arn:aws:iam::<AWSアカウントID>:role/mng-iam-role-github-actions-oidc-project
+2. リポジトリ作成後作業¶
+GitHub Advanced Security（GHAS）の有効化確認、デフォルト値設定¶
+リポジトリ作成後、GitHub Advanced Security（GHAS）が有効化になっていることを確認し、デフォルト値を PE チームで設定を行う。
+
+GHAS が有効化状態になっているかを確認するために Admin 権限が必要となるため、対象リポジトリに対して Admin 権限を付与してもらうよう TMC 舟波さんに依頼する。
+
+GHAS が有効化状態になっているかを確認する。
+
+Settings > Security（Code security）の「GitHub Advanced Security」の状態を確認する。有効化されている（Enabled）場合、デフォルト値の設定作業に進む。
+GHAS設定
+GHAS設定
+
+無効化されている（Disable）場合、使用可能なライセンス上限に達していることがあるため TMC 舟波さんに使用状況、追加購入可否について確認が必要。
+ライセンス不足の場合のエラーメッセージサンプル
+
+GitHub Advanced Security cannot be enabled because Toyota Motor is using xx more GitHub Advanced Security licenses than they have purchased.
+ライセンス追加購入後、PE チーム側で「Disable」から「Enabled」へ変更不可のため、有効化についても合わせて依頼する。
+GHAS のデフォルト値設定を行う。設定方法についてはGitHub Advanced Security についてに記載のリンクから下記の設定を行ってください。
+
+Code scanning
+Secret scanning
+Custom auto-triage rules
+Dependency review
+開発プロジェクトチームに連絡¶
+作成したプロジェクト、リポジトリ情報を依頼のあった開発プロジェクトチームに連携する。
+tmpl-amplifyをテンプレートとしたリポジトリについては、開発プロジェクトチームでAmplify Console のセットアップ後に環境変数AMPLIFY_BACKEND_APP_IDに Amplify バックエンド環境の APP ID を設定する必要がある。開発プロジェクトチームから TMC 舟波さんに設定依頼してもらうよう連携する。
+Team から PE チームの作成者ユーザー削除¶
+Team 作成時に PE チームの作成者は自動的に Team に所属した状態になり、Maintain 権限を持っている。Team の Maintain 権限は開発プロジェクト側のユーザーを上記手順で設定しているため、作業後は PE チームの作成者は Team への所属が不要となる。開発プロジェクトチームに連絡後、開発チームで権限付与が問題ないことを確認した後、Team から作成者のユーザー削除を行う。
