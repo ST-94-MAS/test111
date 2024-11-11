@@ -1,42 +1,86 @@
-. PowerShellを管理者権限で起動する
-スタートメニューで「PowerShell」と入力します。
-「Windows PowerShell」を右クリックして、「管理者として実行」を選択します。
-ユーザーアカウント制御の確認が出る場合、「はい」を選択します。
-2. 実行ポリシーの確認・変更
-デフォルトでは、PowerShellでスクリプトの実行が制限されています。この制限を変更します。
+確認項目
 
-以下のコマンドを実行して、スクリプトの実行を許可します：
-powershell
-コードをコピーする
-Set-ExecutionPolicy RemoteSigned
+PBI のリンクが紐づけできてる
 
 
+対象 SBI(issue)から作業ブランチが作成できている
 
-memory_test.ps1
 
-# 使用するメモリのサイズ（GB単位で指定）
-$memorySize = 80 # 必要なサイズに応じて変更します
+作業ブランチと SBI が紐づいている
+作業する対象リポジトリ名を記載して下さい。
 
-# メモリ確保開始メッセージ
-Write-Output "Memory allocation started..."
+作業箇所を記載して下さい。例：バックエンド
 
-# 指定されたサイズの文字列を作成してメモリを消費します
-$largeString = "A" * 1024 * 1024 # 1MBの文字列
-$stringsArray = @()
+詳細
+現在どのようなドキュメントがあるか、不備があるか、追加したほうがいいドキュメントがあるか、FAQ系、ノウハウやユースケース、共通で情報開示できるドキュメント系など、共通PFで使ったPJの開発事例など
 
-for ($i = 0; $i -lt ($memorySize * 1024); $i++) {
-    $stringsArray += $largeString
-    Write-Output "Allocated $($i + 1) MB of memory"
-}
+受け入れ条件
 
-# メモリ確保後のメッセージ
-Write-Output "Memory allocated successfully."
+受け入れ条件を示してください。
+関連する情報
+関連する Isssue やドキュメント、スクリーンショット、または参考情報がある場合、こちらにアップロードまたはリンクを貼ってください。
 
-# メモリを保持するためのメッセージ
-Write-Output "Memory is being held for 1 hour..."
+PBI：
 
-# メモリを保持するために停止せずに保持する
-Start-Sleep -Seconds 3600
+PBI: 【1stフェーズ】Zendeskガイドのコンテンツの配置 tmpl-project#227
 
-# スクリプト終了メッセージ
-Write-Output "Memory allocation test completed."
+
+背景
+BackstageのTechdocsに書いていたナレッジをZendeskのGuideに移行する。
+
+ZendeskのGuideは下記のようなページ(要サインイン)
+https://ambientlab.zendesk.com/hc/ja
+
+対応内容
+
+Techdocsから移行する内容を精査する
+
+Guideで「セクション」を作成する
+
+Guideで「カテゴリ」を作成する
+
+Guideで「コンテンツタグ」を作成する
+
+TechdocsをGuideに移植する
+余裕があれば
+Zendesk API経由で記事作成もできるので、一括移行する場合はスクリプトも組んで良い
+
+https://developer.zendesk.com/api-reference/help_center/help-center-api/articles/#create-article
+
+対象リポジトリ
+
+tmpl-root
+
+tmpl-project
+
+pe-actions
+
+pe-backstage
+
+tmpl-amplify
+
+tmpl-infra
+作業手順
+作業手順を記載してください。
+
+DoD (完了の定義)
+
+全ての SBI が Done
+
+全ての受け入れ基準が Done
+SBI (スプリントバックログアイテム)
+既存のTechdocsの内容を精査
+補足：現在どのようなドキュメントがあるか、不備があるか、追加したほうがいいドキュメントがあるか、FAQ系、ノウハウやユースケース、共通で情報開示できるドキュメント系など、共通PFで使ったPJの開発事例など
+feat: 既存のTechdocsの内容を精査 pe-backstage#350
+feat: 既存のTechdocsの内容を精査 pe-backstage#350 の精査結果次第、ドキュメントを追加する
+子タスクの URL（例：https://github.com/tmc-ccoe/作業するリポジトリ名/issues/123）
+Techdocsに回すドキュメントとGuideへ移すコンテンツを整理していく
+補足：Techdocs: 技術系、PJ特化のクローズド情報、PJ開発事例概要などを共有したい場合など
+Zendesk Guide: 共通PF系は情報を格納(全開発者が見れる)→FAQ系、ノウハウやユースケース、共通で情報開示できるドキュメント系など、共通PFで使ったPJの開発事例など
+feat: Techdocsに回すドキュメントとGuideへ移すコンテンツの整理 pe-backstage#351
+Techdocs→Zendeskガイドへの移行方法の調査と作業
+補足：pe-backstage上でgit管理してるが、zendesk用のコンテンツ管理する新規リポジトリ作成するのもあり
+子タスクの URL（例：https://github.com/tmc-ccoe/作業するリポジトリ名/issues/123）
+DoR (Ready の定義)
+
+受け入れ基準が記載されていること
